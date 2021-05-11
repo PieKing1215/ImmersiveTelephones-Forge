@@ -128,8 +128,8 @@ dependencies {
 
     // Simple Voice Chat
     // www.curseforge.com/minecraft/mc-mods/simple-voice-chat
-    runtimeOnly fg.deobf("curse.maven:simple_voice_chat-416089:3286777")
-    compileOnly fg.deobf("curse.maven:simple_voice_chat-416089:3286777")
+    runtimeOnly fg.deobf("curse.maven:simple_voice_chat-416089:3306111")
+    compileOnly fg.deobf("curse.maven:simple_voice_chat-416089:3306111")
 
     // utility / testing
 
