@@ -23,14 +23,14 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'maven-publish'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.16-0.0.0'
-group = 'me.pieking1215.immersive_telephones'
-archivesBaseName = 'ImmersiveTelephones'
+version = mod_version
+group = mod_group
+archivesBaseName = mod_id
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
 mixin {
-    add sourceSets.main, "immersive_telephones.refmap.json"
+    add sourceSets.main, "${mod_id}.refmap.json"
 }
 
 sourceSets {
@@ -51,7 +51,7 @@ sourceSets {
 }
 
 minecraft {
-    mappings channel: 'snapshot', version: '20210309-1.16.5'
+    mappings channel: 'snapshot', version: mcp_version
 
     runs {
         client {
@@ -59,13 +59,13 @@ minecraft {
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
             properties 'mixin.debug.export': 'true'
-            arg "-mixin.config=immersive_telephones.mixins.json"
+            arg "-mixin.config=${mod_id}.mixins.json".toString()
             property 'fml.earlyprogresswindow', 'false'
             property 'mixin.env.disableRefMap', 'true'
             arg "--username=Dev" + (new Random()).nextInt(999)
 
             mods {
-                immersive_telephones {
+                mod_id {
                     source sourceSets.main
                 }
             }
@@ -75,13 +75,13 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-            arg "-mixin.config=immersive_telephones.mixins.json"
+            arg "-mixin.config=${mod_id}.mixins.json".toString()
             arg "-Dmixin.debug.export=true"
             property 'fml.earlyprogresswindow', 'false'
             property 'mixin.env.disableRefMap', 'true'
 
             mods {
-                immersive_telephones {
+                mod_id {
                     source sourceSets.main
                 }
             }
@@ -91,16 +91,16 @@ minecraft {
             workingDirectory project.file('run')
             property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
             property 'forge.logging.console.level', 'debug'
-            args '--mod', 'immersive_telephones',
+            args '--mod', mod_id,
                     '--all',
                     '--output', file('src/generated/resources/'),
                     '--existing', sourceSets.main.resources.srcDirs[0],
                     '--existing-mod', 'immersiveengineering'
-            arg "-mixin.config=immersive_telephones.mixins.json"
+            arg "-mixin.config=${mod_id}.mixins.json".toString()
             property 'mixin.env.disableRefMap', 'true'
 
             mods {
-                immersive_telephones {
+                mod_id {
                     source sourceSets.main
                     source sourceSets.datagen
                 }
@@ -111,63 +111,71 @@ minecraft {
 
 dependencies {
     //minecraft 'net.minecraftforge:forge:1.16.1-32.0.108' // 1.16.1
-    minecraft 'net.minecraftforge:forge:1.16.5-36.1.4' // 1.16.5
+    minecraft "net.minecraftforge:forge:${build_forge_version}" // 1.16.5
 
     // Cloth Config API (Forge)
     // www.curseforge.com/minecraft/mc-mods/cloth-config-forge
-    runtimeOnly fg.deobf("curse.maven:cloth-config-forge:3155284")
-    compileOnly fg.deobf("curse.maven:cloth-config-forge:3155284")
+    runtimeOnly fg.deobf("curse.maven:cloth-config-forge:${build_config_version}")
+    compileOnly fg.deobf("curse.maven:cloth-config-forge:${build_config_version}")
 
     // Immersive Engineering
     // www.curseforge.com/minecraft/mc-mods/immersive-engineering
-    runtimeOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:1.16.5-4.2.4-134.26")
-    compileOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:1.16.5-4.2.4-134.26")
+    runtimeOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:${build_ie_version}")
+    compileOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:${build_ie_version}")
 
-    datagenRuntimeOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:1.16.5-4.2.4-134.26:datagen")
-    compileOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:1.16.5-4.2.4-134.26:datagen")
+    datagenRuntimeOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:${build_ie_version}:datagen")
+    compileOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:${build_ie_version}:datagen")
 
     // Simple Voice Chat
     // www.curseforge.com/minecraft/mc-mods/simple-voice-chat
-    runtimeOnly fg.deobf("curse.maven:simple_voice_chat-416089:3306111")
-    compileOnly fg.deobf("curse.maven:simple_voice_chat-416089:3306111")
+    runtimeOnly fg.deobf("curse.maven:simple_voice_chat-416089:${build_voicechat_version}")
+    compileOnly fg.deobf("curse.maven:simple_voice_chat-416089:${build_voicechat_version}")
 
     // utility / testing
 
     // GameMenuModOption
     // www.curseforge.com/minecraft/mc-mods/gamemenumodoption
     //runtimeOnly fg.deobf("curse.maven:gamemenumodoption:2990253") // 1.16.1
-    runtimeOnly fg.deobf("curse.maven:gamemenumodoption:3256467") // 1.16.5 - version 1.8 (3273863) has mixins that crash this dev env
+    runtimeOnly fg.deobf("curse.maven:gamemenumodoption:${build_modoption_version}") // 1.16.5 - version 1.8 (3273863) has mixins that crash this dev env
 
 }
 
 jar {
     manifest {
         attributes([
-                "Specification-Title": "ImmersiveTelephone",
-                "Specification-Vendor": "pieking1215",
-                "Specification-Version": "1", // We are version 1 of ourselves
-                "Implementation-Title": project.name,
+                "Specification-Title": mod_name,
+                "Specification-Vendor": "${mod_author}",
+                "Specification-Version": "1",
+                "Implementation-Title": mod_name,
                 "Implementation-Version": "${version}",
-                "Implementation-Vendor" :"pieking1215",
+                "Implementation-Vendor" :"${mod_author}",
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                "MixinConfigs": "immersive_telephones.mixins.json"
+                "MixinConfigs": "${mod_id}.mixins.json"
         ])
     }
 }
 
-// Example configuration to allow publishing using the maven-publish task
-// This is the preferred method to reobfuscate your jar file
-jar.finalizedBy('reobfJar')
+processResources {
+    inputs.property "version", project.version
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifact jar
-        }
+    from(sourceSets.main.resources.srcDirs) {
+        include 'META-INF/mods.toml'
+
+        expand  'mod_group': mod_group,
+                'mod_id': mod_id,
+                'mod_name': mod_name,
+                'mod_version': mod_version,
+                'mod_author': mod_author,
+                'minecraft_version': minecraft_version,
+                'forge_version': forge_version,
+                'voicechat_version': voicechat_version,
+                'ie_version': ie_version
     }
-    repositories {
-        maven {
-            url "file:///${project.projectDir}/mcmodsrepo"
-        }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'META-INF/mods.toml'
     }
 }
+
+jar.finalizedBy('reobfJar')
+
