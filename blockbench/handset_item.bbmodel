@@ -1,0 +1,84 @@
+{
+	"meta": {
+		"format_version": "3.6",
+		"creation_time": 1620544208,
+		"model_format": "java_block",
+		"box_uv": false
+	},
+	"name": "handset",
+	"parent": "",
+	"ambientocclusion": true,
+	"front_gui_light": true,
+	"visible_box": [1, 1, 0],
+	"resolution": {
+		"width": 16,
+		"height": 16
+	},
+	"elements": [
+		{
+			"name": "cube",
+			"rescale": false,
+			"from": [5, 2, 1],
+			"to": [11, 14, 3],
+			"autouv": 0,
+			"color": 5,
+			"locked": false,
+			"origin": [8, 0, 8],
+			"faces": {
+				"north": {"uv": [12, 2, 16, 14], "tint": 0, "texture": 0},
+				"east": {"uv": [11, 2, 14, 14], "tint": 0, "texture": 0},
+				"south": {"uv": [5, 2, 11, 14], "tint": 0, "texture": 0},
+				"west": {"uv": [2, 2, 5, 14], "tint": 0, "texture": 0},
+				"up": {"uv": [0, 0, 6, 3], "rotation": 180, "tint": 0, "texture": 0},
+				"down": {"uv": [0, 0, 6, 3], "rotation": 180, "tint": 0, "texture": 0}
+			},
+			"uuid": "e472f006-14a4-9331-8196-7558b70f92cf"
+		}
+	],
+	"outliner": ["e472f006-14a4-9331-8196-7558b70f92cf"],
+	"textures": [
+		{
+			"path": "..\\..\\src\\main\\resources\\assets\\immersive_telephones\\textures\\blocks\\telephone.png",
+			"name": "telephone.png",
+			"folder": "blocks",
+			"namespace": "immersive_telephones",
+			"id": "0",
+			"particle": true,
+			"visible": true,
+			"mode": "bitmap",
+			"saved": false,
+			"uuid": "c898e59d-8365-2dbc-1f16-39ea952377b4",
+			"source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABBklEQVQ4T7WTsctFABTFj9TbLTYjBtnsFiULi//CYLRZFEbDy26zSr1klr9CGSkpK4sv+vqW571Hr+/O9/w6nXsusa7rii+G+DfA/X5HURQQRRG+74MgiEOfhw7yPIeu67uAoigMwwCSJM8DLMtCHMe7YANlWfYypUMHsiyjrmsEQQDDMMCy7DUAz/NYlgVt2368z6EDjuPQNA3GcdwzeDeHAFVVUZYlHo8HNE27DtgC3IJ0HAdhGF4HTNMEhmFA0zTSNN07IEnS+TNum67rwvO8P1EURbBt+wnyssrzPENRFFRVtYtutxv6vn8K9e0vbJAkSdB1HQRBgGma5x18LMDvwtff+AN2zI3ReKKWFgAAAABJRU5ErkJggg=="
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [0, -90, 20],
+			"translation": [-5.75, -1.5, 2.75],
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"thirdperson_lefthand": {
+			"translation": [0, 0.5, 4.25],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -70, -14],
+			"translation": [-5, 5.75, 4.25]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -70, -14],
+			"translation": [-5, 5.75, 4.25]
+		},
+		"ground": {
+			"rotation": [-90, 0, 0],
+			"translation": [0, 3, 0]
+		},
+		"gui": {
+			"scale": [1, 1, 4]
+		},
+		"fixed": {
+			"rotation": [0, -180, 0],
+			"translation": [0, 0, -7]
+		}
+	}
+}

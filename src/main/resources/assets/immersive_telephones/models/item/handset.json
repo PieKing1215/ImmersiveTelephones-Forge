@@ -1,0 +1,52 @@
+{
+	"textures": {
+		"0": "immersive_telephones:blocks/telephone",
+		"particle": "immersive_telephones:blocks/telephone"
+	},
+	"elements": [
+		{
+			"from": [5, 2, 1],
+			"to": [11, 14, 3],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
+			"faces": {
+				"north": {"uv": [12, 2, 16, 14], "texture": "#0", "tintindex": 0},
+				"east": {"uv": [11, 2, 14, 14], "texture": "#0", "tintindex": 0},
+				"south": {"uv": [5, 2, 11, 14], "texture": "#0", "tintindex": 0},
+				"west": {"uv": [2, 2, 5, 14], "texture": "#0", "tintindex": 0},
+				"up": {"uv": [0, 0, 6, 3], "rotation": 180, "texture": "#0", "tintindex": 0},
+				"down": {"uv": [0, 0, 6, 3], "rotation": 180, "texture": "#0", "tintindex": 0}
+			}
+		}
+	],
+	"gui_light": "front",
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [0, -90, 20],
+			"translation": [-5.75, -1.5, 2.75],
+			"scale": [0.6, 0.6, 0.6]
+		},
+		"thirdperson_lefthand": {
+			"translation": [0, 0.5, 4.25],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"firstperson_righthand": {
+			"rotation": [0, -70, -14],
+			"translation": [-5, 5.75, 4.25]
+		},
+		"firstperson_lefthand": {
+			"rotation": [0, -70, -14],
+			"translation": [-5, 5.75, 4.25]
+		},
+		"ground": {
+			"rotation": [-90, 0, 0],
+			"translation": [0, 3, 0]
+		},
+		"gui": {
+			"scale": [1, 1, 4]
+		},
+		"fixed": {
+			"rotation": [0, -180, 0],
+			"translation": [0, 0, -7]
+		}
+	}
+}

@@ -1,0 +1,173 @@
+buildscript {
+    repositories {
+        maven { url = "https://files.minecraftforge.net/maven" }
+        maven { url = "https://repo.spongepowered.org/maven" }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'org.spongepowered', name: 'mixingradle', version: '0.7-SNAPSHOT'
+    }
+}
+
+plugins {
+    id("com.wynprice.cursemaven") version("2.1.1")
+}
+
+repositories {
+    maven {	name = "BlameJared";	url = "https://maven.blamejared.com/" }         // IE & CT Files
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'maven-publish'
+apply plugin: 'org.spongepowered.mixin'
+
+version = '1.16-0.0.0'
+group = 'me.pieking1215.immersive_telephones'
+archivesBaseName = 'ImmersiveTelephones'
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+
+mixin {
+    add sourceSets.main, "immersive_telephones.refmap.json"
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs = [
+                    "$rootDir/src/main/resources",
+                    "$rootDir/src/generated/resources"
+            ]
+        }
+    }
+    datagen {
+        compileClasspath += main.compileClasspath
+        runtimeClasspath += main.runtimeClasspath
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+    }
+}
+
+minecraft {
+    mappings channel: 'snapshot', version: '20210309-1.16.5'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            properties 'mixin.debug.export': 'true'
+            arg "-mixin.config=immersive_telephones.mixins.json"
+            property 'fml.earlyprogresswindow', 'false'
+            property 'mixin.env.disableRefMap', 'true'
+            arg "--username=Dev" + (new Random()).nextInt(999)
+
+            mods {
+                immersive_telephones {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            arg "-mixin.config=immersive_telephones.mixins.json"
+            arg "-Dmixin.debug.export=true"
+            property 'fml.earlyprogresswindow', 'false'
+            property 'mixin.env.disableRefMap', 'true'
+
+            mods {
+                immersive_telephones {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            args '--mod', 'immersive_telephones',
+                    '--all',
+                    '--output', file('src/generated/resources/'),
+                    '--existing', sourceSets.main.resources.srcDirs[0],
+                    '--existing-mod', 'immersiveengineering'
+            arg "-mixin.config=immersive_telephones.mixins.json"
+            property 'mixin.env.disableRefMap', 'true'
+
+            mods {
+                immersive_telephones {
+                    source sourceSets.main
+                    source sourceSets.datagen
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    //minecraft 'net.minecraftforge:forge:1.16.1-32.0.108' // 1.16.1
+    minecraft 'net.minecraftforge:forge:1.16.5-36.1.4' // 1.16.5
+
+    // Cloth Config API (Forge)
+    // www.curseforge.com/minecraft/mc-mods/cloth-config-forge
+    runtimeOnly fg.deobf("curse.maven:cloth-config-forge:3155284")
+    compileOnly fg.deobf("curse.maven:cloth-config-forge:3155284")
+
+    // Immersive Engineering
+    // www.curseforge.com/minecraft/mc-mods/immersive-engineering
+    runtimeOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:1.16.5-4.2.4-134.26")
+    compileOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:1.16.5-4.2.4-134.26")
+
+    datagenRuntimeOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:1.16.5-4.2.4-134.26:datagen")
+    compileOnly fg.deobf("blusunrize.immersiveengineering:ImmersiveEngineering:1.16.5-4.2.4-134.26:datagen")
+
+    // Simple Voice Chat
+    // www.curseforge.com/minecraft/mc-mods/simple-voice-chat
+    runtimeOnly fg.deobf("curse.maven:simple_voice_chat-416089:3286777")
+    compileOnly fg.deobf("curse.maven:simple_voice_chat-416089:3286777")
+
+    // utility / testing
+
+    // GameMenuModOption
+    // www.curseforge.com/minecraft/mc-mods/gamemenumodoption
+    //runtimeOnly fg.deobf("curse.maven:gamemenumodoption:2990253") // 1.16.1
+    runtimeOnly fg.deobf("curse.maven:gamemenumodoption:3256467") // 1.16.5 - version 1.8 (3273863) has mixins that crash this dev env
+
+}
+
+jar {
+    manifest {
+        attributes([
+                "Specification-Title": "ImmersiveTelephone",
+                "Specification-Vendor": "pieking1215",
+                "Specification-Version": "1", // We are version 1 of ourselves
+                "Implementation-Title": project.name,
+                "Implementation-Version": "${version}",
+                "Implementation-Vendor" :"pieking1215",
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+                "MixinConfigs": "immersive_telephones.mixins.json"
+        ])
+    }
+}
+
+// Example configuration to allow publishing using the maven-publish task
+// This is the preferred method to reobfuscate your jar file
+jar.finalizedBy('reobfJar')
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact jar
+        }
+    }
+    repositories {
+        maven {
+            url "file:///${project.projectDir}/mcmodsrepo"
+        }
+    }
+}

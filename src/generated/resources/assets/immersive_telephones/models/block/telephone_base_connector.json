@@ -1,0 +1,10 @@
+{
+  "textures": {
+    "particle": "immersive_telephones:blocks/telephone"
+  },
+  "loader": "immersiveengineering:connector",
+  "base_model": "immersive_telephones:block/telephone_base",
+  "layers": [
+    "cutout"
+  ]
+}

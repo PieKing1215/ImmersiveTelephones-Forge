@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "package": "me.pieking1215.immersive_telephones.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "immersive_telephones.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+    "client.MixinClientAccessor",
+    "client.MixinAudioChannelAccessor",
+    "client.MixinAudioChannel",
+    "client.MixinBipedModel",
+    "client.MixinPlayerRenderer"
+  ],
+  "server": [
+    "server.MixinServer"
+  ],
+  "minVersion": "0.8"
+}

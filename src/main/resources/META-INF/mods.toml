@@ -1,0 +1,45 @@
+modLoader="javafml"
+loaderVersion="[32,)" # 1.16+
+license="GPL v3.0"
+issueTrackerURL=""
+[[mods]]
+modId="immersive_telephones"
+version="0.0.0"
+displayName="Immersive Telephones"
+displayURL=""
+logoFile="logo.png"
+#credits=""
+authors="PieKing1215"
+description='''
+Telephones for proximity voice chat'''
+
+[[dependencies.immersive_telephones]]
+    modId="forge"
+    mandatory=true
+    versionRange="[32,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.immersive_telephones]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16.1,]"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.immersive_telephones]]
+    modId="cloth-config"
+    mandatory=true
+    versionRange="[4.0,)"
+    ordering="NONE"
+    side="CLIENT"
+[[dependencies.immersive_telephones]]
+    modId="voicechat"
+    mandatory=true
+    versionRange="[1.3.1,)"
+    ordering="NONE"
+    side="BOTH"
+[[dependencies.immersive_telephones]]
+    modId="immersiveengineering"
+    mandatory=true
+    versionRange="[1.16.5-4.2.4-134,)"
+    ordering="NONE"
+    side="BOTH"
