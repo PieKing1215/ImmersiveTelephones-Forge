@@ -24,11 +24,13 @@ public class MixinBipedModel<T extends LivingEntity> implements ICustomPoseHandl
         }
     }
 
+    @SuppressWarnings("unused")
     @Override
     public void setHoldingPhone(boolean holdingPhone) {
         this.holdingPhone = holdingPhone;
     }
 
+    @SuppressWarnings("unused")
     @Override
     public boolean getHoldingPhone() {
         return this.holdingPhone;

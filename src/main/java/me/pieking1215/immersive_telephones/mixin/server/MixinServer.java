@@ -5,7 +5,7 @@ import de.maxhenkel.voicechat.voice.common.NetworkMessage;
 import de.maxhenkel.voicechat.voice.common.SoundPacket;
 import de.maxhenkel.voicechat.voice.server.ClientConnection;
 import de.maxhenkel.voicechat.voice.server.Server;
-import me.pieking1215.immersive_telephones.tile_entity.TelephoneTileEntity;
+import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import org.spongepowered.asm.mixin.Mixin;

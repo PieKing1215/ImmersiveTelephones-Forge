@@ -2,8 +2,8 @@ package me.pieking1215.immersive_telephones.data.client;
 
 import blusunrize.immersiveengineering.data.blockstates.ConnectorBlockBuilder;
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
-import me.pieking1215.immersive_telephones.block.BlockRegister;
-import me.pieking1215.immersive_telephones.block.TelephoneBlock;
+import me.pieking1215.immersive_telephones.common.block.BlockRegister;
+import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.util.ResourceLocation;
@@ -48,6 +48,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
             builder.getModels().forEach((partialBlockstate, configuredModelList) -> {
                 try {
+                    //noinspection unchecked
                     ((List<ConfiguredModel>) f_models.get(configuredModelList)).forEach(m -> {
                         try {
                             f_uvLock.set(m, false);

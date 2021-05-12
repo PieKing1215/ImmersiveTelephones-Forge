@@ -13,6 +13,7 @@ import javax.sound.sampled.SourceDataLine;
 import java.util.UUID;
 import java.util.concurrent.BlockingQueue;
 
+@SuppressWarnings("unused")
 @Mixin(AudioChannel.class)
 public interface MixinAudioChannelAccessor {
 

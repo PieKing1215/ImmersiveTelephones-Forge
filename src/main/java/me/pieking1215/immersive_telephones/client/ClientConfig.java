@@ -1,8 +1,8 @@
 package me.pieking1215.immersive_telephones.client;
 
-public class ClientConfig {
+class ClientConfig {
 
-    public static void registerClothConfig() {
+    static void registerClothConfig() {
         // TODO
 //        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (client, parent) -> {
 //            ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parent).setTitle(new TranslationTextComponent("config.immersive_telephones.title"));
@@ -40,7 +40,7 @@ public class ClientConfig {
 //
 //            general.addEntry(eb.startBooleanToggle(new TranslationTextComponent("config.immersive_telephones.disableAnimation"), Config.getBoolSafe(Config.GENERAL.disableAnimation, false)).setDefaultValue(false).setSaveConsumer(Config.GENERAL.disableAnimation::set)/*.setTooltip(Arrays.asList(I18n.format("tooltip.config.immersive_telephones.disableAnimation").split("\n")).stream().map(StringTextComponent::new).toArray(StringTextComponent[]::new))*/.build());
 //
-//            return builder.setSavingRunnable(Config.spec::save).build();
+//            return builder.setSavingRunnable(Config.SPEC::save).build();
 //        });
     }
 
