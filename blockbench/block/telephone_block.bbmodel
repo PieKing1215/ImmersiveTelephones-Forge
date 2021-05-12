@@ -945,7 +945,7 @@
 	],
 	"textures": [
 		{
-			"path": "..\\..\\src\\main\\resources\\assets\\immersive_telephones\\textures\\blocks\\telephone.png",
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\textures\\blocks\\telephone.png",
 			"name": "telephone.png",
 			"folder": "blocks",
 			"namespace": "immersive_telephones",
@@ -958,7 +958,7 @@
 			"source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABBklEQVQ4T7WTsctFABTFj9TbLTYjBtnsFiULi//CYLRZFEbDy26zSr1klr9CGSkpK4sv+vqW571Hr+/O9/w6nXsusa7rii+G+DfA/X5HURQQRRG+74MgiEOfhw7yPIeu67uAoigMwwCSJM8DLMtCHMe7YANlWfYypUMHsiyjrmsEQQDDMMCy7DUAz/NYlgVt2368z6EDjuPQNA3GcdwzeDeHAFVVUZYlHo8HNE27DtgC3IJ0HAdhGF4HTNMEhmFA0zTSNN07IEnS+TNum67rwvO8P1EURbBt+wnyssrzPENRFFRVtYtutxv6vn8K9e0vbJAkSdB1HQRBgGma5x18LMDvwtff+AN2zI3ReKKWFgAAAABJRU5ErkJggg=="
 		},
 		{
-			"path": "..\\..\\src\\main\\resources\\assets\\immersive_telephones\\textures\\blocks\\numbers.png",
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\textures\\blocks\\numbers.png",
 			"name": "numbers.png",
 			"folder": "blocks",
 			"namespace": "immersive_telephones",

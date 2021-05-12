@@ -38,7 +38,7 @@
 	"outliner": ["e472f006-14a4-9331-8196-7558b70f92cf"],
 	"textures": [
 		{
-			"path": "..\\..\\src\\main\\resources\\assets\\immersive_telephones\\textures\\blocks\\telephone.png",
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\textures\\blocks\\telephone.png",
 			"name": "telephone.png",
 			"folder": "blocks",
 			"namespace": "immersive_telephones",
