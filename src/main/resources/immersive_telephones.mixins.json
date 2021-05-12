@@ -10,7 +10,9 @@
     "client.MixinAudioChannelAccessor",
     "client.MixinAudioChannel",
     "client.MixinBipedModel",
-    "client.MixinPlayerRenderer"
+    "client.MixinPlayerRenderer",
+    "client.MixinHeldItemLayer",
+    "client.MixinMatrixStackAccessor"
   ],
   "server": [
     "server.MixinServer"

@@ -1,7 +1,7 @@
 {
 	"meta": {
 		"format_version": "3.6",
-		"creation_time": 1620544208,
+		"creation_time": 1620809902,
 		"model_format": "java_block",
 		"box_uv": false
 	},
@@ -58,8 +58,9 @@
 			"scale": [0.6, 0.6, 0.6]
 		},
 		"thirdperson_lefthand": {
-			"translation": [0, 0.5, 4.25],
-			"scale": [0.5, 0.5, 0.5]
+			"rotation": [0, -90, 20],
+			"translation": [-5.75, -1.5, 2.75],
+			"scale": [0.6, 0.6, 0.6]
 		},
 		"firstperson_righthand": {
 			"rotation": [0, -70, -14],
@@ -75,6 +76,10 @@
 		},
 		"gui": {
 			"scale": [1, 1, 4]
+		},
+		"head": {
+			"rotation": [17, -103, 0],
+			"translation": [1.75, 0, -6.75]
 		},
 		"fixed": {
 			"rotation": [0, -180, 0],

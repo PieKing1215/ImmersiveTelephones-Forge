@@ -5,6 +5,7 @@ import me.pieking1215.immersive_telephones.common.item.HandsetItem;
 import net.minecraft.client.entity.player.AbstractClientPlayerEntity;
 import net.minecraft.client.renderer.entity.PlayerRenderer;
 import net.minecraft.util.Hand;
+import net.minecraft.util.HandSide;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -15,10 +16,16 @@ class MixinPlayerRenderer {
 
     @Inject(method = "setModelVisibilities", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/renderer/entity/PlayerRenderer;func_241741_a_(Lnet/minecraft/client/entity/player/AbstractClientPlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/client/renderer/entity/model/BipedModel$ArmPose;"))
     private void injectChoosePose(AbstractClientPlayerEntity clientPlayer, CallbackInfo ci){
-        if(clientPlayer.getHeldItem(Hand.MAIN_HAND).getItem() instanceof HandsetItem) {
-            ((ICustomPoseHandler) ((PlayerRenderer) (Object) this).getEntityModel()).setHoldingPhone(true);
+        if(clientPlayer.getHeldItem(clientPlayer.getPrimaryHand() == HandSide.RIGHT ? Hand.MAIN_HAND : Hand.OFF_HAND).getItem() instanceof HandsetItem) {
+            ((ICustomPoseHandler) ((PlayerRenderer) (Object) this).getEntityModel()).setHoldingPhoneRightHand(true);
         }else{
-            ((ICustomPoseHandler) ((PlayerRenderer) (Object) this).getEntityModel()).setHoldingPhone(false);
+            ((ICustomPoseHandler) ((PlayerRenderer) (Object) this).getEntityModel()).setHoldingPhoneRightHand(false);
+        }
+
+        if(clientPlayer.getHeldItem(clientPlayer.getPrimaryHand() == HandSide.LEFT ? Hand.MAIN_HAND : Hand.OFF_HAND).getItem() instanceof HandsetItem) {
+            ((ICustomPoseHandler) ((PlayerRenderer) (Object) this).getEntityModel()).setHoldingPhoneLeftHand(true);
+        }else{
+            ((ICustomPoseHandler) ((PlayerRenderer) (Object) this).getEntityModel()).setHoldingPhoneLeftHand(false);
         }
     }
 }

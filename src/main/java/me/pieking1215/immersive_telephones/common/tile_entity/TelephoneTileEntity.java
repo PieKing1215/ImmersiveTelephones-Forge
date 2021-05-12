@@ -33,6 +33,7 @@ import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
+import net.minecraft.util.HandSide;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -42,6 +43,8 @@ import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.common.util.Constants;
 
@@ -50,6 +53,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class TelephoneTileEntity extends TileEntity implements IImmersiveConnectable, ITickableTileEntity {
@@ -77,6 +81,12 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     private int lastButton = -1;
     private int missingHandsetEntityID = -1;
 
+    // TODO: this whole concept is insanely stupid on so many levels
+    @OnlyIn(Dist.CLIENT)
+    public Object clientHandItemMatrix4f = null;
+    @OnlyIn(Dist.CLIENT)
+    public Object clientCameraMatrix4f = null;
+
     public TelephoneTileEntity() {
         super(TileEntityRegister.TELEPHONE.get());
         tel_UUID = UUID.randomUUID();
@@ -97,6 +107,11 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
                 sw.getLoadedEntitiesWithinAABB(HandsetEntity.class, AxisAlignedBB.fromVector(Vector3d.copyCentered(getPos())).grow(20)).stream()
                         .filter(e -> getPos().equals(HandsetItem.getConnectedPosition(e.getItem())))
                         .findFirst().ifPresent(this::disconnectHandset);
+
+                sw.getLoadedEntitiesWithinAABB(ServerPlayerEntity.class, AxisAlignedBB.fromVector(Vector3d.copyCentered(getPos())).grow(20)).stream()
+                        .filter(e -> getPos().equals(HandsetItem.getConnectedPosition(e.getHeldItemMainhand()))
+                                  || getPos().equals(HandsetItem.getConnectedPosition(e.getHeldItemOffhand())))
+                        .findFirst().ifPresent(this::reconnectHandset);
             }
 
             if(!dial.isEmpty() && world.getGameTime() - lastDial > 20 * 2){
@@ -481,6 +496,10 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
 
         handsetEntity = entityItem;
 
+        if(handsetEntity instanceof HandsetEntity){
+            HandsetItem.setColor(((HandsetEntity)handsetEntity).getItem(), this.color);
+        }
+
         world.setBlockState(pos, this.getBlockState().with(TelephoneBlock.HANDSET, false));
         world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
     }
@@ -751,6 +770,8 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
 
         this.color = (((combinedR << 8) + combinedG) << 8) + combinedB;
 
+        findHandsetItem().ifPresent(is -> HandsetItem.setColor(is, this.color));
+
         world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
 
     }
@@ -760,6 +781,38 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
 
         this.color = 0xffffff;
 
+        findHandsetItem().ifPresent(is -> HandsetItem.setColor(is, this.color));
+
         world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
     }
+
+    @Nonnull
+    public HandSide getHoldingHand(PlayerEntity holder) {
+        if(handsetEntity != holder) return holder.getPrimaryHand();
+
+        if(isTheHandset(holder.getHeldItemMainhand())){
+            return holder.getPrimaryHand();
+        }else if(isTheHandset(holder.getHeldItemOffhand())){
+            return holder.getPrimaryHand().opposite();
+        }
+
+        return holder.getPrimaryHand();
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public Optional<ItemStack> findHandsetItem(){
+        if(handsetEntity instanceof HandsetEntity){
+            return Optional.of(((HandsetEntity)handsetEntity).getItem());
+        }else if(handsetEntity instanceof PlayerEntity){
+            PlayerEntity pl = (PlayerEntity)handsetEntity;
+
+            if(isTheHandset(pl.getHeldItemMainhand())){
+                return Optional.of(pl.getHeldItemMainhand());
+            }else if(isTheHandset(pl.getHeldItemOffhand())){
+                return Optional.of(pl.getHeldItemOffhand());
+            }
+        }
+        return Optional.empty();
+    }
+
 }
