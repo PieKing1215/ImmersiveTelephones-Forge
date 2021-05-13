@@ -1,7 +1,6 @@
 package me.pieking1215.immersive_telephones.common.entity;
 
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
-import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
@@ -14,7 +13,6 @@ import net.minecraft.network.IPacket;
 import net.minecraft.particles.BlockParticleData;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
@@ -95,21 +93,8 @@ public class HandsetEntity extends ItemEntity {
 
                 player.onItemPickup(this, i);
 
-                if(item instanceof HandsetItem){
-                    BlockPos telPos = HandsetItem.getConnectedPosition(itemstack);
-
-                    if(telPos != null) {
-                        //noinspection deprecation
-                        if (world.isBlockLoaded(telPos)) {
-
-                            TileEntity te = world.getTileEntity(telPos);
-                            if (te instanceof TelephoneTileEntity) {
-                                TelephoneTileEntity tel = (TelephoneTileEntity) te;
-                                tel.reconnectHandset((ServerPlayerEntity) player);
-                            }
-                        }
-                    }
-                }
+                HandsetItem.findConnectedTE(itemstack, this.world).ifPresent(tel ->
+                        tel.reconnectHandset((ServerPlayerEntity) player));
 
                 this.remove();
 

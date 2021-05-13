@@ -105,12 +105,12 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
                 // the handset entity got lost
 
                 sw.getLoadedEntitiesWithinAABB(HandsetEntity.class, AxisAlignedBB.fromVector(Vector3d.copyCentered(getPos())).grow(20)).stream()
-                        .filter(e -> getPos().equals(HandsetItem.getConnectedPosition(e.getItem())))
+                        .filter(e -> isTheHandset(e.getItem()))
                         .findFirst().ifPresent(this::disconnectHandset);
 
                 sw.getLoadedEntitiesWithinAABB(ServerPlayerEntity.class, AxisAlignedBB.fromVector(Vector3d.copyCentered(getPos())).grow(20)).stream()
-                        .filter(e -> getPos().equals(HandsetItem.getConnectedPosition(e.getHeldItemMainhand()))
-                                  || getPos().equals(HandsetItem.getConnectedPosition(e.getHeldItemOffhand())))
+                        .filter(e -> isTheHandset(e.getHeldItemMainhand())
+                                  || isTheHandset(e.getHeldItemOffhand()))
                         .findFirst().ifPresent(this::reconnectHandset);
             }
 
@@ -518,12 +518,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     private ItemStack createHandset(){
         ItemStack stack = new ItemStack(ItemRegister.TELEPHONE_HANDSET.get(), 1);
 
-        CompoundNBT nbt = new CompoundNBT();
-        nbt.putInt("connected_x", this.getPos().getX());
-        nbt.putInt("connected_y", this.getPos().getY());
-        nbt.putInt("connected_z", this.getPos().getZ());
-        nbt.putInt("color", this.getColor());
-        stack.setTag(nbt);
+        HandsetItem.write(stack, this.getPos(), this.getColor());
 
         return stack;
     }

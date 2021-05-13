@@ -1,10 +1,12 @@
 package me.pieking1215.immersive_telephones.common.item;
 
 import com.google.common.base.Preconditions;
+import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -13,6 +15,7 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Optional;
 
 public class HandsetItem extends Item {
     HandsetItem(Properties properties) {
@@ -28,6 +31,21 @@ public class HandsetItem extends Item {
         }
     }
 
+    public static void write(ItemStack stack, BlockPos pos, int color){
+        CompoundNBT nbt = new CompoundNBT();
+
+        if(pos != null) {
+            nbt.putInt("connected_x", pos.getX());
+            nbt.putInt("connected_y", pos.getY());
+            nbt.putInt("connected_z", pos.getZ());
+        }
+
+        nbt.putInt("color", color);
+
+        stack.setTag(nbt);
+    }
+
+    @SuppressWarnings("WeakerAccess")
     public static BlockPos getConnectedPosition(ItemStack stack){
         if(!(stack.getItem() instanceof HandsetItem)) return null;
 
@@ -44,6 +62,34 @@ public class HandsetItem extends Item {
         }
 
         return null;
+    }
+
+    public static Optional<TelephoneTileEntity> findConnectedTE(ItemStack stack, World world){
+        BlockPos telPos = HandsetItem.getConnectedPosition(stack);
+
+        if(telPos == null) {
+            // invalid item
+            return Optional.empty();
+        }
+
+        if(world == null){
+            // invalid item
+            return Optional.empty();
+        }
+
+        //noinspection deprecation
+        if(!world.isBlockLoaded(telPos)){
+            // the position this is supposed to be connected to is not chunk loaded
+            return Optional.empty();
+        }
+
+        TileEntity te = world.getTileEntity(telPos);
+        if(!(te instanceof TelephoneTileEntity)){
+            // there is no telephone here
+            return Optional.empty();
+        }
+
+        return Optional.of((TelephoneTileEntity) te);
     }
 
     public static void setColor(ItemStack stack, int color){
