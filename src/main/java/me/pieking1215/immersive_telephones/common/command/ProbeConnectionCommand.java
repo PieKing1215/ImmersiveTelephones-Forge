@@ -21,10 +21,10 @@ public class ProbeConnectionCommand {
             BlockPos pos = BlockPosArgument.getBlockPos(source, "position");
             LocalWireNetwork net = GlobalWireNetwork.getNetwork(source.getSource().getWorld()).getNullableLocalNet(pos);
             if(net == null){
-                source.getSource().sendFeedback(new StringTextComponent("No LocalWireNetwork at " + pos.toString()), true);
+                source.getSource().sendFeedback(new StringTextComponent("No LocalWireNetwork at " + pos), true);
                 return 1;
             }else{
-                source.getSource().sendFeedback(new StringTextComponent("Connections for LocalWireNetwork at " + pos.toString() + ":"), true);
+                source.getSource().sendFeedback(new StringTextComponent("Connections for LocalWireNetwork at " + pos + ":"), true);
                 int i = 0;
                 for(BlockPos p : net.getConnectors()){
                     String s = i + ") " + p.toString();

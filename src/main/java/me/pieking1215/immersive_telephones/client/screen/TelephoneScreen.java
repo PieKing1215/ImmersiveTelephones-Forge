@@ -47,7 +47,7 @@ public class TelephoneScreen extends Screen {
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 
-        Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, "telephone \"" + tileEntity.getName() + "\"" + " " + tileEntity.getUUID().toString(), 10, 10, 0xffffff);
+        Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, "telephone \"" + tileEntity.getName() + "\"" + " " + tileEntity.getUUID(), 10, 10, 0xffffff);
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }

@@ -102,8 +102,8 @@ public class TelephoneTileEntityRenderer extends TileEntityRenderer<TelephoneTil
             Matrix4f itemMatrix = (Matrix4f) te.clientHandItemMatrix4f;
             Matrix4f cameraMatrix = (Matrix4f) te.clientCameraMatrix4f;
 
-            Preconditions.checkState(itemMatrix != null);
-            Preconditions.checkState(cameraMatrix != null);
+            Preconditions.checkNotNull(itemMatrix);
+            Preconditions.checkNotNull(cameraMatrix);
 
             cameraMatrix.invert();
 

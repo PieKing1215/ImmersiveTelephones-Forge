@@ -16,16 +16,14 @@ class MixinPlayerRenderer {
 
     @Inject(method = "setModelVisibilities", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/renderer/entity/PlayerRenderer;func_241741_a_(Lnet/minecraft/client/entity/player/AbstractClientPlayerEntity;Lnet/minecraft/util/Hand;)Lnet/minecraft/client/renderer/entity/model/BipedModel$ArmPose;"))
     private void injectChoosePose(AbstractClientPlayerEntity clientPlayer, CallbackInfo ci){
-        if(clientPlayer.getHeldItem(clientPlayer.getPrimaryHand() == HandSide.RIGHT ? Hand.MAIN_HAND : Hand.OFF_HAND).getItem() instanceof HandsetItem) {
-            ((ICustomPoseHandler) ((PlayerRenderer) (Object) this).getEntityModel()).setHoldingPhoneRightHand(true);
-        }else{
-            ((ICustomPoseHandler) ((PlayerRenderer) (Object) this).getEntityModel()).setHoldingPhoneRightHand(false);
-        }
+        ICustomPoseHandler poser = ((ICustomPoseHandler) ((PlayerRenderer) (Object) this).getEntityModel());
 
-        if(clientPlayer.getHeldItem(clientPlayer.getPrimaryHand() == HandSide.LEFT ? Hand.MAIN_HAND : Hand.OFF_HAND).getItem() instanceof HandsetItem) {
-            ((ICustomPoseHandler) ((PlayerRenderer) (Object) this).getEntityModel()).setHoldingPhoneLeftHand(true);
-        }else{
-            ((ICustomPoseHandler) ((PlayerRenderer) (Object) this).getEntityModel()).setHoldingPhoneLeftHand(false);
-        }
+        poser.setHoldingPhoneRightHand(
+                clientPlayer.getHeldItem(clientPlayer.getPrimaryHand() == HandSide.RIGHT ? Hand.MAIN_HAND : Hand.OFF_HAND)
+                        .getItem() instanceof HandsetItem);
+
+        poser.setHoldingPhoneLeftHand(
+                clientPlayer.getHeldItem(clientPlayer.getPrimaryHand() == HandSide.LEFT ? Hand.MAIN_HAND : Hand.OFF_HAND)
+                        .getItem() instanceof HandsetItem);
     }
 }

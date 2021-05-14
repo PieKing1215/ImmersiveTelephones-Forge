@@ -55,7 +55,7 @@ public class TelephoneAudioChannel extends AudioChannel {
     private float calcVolume(){
         if(shouldBeMono()) return 1f;
 
-        Preconditions.checkState(Minecraft.getInstance().player != null);
+        Preconditions.checkNotNull(Minecraft.getInstance().player);
 
         float distance = (float) getPlaybackPosition().distanceTo(Minecraft.getInstance().player.getPositionVec());
         // TODO: different fading curve for phone

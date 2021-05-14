@@ -36,6 +36,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
@@ -94,7 +95,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
 
     @Override
     public void tick() {
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         if(!world.isRemote) {
             // server
@@ -141,10 +142,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
                 if(handsetEntity instanceof ServerPlayerEntity) {
                     ServerPlayerEntity pl = (ServerPlayerEntity) handsetEntity;
 
-                    boolean dropIfPresent = false;
-                    if (this.getPos().distanceSq(pl.getPositionVec(), true) > 10 * 10) {
-                        dropIfPresent = true;
-                    }
+                    boolean dropIfPresent = this.getPos().distanceSq(pl.getPositionVec(), true) > 10 * 10; //TODO: config
 
                     //boolean found = false;
 
@@ -313,7 +311,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
         ringTime = nbt.getLong("ringTime");
         inCall = nbt.getBoolean("inCall");
 
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         if(nbt.contains("handsetEntity")){
             handsetEntity = world.getEntityByID(nbt.getInt("handsetEntity"));
@@ -359,7 +357,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
         ringTime = nbt.getLong("ringTime");
         inCall = nbt.getBoolean("inCall");
 
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         if(nbt.contains("handsetEntity")){
             handsetEntity = world.getEntityByID(nbt.getInt("handsetEntity"));
@@ -388,7 +386,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     }
 
     public void beingCalled(TelephoneTileEntity calledBy) {
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         if(!world.isRemote){
             // server side
@@ -410,7 +408,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     }
 
     public void answerPhone(ServerPlayerEntity player) {
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         ringTime = -1;
 
@@ -456,7 +454,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
 
     @SuppressWarnings("WeakerAccess")
     public void addToCall(TelephoneTileEntity other){
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         if(other == this || inCallWith.contains(other)){
             // bonus check because I definitely got the logic in answerPhone wrong
@@ -470,7 +468,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     }
 
     public void pickUpHandset(ServerPlayerEntity player) {
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         handsetEntity = player;
 
@@ -483,7 +481,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     }
 
     public void reconnectHandset(ServerPlayerEntity player){
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         handsetEntity = player;
 
@@ -492,7 +490,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     }
 
     public void disconnectHandset(Entity entityItem) {
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         handsetEntity = entityItem;
 
@@ -506,7 +504,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
 
     public boolean isTheHandset(ItemStack stack){
         if(stack.getItem() instanceof HandsetItem && stack.hasTag()) {
-            Preconditions.checkState(stack.getTag() != null);
+            Preconditions.checkNotNull(stack.getTag());
             return stack.getTag().getInt("connected_x") == getPos().getX()
                 && stack.getTag().getInt("connected_y") == getPos().getY()
                 && stack.getTag().getInt("connected_z") == getPos().getZ();
@@ -524,7 +522,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     }
 
     public void endCall() {
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         inCall = false;
         handsetEntity = null;
@@ -577,7 +575,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     }
 
     public void pressButton(ServerPlayerEntity player, int i) {
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         if(i == lastButton && world.getGameTime() - lastDial < 5) return;
 
@@ -631,7 +629,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
                 break;
         }
 
-        player.sendMessage(new StringTextComponent("press button " + i + " \"" + dial + "\""), null);
+        player.sendMessage(new StringTextComponent("press button " + i + " \"" + dial + "\""), Util.DUMMY_UUID);
 
         lastDial = world.getGameTime();
         lastButton = i;
@@ -693,21 +691,21 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     @Override
     public void onLoad() {
         super.onLoad();
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         GlobalWireNetwork.getNetwork(world).onConnectorLoad(this, world);
     }
 
     @Nonnull
     public IModelData getModelData() {
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         return CombinedModelData.combine(new SinglePropertyModelData<>(ConnectorTileHelper.genConnBlockState(this.world, this), IEProperties.Model.CONNECTIONS), super.getModelData());
     }
 
     @Override
     public void remove() {
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         if(!world.isRemote){
             // server
@@ -737,7 +735,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     }
 
     public void dyed(DyeColor color) {
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         float[] newColor = color.getColorComponentValues();
 
@@ -772,7 +770,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     }
 
     public void clearDye() {
-        Preconditions.checkState(world != null);
+        Preconditions.checkNotNull(world);
 
         this.color = 0xffffff;
 

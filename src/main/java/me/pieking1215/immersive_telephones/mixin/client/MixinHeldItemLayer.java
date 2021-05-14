@@ -17,7 +17,7 @@ import java.util.Deque;
 import java.util.Iterator;
 
 @Mixin(HeldItemLayer.class)
-class MixinHeldItemlayer {
+class MixinHeldItemLayer {
 
     @Inject(method = "func_229135_a_", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FirstPersonRenderer;renderItemSide(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/renderer/model/ItemCameraTransforms$TransformType;ZLcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;I)V"))
     private void injectHeldItemRender(LivingEntity entity, ItemStack stack, ItemCameraTransforms.TransformType p_229135_3_, HandSide p_229135_4_, MatrixStack p_229135_5_, IRenderTypeBuffer p_229135_6_, int p_229135_7_, CallbackInfo ci){

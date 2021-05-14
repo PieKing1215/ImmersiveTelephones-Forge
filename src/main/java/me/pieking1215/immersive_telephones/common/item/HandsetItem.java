@@ -34,11 +34,12 @@ public class HandsetItem extends Item {
     public static void write(ItemStack stack, BlockPos pos, int color){
         CompoundNBT nbt = new CompoundNBT();
 
-        if(pos != null) {
-            nbt.putInt("connected_x", pos.getX());
-            nbt.putInt("connected_y", pos.getY());
-            nbt.putInt("connected_z", pos.getZ());
-        }
+        Preconditions.checkNotNull(stack);
+        Preconditions.checkNotNull(pos);
+
+        nbt.putInt("connected_x", pos.getX());
+        nbt.putInt("connected_y", pos.getY());
+        nbt.putInt("connected_z", pos.getZ());
 
         nbt.putInt("color", color);
 
@@ -46,13 +47,14 @@ public class HandsetItem extends Item {
     }
 
     @SuppressWarnings("WeakerAccess")
+    @Nullable
     public static BlockPos getConnectedPosition(ItemStack stack){
         if(!(stack.getItem() instanceof HandsetItem)) return null;
 
         if (stack.hasTag()) {
             CompoundNBT nbt = stack.getTag();
 
-            Preconditions.checkState(nbt != null);
+            Preconditions.checkNotNull(nbt);
 
             return new BlockPos(
                     nbt.getInt("connected_x"),
@@ -72,10 +74,7 @@ public class HandsetItem extends Item {
             return Optional.empty();
         }
 
-        if(world == null){
-            // invalid item
-            return Optional.empty();
-        }
+        Preconditions.checkNotNull(world);
 
         //noinspection deprecation
         if(!world.isBlockLoaded(telPos)){
