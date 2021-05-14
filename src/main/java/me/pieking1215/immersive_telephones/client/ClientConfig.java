@@ -1,47 +1,64 @@
 package me.pieking1215.immersive_telephones.client;
 
+import me.pieking1215.immersive_telephones.common.Config;
+import me.shedaniel.clothconfig2.forge.api.ConfigBuilder;
+import me.shedaniel.clothconfig2.forge.api.ConfigCategory;
+import me.shedaniel.clothconfig2.forge.api.ConfigEntryBuilder;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.ExtensionPoint;
+import net.minecraftforge.fml.ModLoadingContext;
+
+import java.util.Arrays;
+
 class ClientConfig {
 
     static void registerClothConfig() {
-        // TODO
-//        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (client, parent) -> {
-//            ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parent).setTitle(new TranslationTextComponent("config.immersive_telephones.title"));
-//            builder.setDefaultBackgroundTexture(new ResourceLocation("minecraft:textures/block/spruce_planks.png"));
-//            builder.transparentBackground();
-//
-//            ConfigEntryBuilder eb = builder.getEntryBuilder();
-//            ConfigCategory general = builder.getOrCreateCategory(new TranslationTextComponent("key.immersive_telephones.category.general"));
-//            general.addEntry(eb.startBooleanToggle(new TranslationTextComponent("config.immersive_telephones.enable"), Config.getBoolSafe(Config.GENERAL.enabled, true)).setDefaultValue(true).setSaveConsumer(Config.GENERAL.enabled::set)/*.setTooltip(Arrays.asList(I18n.format("tooltip.config.immersive_telephones.enable").split("\n")).stream().map(StringTextComponent::new).toArray(StringTextComponent[]::new))*/.build());
-//            //general.addEntry(eb.startDoubleField("config.immersive_telephones.animationSpeed", getDoubleSafe(GENERAL.animationSpeed, 1.0)).setDefaultValue(1.0).setMin(0.1).setMax(2.5).setSaveConsumer(GENERAL.animationSpeed::set).setTooltip(I18n.format("tooltip.config.immersive_telephones.animationSpeed").split("\n")).build());
-//
-//            int nTicks = (int) ((Config.General.ANIM_MAX - Config.General.ANIM_MIN) / 0.1) + 1;
-//
-//            // map [ANIM_MIN, ANIM_MAX] to [0, nTicks]
-//            int animV = (int) (((Config.getDoubleSafe(Config.GENERAL.animationSpeed, 1.0) - Config.General.ANIM_MIN) / (Config.General.ANIM_MAX - Config.General.ANIM_MIN)) * nTicks);
-//            int animDef = (int) (((1.0 - Config.General.ANIM_MIN) / (Config.General.ANIM_MAX - Config.General.ANIM_MIN)) * nTicks);
-//
-//            general.addEntry(eb.startIntSlider(new TranslationTextComponent("config.immersive_telephones.animationSpeed"), animV, 0, nTicks).setDefaultValue(animDef).setSaveConsumer((i) -> {
-//                // map [0, nTicks] to [ANIM_MIN, ANIM_MAX]
-//                double thru = i / (double)nTicks;
-//                double v = Config.General.ANIM_MIN + (thru * (Config.General.ANIM_MAX - Config.General.ANIM_MIN));
-//                v = Math.round(v * 20.0) / 20.0;
-//                Config.GENERAL.animationSpeed.set(v);
-//            }).setTextGetter((i) -> {
-//                // map [0, nTicks] to [ANIM_MIN * 100, ANIM_MAX * 100]
-//                double thru = i / (double)nTicks;
-//                double v = Config.General.ANIM_MIN + (thru * (Config.General.ANIM_MAX - Config.General.ANIM_MIN));
-//                v = Math.round(v * 20.0) / 20.0;
-//                int percent = (int) (100 * v);
-//
-//                percent = (int) (Math.round(percent/10.0) * 10);
-//                return new StringTextComponent(percent + "%");
-//
-//            })/*.setTooltip(Arrays.asList(I18n.format("tooltip.config.immersive_telephones.animationSpeed").split("\n")).stream().map(StringTextComponent::new).toArray(StringTextComponent[]::new))*/.build());
-//
-//            general.addEntry(eb.startBooleanToggle(new TranslationTextComponent("config.immersive_telephones.disableAnimation"), Config.getBoolSafe(Config.GENERAL.disableAnimation, false)).setDefaultValue(false).setSaveConsumer(Config.GENERAL.disableAnimation::set)/*.setTooltip(Arrays.asList(I18n.format("tooltip.config.immersive_telephones.disableAnimation").split("\n")).stream().map(StringTextComponent::new).toArray(StringTextComponent[]::new))*/.build());
-//
-//            return builder.setSavingRunnable(Config.SPEC::save).build();
-//        });
+        ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (client, parent) -> {
+            ConfigBuilder builder = ConfigBuilder.create().setParentScreen(parent).setTitle(new TranslationTextComponent("config.immersive_telephones.title"));
+            builder.setDefaultBackgroundTexture(new ResourceLocation("minecraft:textures/block/spruce_planks.png"));
+            builder.transparentBackground();
+
+            new CategoryHandler(builder, "client"){{
+                addBoolean("fancyCordRendering", Config.CLIENT.fancyCordRendering);
+                addBoolean("accurateCordAttachment", Config.CLIENT.accurateCordAttachment);
+                addBoolean("handsetPose", Config.CLIENT.handsetPose);
+            }};
+
+            //noinspection EmptyClassInitializer
+            new CategoryHandler(builder, "server"){{
+                // none yet
+            }};
+
+            return builder.setSavingRunnable(Config.SPEC::save).build();
+        });
     }
+
+    private static class CategoryHandler {
+
+        final ConfigEntryBuilder builder;
+        final ConfigCategory category;
+
+        public CategoryHandler(ConfigBuilder configBuilder, String category) {
+            this.builder = configBuilder.entryBuilder();
+            this.category = configBuilder.getOrCreateCategory(new TranslationTextComponent("config.immersive_telephones.category." + category));
+        }
+
+        void addBoolean(String key, ForgeConfigSpec.ConfigValue<Boolean> bool){
+            category.addEntry(
+                    builder.startBooleanToggle(
+                            new TranslationTextComponent("config.immersive_telephones." + key)
+                            , bool.get())
+                            .setSaveConsumer(bool::set)
+                            .setDefaultValue(true)
+                            .setTooltip(Arrays.stream(I18n.format("tooltip.config.immersive_telephones." + key).split("\n")).map(StringTextComponent::new).toArray(StringTextComponent[]::new))
+                            .build());
+        }
+    }
+
+
 
 }

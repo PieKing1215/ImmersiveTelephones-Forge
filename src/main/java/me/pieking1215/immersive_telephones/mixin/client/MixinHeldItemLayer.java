@@ -1,6 +1,7 @@
 package me.pieking1215.immersive_telephones.mixin.client;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import me.pieking1215.immersive_telephones.common.Config;
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.entity.layers.HeldItemLayer;
@@ -21,6 +22,8 @@ class MixinHeldItemLayer {
 
     @Inject(method = "func_229135_a_", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FirstPersonRenderer;renderItemSide(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/renderer/model/ItemCameraTransforms$TransformType;ZLcom/mojang/blaze3d/matrix/MatrixStack;Lnet/minecraft/client/renderer/IRenderTypeBuffer;I)V"))
     private void injectHeldItemRender(LivingEntity entity, ItemStack stack, ItemCameraTransforms.TransformType p_229135_3_, HandSide p_229135_4_, MatrixStack p_229135_5_, IRenderTypeBuffer p_229135_6_, int p_229135_7_, CallbackInfo ci){
+        if(!Config.CLIENT.accurateCordAttachment.get()) return;
+
         if(stack.getItem() instanceof HandsetItem){
 
             HandsetItem.findConnectedTE(stack, entity.world).ifPresent(tel -> {

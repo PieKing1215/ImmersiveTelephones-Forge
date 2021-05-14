@@ -1,9 +1,14 @@
 {
   "config.immersive_telephones.title": "Immersive Telephones Config",
-  "key.immersive_telephones.category.general": "General",
+  "config.immersive_telephones.category.client": "Client",
+  "config.immersive_telephones.category.server": "Server",
 
-  "config.immersive_telephones.enable": "Enable Mod",
-  "tooltip.config.immersive_telephones.enable": "Enable the entire mod",
+  "config.immersive_telephones.fancyCordRendering": "Fancy Cord Rendering",
+  "tooltip.config.immersive_telephones.fancyCordRendering": "Makes the handset cord curly,\nbut uses many more polygons",
+  "config.immersive_telephones.accurateCordAttachment": "Accurate Cord Attachment",
+  "tooltip.config.immersive_telephones.accurateCordAttachment": "Experimental method of connecting the phone cord\nto the handset in the player's hand",
+  "config.immersive_telephones.handsetPose": "Handset Pose",
+  "tooltip.config.immersive_telephones.handsetPose": "When holding a handset, players hold it to their head",
 
   "block.immersive_telephones.telephone": "Telephone",
   "item.immersive_telephones.handset": "Handset"

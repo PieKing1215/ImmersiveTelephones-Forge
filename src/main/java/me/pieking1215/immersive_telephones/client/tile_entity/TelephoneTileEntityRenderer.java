@@ -3,6 +3,7 @@ package me.pieking1215.immersive_telephones.client.tile_entity;
 import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
+import me.pieking1215.immersive_telephones.common.Config;
 import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -79,7 +80,7 @@ public class TelephoneTileEntityRenderer extends TileEntityRenderer<TelephoneTil
     private Vector3d getHoldingPos(TelephoneTileEntity te, PlayerEntity holder, float partialTicks) {
         HandSide holdingHand = te.getHoldingHand(holder);
 
-        if(Minecraft.getInstance().player == holder && Minecraft.getInstance().gameSettings.getPointOfView() == PointOfView.FIRST_PERSON){
+        if(!Config.CLIENT.accurateCordAttachment.get() || (Minecraft.getInstance().player == holder && Minecraft.getInstance().gameSettings.getPointOfView() == PointOfView.FIRST_PERSON)){
 
             if(holdingHand == holder.getPrimaryHand()){
                 return holder.getLeashPosition(partialTicks);
@@ -95,7 +96,6 @@ public class TelephoneTileEntityRenderer extends TileEntityRenderer<TelephoneTil
 
         Vector3f pos = new Vector3f(0, 0, 0);
 
-        // TODO: there needs to be a config option to turn this off in case of breakage
         if(te.clientHandItemMatrix4f instanceof Matrix4f){
             Preconditions.checkState(te.clientCameraMatrix4f instanceof Matrix4f);
 
@@ -129,7 +129,7 @@ public class TelephoneTileEntityRenderer extends TileEntityRenderer<TelephoneTil
 
     @SuppressWarnings("SameParameterValue")
     private static void renderSide(IVertexBuilder bufferIn, Matrix4f matrixIn, float p_229119_2_, float p_229119_3_, float p_229119_4_, int blockLight, int holderBlockLight, int skyLight, int holderSkyLight, float p_229119_9_, float p_229119_10_, float p_229119_11_, float p_229119_12_, float partialTicks, Entity holder, TelephoneTileEntity te) {
-        int nSegments = 80;
+        int nSegments = Config.CLIENT.fancyCordRendering.get() ? 80 : 24;
 
         for(int j = 0; j < nSegments; ++j) {
             float f = (float)j / (nSegments - 1);
@@ -164,14 +164,6 @@ public class TelephoneTileEntityRenderer extends TileEntityRenderer<TelephoneTil
 
         float thru = (float)segment / (float)totalSegments;
 
-        Vector3d forward = new Vector3d(deltaX, deltaY, deltaZ).normalize();
-        Vector3d horiz = forward.crossProduct(new Vector3d(0, 1, 0));
-        Vector3d up = forward.crossProduct(horiz);
-
-        Vector3d spiralOffsetRaw = new Vector3d(Math.sin(thru * totalSegments), Math.cos(thru * totalSegments), 0).scale(0.05f);
-
-        Vector3d spiralOffsetTransformed = horiz.scale(spiralOffsetRaw.x).add(up.scale(spiralOffsetRaw.y)).add(forward.scale(spiralOffsetRaw.z));
-
         float thruX = deltaX * thru;
 
 //        float thruForY = thru;
@@ -190,9 +182,20 @@ public class TelephoneTileEntityRenderer extends TileEntityRenderer<TelephoneTil
 
         float thruZ = deltaZ * thru;
 
-        thruX += spiralOffsetTransformed.getX();
-        thruY += spiralOffsetTransformed.getY();
-        thruZ += spiralOffsetTransformed.getZ();
+        if(Config.CLIENT.fancyCordRendering.get()) {
+            Vector3d forward = new Vector3d(deltaX, deltaY, deltaZ).normalize();
+            Vector3d horiz = forward.crossProduct(new Vector3d(0, 1, 0));
+            Vector3d up = forward.crossProduct(horiz);
+
+            Vector3d spiralOffsetRaw = new Vector3d(Math.sin(thru * totalSegments), Math.cos(thru * totalSegments), 0).scale(0.05f);
+
+            Vector3d spiralOffsetTransformed = horiz.scale(spiralOffsetRaw.x).add(up.scale(spiralOffsetRaw.y)).add(forward.scale(spiralOffsetRaw.z));
+
+
+            thruX += spiralOffsetTransformed.getX();
+            thruY += spiralOffsetTransformed.getY();
+            thruZ += spiralOffsetTransformed.getZ();
+        }
 
         if (!p_229120_10_) {
             bufferIn.pos(matrixIn, thruX + p_229120_11_, thruY + p_229120_6_ - p_229120_7_, thruZ - p_229120_12_).color(r, g, b, 1.0F).lightmap(packedLight).endVertex();

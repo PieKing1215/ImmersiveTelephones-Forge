@@ -1,6 +1,7 @@
 package me.pieking1215.immersive_telephones.mixin.client;
 
 import me.pieking1215.immersive_telephones.client.ICustomPoseHandler;
+import me.pieking1215.immersive_telephones.common.Config;
 import net.minecraft.client.renderer.entity.model.BipedModel;
 import net.minecraft.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,6 +18,8 @@ public class MixinBipedModel<T extends LivingEntity> implements ICustomPoseHandl
 
     @Inject(method = "func_241654_b_", at = @At("HEAD"), cancellable = true)
     private void injectPoseRightArm(T p_241654_1_, CallbackInfo ci){
+        if(!Config.CLIENT.handsetPose.get()) return;
+
         if(holdingPhoneRight){
             BipedModel bm = (BipedModel)(Object)this;
             bm.bipedRightArm.rotateAngleY = bm.bipedHead.rotateAngleY / 2f;
@@ -28,6 +31,8 @@ public class MixinBipedModel<T extends LivingEntity> implements ICustomPoseHandl
 
     @Inject(method = "func_241655_c_", at = @At("HEAD"), cancellable = true)
     private void injectPoseLeftArm(T p_241654_1_, CallbackInfo ci){
+        if(!Config.CLIENT.handsetPose.get()) return;
+
         if(holdingPhoneLeft){
             BipedModel bm = (BipedModel)(Object)this;
             bm.bipedLeftArm.rotateAngleY = bm.bipedHead.rotateAngleY / 2f;

@@ -125,9 +125,10 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
 
             if(handsetEntity != null) {
 
+                // TODO: extract some of these constants into a cordLength field
+
                 float f = (float)Math.sqrt(handsetEntity.getDistanceSq(Vector3d.copyCentered(getPos())));
                 if(f > 6.0f){
-
                     float sFactor = 0f; // spread (higher -> lower result)
                     float aFactor = 8f; // inverse amplitude (higher -> lower result)
 
@@ -142,7 +143,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
                 if(handsetEntity instanceof ServerPlayerEntity) {
                     ServerPlayerEntity pl = (ServerPlayerEntity) handsetEntity;
 
-                    boolean dropIfPresent = this.getPos().distanceSq(pl.getPositionVec(), true) > 10 * 10; //TODO: config
+                    boolean dropIfPresent = this.getPos().distanceSq(pl.getPositionVec(), true) > 10 * 10;
 
                     //boolean found = false;
 
