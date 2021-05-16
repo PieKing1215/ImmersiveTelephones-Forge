@@ -10,7 +10,7 @@ Extension for [Simple Voice Chat](https://github.com/henkelmax/simple-voice-chat
 that uses [Immersive Engineering](https://github.com/BluSunrize/ImmersiveEngineering)
 to add interactive and functional telephones.<br> 
 
-This mod is extremely early in development - expect crashes and bugs.<br>
+**This mod is extremely early in development - expect crashes and bugs.**<br>
 
 Also note: the mod right now is basically a proof of concept and has only basic functionality.<br>
 There are a large amount of features planned.
