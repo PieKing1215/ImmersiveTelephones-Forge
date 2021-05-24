@@ -5,7 +5,6 @@ import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntity;
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
 import me.pieking1215.immersive_telephones.common.network.ImmersiveTelephonePacketHandler;
-import me.pieking1215.immersive_telephones.common.network.SyncServerConfigPacket;
 import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;

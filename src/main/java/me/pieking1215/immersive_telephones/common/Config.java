@@ -4,7 +4,6 @@ import me.pieking1215.immersive_telephones.common.network.SyncServerConfigPacket
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.lang.reflect.Field;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
@@ -149,6 +148,6 @@ public class Config {
 
     public static void makeDummyServerConfig(SyncServerConfigPacket pkt){
         SERVER_MP = new Server();
-        SERVER_MP.maxHandsetDistance.set((double) pkt.maxHandsetDistance);
+        SERVER_MP.maxHandsetDistance.set(pkt.maxHandsetDistance);
     }
 }

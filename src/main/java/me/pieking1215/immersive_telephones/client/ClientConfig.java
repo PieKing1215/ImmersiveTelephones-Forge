@@ -6,12 +6,10 @@ import me.shedaniel.clothconfig2.forge.api.ConfigCategory;
 import me.shedaniel.clothconfig2.forge.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.forge.gui.entries.BooleanListEntry;
 import me.shedaniel.clothconfig2.forge.gui.entries.DoubleListEntry;
-import me.shedaniel.clothconfig2.forge.gui.entries.FloatListEntry;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 
@@ -71,6 +69,7 @@ class ClientConfig {
             category.addEntry(e);
         }
 
+        @SuppressWarnings("SameParameterValue")
         void addDouble(String key, Config.Atomic<Double> doubleValue){
             addDouble(key, doubleValue, this.readOnly);
         }
