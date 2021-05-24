@@ -25,7 +25,7 @@ apply plugin: 'org.spongepowered.mixin'
 
 version = mod_version
 group = mod_group
-archivesBaseName = mod_id
+archivesBaseName = mod_jarname
 
 sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
 
@@ -133,6 +133,14 @@ dependencies {
 
     // utility / testing
 
+    // Smooth Boot (Forge)
+    // www.curseforge.com/minecraft/mc-mods/smooth-boot-forge
+    runtimeOnly fg.deobf("curse.maven:smooth_boot_forge-420913:${build_smoothboot_version}")
+
+    // DataFixerSlayer (improves RAM usage)
+    // www.curseforge.com/minecraft/mc-mods/datafixerslayer
+    runtimeOnly fg.deobf("curse.maven:datafixerslayer-416519:${build_dfslayer_version}")
+
     // GameMenuModOption
     // www.curseforge.com/minecraft/mc-mods/gamemenumodoption
     //runtimeOnly fg.deobf("curse.maven:gamemenumodoption:2990253") // 1.16.1
@@ -144,11 +152,11 @@ jar {
     manifest {
         attributes([
                 "Specification-Title": mod_name,
-                "Specification-Vendor": "${mod_author}",
+                "Specification-Vendor": mod_author,
                 "Specification-Version": "1",
                 "Implementation-Title": mod_name,
-                "Implementation-Version": "${version}",
-                "Implementation-Vendor" :"${mod_author}",
+                "Implementation-Version": version,
+                "Implementation-Vendor" : mod_author,
                 "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
                 "MixinConfigs": "${mod_id}.mixins.json"
         ])
