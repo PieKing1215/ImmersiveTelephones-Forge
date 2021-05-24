@@ -137,10 +137,6 @@ dependencies {
     // www.curseforge.com/minecraft/mc-mods/smooth-boot-forge
     runtimeOnly fg.deobf("curse.maven:smooth_boot_forge-420913:${build_smoothboot_version}")
 
-    // DataFixerSlayer (improves RAM usage)
-    // www.curseforge.com/minecraft/mc-mods/datafixerslayer
-    runtimeOnly fg.deobf("curse.maven:datafixerslayer-416519:${build_dfslayer_version}")
-
     // GameMenuModOption
     // www.curseforge.com/minecraft/mc-mods/gamemenumodoption
     //runtimeOnly fg.deobf("curse.maven:gamemenumodoption:2990253") // 1.16.1
