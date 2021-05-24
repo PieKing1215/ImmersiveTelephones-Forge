@@ -16,7 +16,7 @@ public class BlockRegister {
 
     public static final RegistryObject<TelephoneBlock> TELEPHONE_BLOCK = BLOCKS.register("telephone",
             () -> new TelephoneBlock(AbstractBlock.Properties.create(Material.PISTON)
-                    .hardnessAndResistance(4f, 30f)
+                    .hardnessAndResistance(1f, 30f)
                     .harvestTool(ToolType.PICKAXE)
                     .harvestLevel(-1)
                     .sound(SoundType.METAL)));

@@ -1,7 +1,7 @@
 {
 	"meta": {
 		"format_version": "3.6",
-		"creation_time": 1620508620,
+		"creation_time": 1621826437,
 		"model_format": "java_block",
 		"box_uv": false
 	},
@@ -991,7 +991,8 @@
 			"translation": [3.5, 3.25, 2.5]
 		},
 		"ground": {
-			"translation": [0, 0, -6.5]
+			"translation": [0, 0, -5],
+			"scale": [0.75, 0.75, 0.75]
 		},
 		"gui": {
 			"rotation": [0, -180, 0]
