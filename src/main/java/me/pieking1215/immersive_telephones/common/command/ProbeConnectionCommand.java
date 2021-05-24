@@ -32,7 +32,7 @@ public class ProbeConnectionCommand {
                     s += " : " + connect.getClass().getSimpleName();
                     if(connect instanceof TelephoneTileEntity){
                         TelephoneTileEntity e = (TelephoneTileEntity) connect;
-                        s += "(" + e.getName() + ")";
+                        s += "(" + e.getNumber() + ")";
                     }
                     source.getSource().sendFeedback(new StringTextComponent(s), true);
                     i++;

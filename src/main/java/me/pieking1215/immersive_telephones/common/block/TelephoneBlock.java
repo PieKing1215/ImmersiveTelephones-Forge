@@ -162,7 +162,7 @@ public class TelephoneBlock extends Block {
 
                 if(!worldIn.isRemote()) {
                     // server
-                    tel.setName(handStack.getDisplayName().getString());
+                    tel.setNumber(handStack.getDisplayName().getString());
                     worldIn.notifyBlockUpdate(pos, state, state, Constants.BlockFlags.BLOCK_UPDATE);
 
                     if(!player.isCreative()) handStack.shrink(1);

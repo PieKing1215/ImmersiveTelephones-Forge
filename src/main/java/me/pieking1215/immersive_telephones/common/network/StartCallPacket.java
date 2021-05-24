@@ -43,7 +43,7 @@ public class StartCallPacket {
                         TelephoneTileEntity te = (TelephoneTileEntity)tileEntity;
 
                         te.findConnectedPhones().stream()
-                                .filter(t -> t.getName().equals(callee))
+                                .filter(t -> t.getNumber().equals(callee))
                                 .findFirst().ifPresent(
                                         other -> other.beingCalled(te));
                     }

@@ -1,18 +1,9 @@
 package me.pieking1215.immersive_telephones.common.tile_entity;
 
-import blusunrize.immersiveengineering.api.IEProperties;
-import blusunrize.immersiveengineering.api.TargetingInfo;
-import blusunrize.immersiveengineering.api.utils.client.CombinedModelData;
-import blusunrize.immersiveengineering.api.utils.client.SinglePropertyModelData;
-import blusunrize.immersiveengineering.api.wires.Connection;
-import blusunrize.immersiveengineering.api.wires.ConnectionPoint;
-import blusunrize.immersiveengineering.api.wires.ConnectorTileHelper;
 import blusunrize.immersiveengineering.api.wires.GlobalWireNetwork;
 import blusunrize.immersiveengineering.api.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.wires.LocalWireNetwork;
-import blusunrize.immersiveengineering.api.wires.WireType;
 import com.google.common.base.Preconditions;
-import com.google.common.collect.ImmutableList;
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
 import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntity;
@@ -26,11 +17,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
@@ -40,28 +27,20 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
-public class TelephoneTileEntity extends TileEntity implements IImmersiveConnectable, ITickableTileEntity {
-    private GlobalWireNetwork globalNet;
-
-    private UUID tel_UUID;
-    private String name = "000";
+public class TelephoneTileEntity extends BasePhoneTileEntity {
+    private String number = "000";
     private int color = 0xffffff;
 
     private TelephoneTileEntity whoRings = null; // server only
@@ -84,13 +63,12 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
 
     // TODO: this whole concept is insanely stupid on so many levels
     @OnlyIn(Dist.CLIENT)
-    public Object clientHandItemMatrix4f = null;
+    public Object clientHandItemMatrix4f;
     @OnlyIn(Dist.CLIENT)
-    public Object clientCameraMatrix4f = null;
+    public Object clientCameraMatrix4f;
 
     public TelephoneTileEntity() {
         super(TileEntityRegister.TELEPHONE.get());
-        tel_UUID = UUID.randomUUID();
     }
 
     @Override
@@ -117,7 +95,7 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
 
             if(!dial.isEmpty() && world.getGameTime() - lastDial > 20 * 2){
                 findConnectedPhones().stream()
-                        .filter(t -> t.getName().equals(dial))
+                        .filter(t -> t.getNumber().equals(dial))
                         .findFirst().ifPresent(
                                 other -> other.beingCalled(this));
                 dial = "";
@@ -270,9 +248,8 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     public CompoundNBT write(CompoundNBT nbt) {
         super.write(nbt);
 
-        nbt.putString("name", name);
+        nbt.putString("name", number);
         nbt.putInt("color", color);
-        nbt.putUniqueId("tel_UUID", tel_UUID);
 
         return nbt;
     }
@@ -281,9 +258,8 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
 
-        name = nbt.getString("name");
+        number = nbt.getString("name");
         if(nbt.contains("color")) color = nbt.getInt("color");
-        if(nbt.contains("tel_UUID")) tel_UUID = nbt.getUniqueId("tel_UUID");
 
     }
 
@@ -291,9 +267,8 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     public CompoundNBT getUpdateTag() {
         CompoundNBT nbt = super.getUpdateTag();
 
-        nbt.putString("name", name);
+        nbt.putString("name", number);
         nbt.putInt("color", color);
-        nbt.putUniqueId("tel_UUID", tel_UUID);
         nbt.putLong("ringTime", ringTime);
         nbt.putBoolean("inCall", inCall);
         if(handsetEntity != null) nbt.putInt("handsetEntity", handsetEntity.getEntityId());
@@ -305,10 +280,8 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     public void handleUpdateTag(BlockState state, CompoundNBT nbt) {
         super.handleUpdateTag(state, nbt);
 
-
-        name = nbt.getString("name");
+        number = nbt.getString("name");
         if(nbt.contains("color")) color = nbt.getInt("color");
-        tel_UUID = nbt.getUniqueId("tel_UUID");
         ringTime = nbt.getLong("ringTime");
         inCall = nbt.getBoolean("inCall");
 
@@ -333,52 +306,12 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
 
     }
 
-    @Nullable
-    @Override
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        CompoundNBT nbt = new CompoundNBT();
-
-        nbt.putString("name", name);
-        nbt.putInt("color", color);
-        nbt.putUniqueId("tel_UUID", tel_UUID);
-        nbt.putLong("ringTime", ringTime);
-        nbt.putBoolean("inCall", inCall);
-        if(handsetEntity != null) nbt.putInt("handsetEntity", handsetEntity.getEntityId());
-
-        return new SUpdateTileEntityPacket(getPos(), -1, nbt);
+    public String getNumber(){
+        return number;
     }
 
-    @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-        CompoundNBT nbt = pkt.getNbtCompound();
-
-        name = nbt.getString("name");
-        if(nbt.contains("color")) color = nbt.getInt("color");
-        tel_UUID = nbt.getUniqueId("tel_UUID");
-        ringTime = nbt.getLong("ringTime");
-        inCall = nbt.getBoolean("inCall");
-
-        Preconditions.checkNotNull(world);
-
-        if(nbt.contains("handsetEntity")){
-            handsetEntity = world.getEntityByID(nbt.getInt("handsetEntity"));
-            if(handsetEntity == null){
-                missingHandsetEntityID = nbt.getInt("handsetEntity");
-            }else{
-                missingHandsetEntityID = -1;
-            }
-        }else{
-            handsetEntity = null;
-            missingHandsetEntityID = -1;
-        }
-    }
-
-    public String getName(){
-        return name;
-    }
-
-    public void setName(String displayName) {
-        this.name = displayName;
+    public void setNumber(String displayName) {
+        this.number = displayName;
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -550,10 +483,6 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
 
     }
 
-    public UUID getUUID() {
-        return tel_UUID;
-    }
-
     @Nullable
     public Entity getHandsetEntity(){
         return handsetEntity;
@@ -637,74 +566,6 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
     }
 
     @Override
-    public boolean canConnect() {
-        return true;
-    }
-
-    @Override
-    public BlockPos getConnectionMaster(@Nullable WireType wireType, TargetingInfo targetingInfo) {
-        return this.getPos();
-    }
-
-    @Override
-    public boolean canConnectCable(WireType wireType, ConnectionPoint connectionPoint, Vector3i vector3i) {
-        return true;
-    }
-
-    @Override
-    public void connectCable(WireType wireType, ConnectionPoint connectionPoint, IImmersiveConnectable iImmersiveConnectable, ConnectionPoint connectionPoint1) {
-
-    }
-
-    @Nullable
-    @Override
-    public ConnectionPoint getTargetedPoint(TargetingInfo targetingInfo, Vector3i vector3i) {
-        return new ConnectionPoint(this.pos, 0);
-    }
-
-    @Override
-    public void removeCable(@Nullable Connection connection, ConnectionPoint connectionPoint) {
-        this.markDirty();
-    }
-
-    @Override
-    public Vector3d getConnectionOffset(@Nonnull Connection connection, ConnectionPoint connectionPoint) {
-        Direction side = getBlockState().get(TelephoneBlock.FACING);
-        return new Vector3d(0.5 + side.getXOffset() * (7.0/16.0), 15.0 / 16.0, 0.5 + side.getZOffset() * (7.0/16.0));
-    }
-
-    @Override
-    public Collection<ConnectionPoint> getConnectionPoints() {
-        return ImmutableList.of(new ConnectionPoint(this.pos, 0));
-    }
-
-    public void setWorldAndPos(@Nonnull World worldIn, @Nonnull BlockPos pos) {
-        super.setWorldAndPos(worldIn, pos);
-        this.globalNet = GlobalWireNetwork.getNetwork(worldIn);
-    }
-
-    @Override
-    public void onChunkUnloaded() {
-        super.onChunkUnloaded();
-        globalNet.onConnectorUnload(this);
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        Preconditions.checkNotNull(world);
-
-        GlobalWireNetwork.getNetwork(world).onConnectorLoad(this, world);
-    }
-
-    @Nonnull
-    public IModelData getModelData() {
-        Preconditions.checkNotNull(world);
-
-        return CombinedModelData.combine(new SinglePropertyModelData<>(ConnectorTileHelper.genConnBlockState(this.world, this), IEProperties.Model.CONNECTIONS), super.getModelData());
-    }
-
-    @Override
     public void remove() {
         Preconditions.checkNotNull(world);
 
@@ -728,7 +589,6 @@ public class TelephoneTileEntity extends TileEntity implements IImmersiveConnect
         }
 
         super.remove();
-        ConnectorTileHelper.remove(this.world, this);
     }
 
     public int getColor() {

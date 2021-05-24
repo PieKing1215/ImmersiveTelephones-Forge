@@ -29,11 +29,11 @@ public class TelephoneScreen extends Screen {
 
         for(int i = 0; i < options.size(); i++){
             TelephoneTileEntity opt = options.get(i);
-            Button cb = new Button(10, 20 + (i * 22), 100, 20, new StringTextComponent(opt.getName()), (b) -> {
-                ImmersiveTelephone.LOGGER.debug("Calling {}", opt.getName());
+            Button cb = new Button(10, 20 + (i * 22), 100, 20, new StringTextComponent(opt.getNumber()), (b) -> {
+                ImmersiveTelephone.LOGGER.debug("Calling {}", opt.getNumber());
                 Minecraft.getInstance().displayGuiScreen(null);
 
-                StartCallPacket packet = new StartCallPacket(tileEntity.getPosition(), opt.getName());
+                StartCallPacket packet = new StartCallPacket(tileEntity.getPosition(), opt.getNumber());
                 ImmersiveTelephonePacketHandler.INSTANCE.sendToServer(packet);
 
             });
@@ -47,7 +47,7 @@ public class TelephoneScreen extends Screen {
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 
-        Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, "telephone \"" + tileEntity.getName() + "\"" + " " + tileEntity.getUUID(), 10, 10, 0xffffff);
+        Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, "telephone \"" + tileEntity.getNumber() + "\"" + " " + tileEntity.getUUID(), 10, 10, 0xffffff);
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
