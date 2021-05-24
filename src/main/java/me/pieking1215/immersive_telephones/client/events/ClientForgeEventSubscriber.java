@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 public class ClientForgeEventSubscriber {
 
     @SubscribeEvent
-    public void onClick(InputEvent.ClickInputEvent ev){
+    public static void onClick(InputEvent.ClickInputEvent ev){
         if(ImmersiveTelephone.proxy.shouldCancelClick(ev)) {
             ev.setResult(Event.Result.DENY);
             ev.setCanceled(true);
