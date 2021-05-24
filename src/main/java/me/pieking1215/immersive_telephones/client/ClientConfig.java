@@ -4,6 +4,9 @@ import me.pieking1215.immersive_telephones.common.Config;
 import me.shedaniel.clothconfig2.forge.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.forge.api.ConfigCategory;
 import me.shedaniel.clothconfig2.forge.api.ConfigEntryBuilder;
+import me.shedaniel.clothconfig2.forge.gui.entries.BooleanListEntry;
+import me.shedaniel.clothconfig2.forge.gui.entries.DoubleListEntry;
+import me.shedaniel.clothconfig2.forge.gui.entries.FloatListEntry;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
@@ -28,9 +31,8 @@ class ClientConfig {
                 addBoolean("handsetPose", Config.CLIENT.handsetPose);
             }};
 
-            //noinspection EmptyClassInitializer
-            new CategoryHandler(builder, "server"){{
-                // none yet
+            new CategoryHandler(builder, "server", Config.getActiveServerConfig() == Config.SERVER_MP){{
+                addDouble("maxHandsetDistance", Config.getActiveServerConfig().maxHandsetDistance);
             }};
 
             return builder.setSavingRunnable(Config.SPEC::save).build();
@@ -41,21 +43,50 @@ class ClientConfig {
 
         final ConfigEntryBuilder builder;
         final ConfigCategory category;
+        final boolean readOnly;
 
         public CategoryHandler(ConfigBuilder configBuilder, String category) {
-            this.builder = configBuilder.entryBuilder();
-            this.category = configBuilder.getOrCreateCategory(new TranslationTextComponent("config.immersive_telephones.category." + category));
+            this(configBuilder, category, false);
         }
 
-        void addBoolean(String key, ForgeConfigSpec.ConfigValue<Boolean> bool){
-            category.addEntry(
-                    builder.startBooleanToggle(
-                            new TranslationTextComponent("config.immersive_telephones." + key)
-                            , bool.get())
-                            .setSaveConsumer(bool::set)
-                            .setDefaultValue(true)
-                            .setTooltip(Arrays.stream(I18n.format("tooltip.config.immersive_telephones." + key).split("\n")).map(StringTextComponent::new).toArray(StringTextComponent[]::new))
-                            .build());
+        public CategoryHandler(ConfigBuilder configBuilder, String category, boolean readOnly) {
+            this.builder = configBuilder.entryBuilder();
+            this.category = configBuilder.getOrCreateCategory(new TranslationTextComponent("config.immersive_telephones.category." + category));
+            this.readOnly = readOnly;
+        }
+
+        void addBoolean(String key, Config.Atomic<Boolean> bool) {
+            addBoolean(key, bool, this.readOnly);
+        }
+
+        void addBoolean(String key, Config.Atomic<Boolean> bool, boolean readOnly){
+            BooleanListEntry e = builder.startBooleanToggle(
+                    new TranslationTextComponent("config.immersive_telephones." + key)
+                    , bool.get())
+                    .setSaveConsumer(readOnly ? v -> {} : bool::set)
+                    .setDefaultValue(readOnly ? bool.get() : bool.getDefault())
+                    .setTooltip(Arrays.stream(I18n.format("tooltip.config.immersive_telephones." + key).split("\n")).map(StringTextComponent::new).toArray(StringTextComponent[]::new))
+                    .build();
+            e.setEditable(!readOnly);
+            category.addEntry(e);
+        }
+
+        void addDouble(String key, Config.Atomic<Double> doubleValue){
+            addDouble(key, doubleValue, this.readOnly);
+        }
+
+        void addDouble(String key, Config.Atomic<Double> doubleValue, boolean readOnly){
+            // ah yes great formatting
+            DoubleListEntry e = builder.startDoubleField(
+                    new TranslationTextComponent("config.immersive_telephones." + key)
+                    , doubleValue.get())
+
+                    .setSaveConsumer(readOnly ? v -> {} : doubleValue::set)
+                    .setDefaultValue(readOnly ? doubleValue.get() : doubleValue.getDefault()) // TODO: reflect into ForgeConfigSpec.ConfigValue or something to get the actual default
+                    .setTooltip(Arrays.stream(I18n.format("tooltip.config.immersive_telephones." + key).split("\n")).map(StringTextComponent::new).toArray(StringTextComponent[]::new))
+                    .build();
+            e.setEditable(!readOnly);
+            category.addEntry(e);
         }
     }
 

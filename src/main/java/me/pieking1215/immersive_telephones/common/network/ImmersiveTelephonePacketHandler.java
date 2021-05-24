@@ -19,6 +19,7 @@ public class ImmersiveTelephonePacketHandler {
     public static void init(){
         int i = 0;
         INSTANCE.registerMessage(i++, StartCallPacket.class, StartCallPacket::encode, StartCallPacket::decode, StartCallPacket::handle);
+        INSTANCE.registerMessage(i++, SyncServerConfigPacket.class, SyncServerConfigPacket::encode, SyncServerConfigPacket::decode, SyncServerConfigPacket::handle);
     }
 
 }

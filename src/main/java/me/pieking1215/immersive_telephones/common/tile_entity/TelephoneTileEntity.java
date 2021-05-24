@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.api.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.wires.LocalWireNetwork;
 import com.google.common.base.Preconditions;
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
+import me.pieking1215.immersive_telephones.common.Config;
 import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntity;
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
@@ -121,7 +122,8 @@ public class TelephoneTileEntity extends BasePhoneTileEntity {
                 if(handsetEntity instanceof ServerPlayerEntity) {
                     ServerPlayerEntity pl = (ServerPlayerEntity) handsetEntity;
 
-                    boolean dropIfPresent = this.getPos().distanceSq(pl.getPositionVec(), true) > 10 * 10;
+                    double maxDist = Config.getActiveServerConfig().maxHandsetDistance.get();
+                    boolean dropIfPresent = this.getPos().distanceSq(pl.getPositionVec(), true) > maxDist * maxDist;
 
                     //boolean found = false;
 
@@ -579,7 +581,7 @@ public class TelephoneTileEntity extends BasePhoneTileEntity {
                     // backup functionality
                     handsetEntity.remove();
                 }else if(handsetEntity instanceof PlayerEntity){
-                    int slot = ((PlayerEntity)handsetEntity).inventory.getSlotFor(createHandset());
+                    int slot = ((PlayerEntity)handsetEntity).inventory.getSlotFor(createHandset()); //TODO: !!! CRASH: getSlotFor is client only but we are the server here
                     if(slot != -1) ((PlayerEntity)handsetEntity).inventory.removeStackFromSlot(slot);
                     if(((PlayerEntity)handsetEntity).getHeldItemOffhand().isItemEqual(createHandset())){
                         ((PlayerEntity)handsetEntity).setHeldItem(Hand.OFF_HAND, ItemStack.EMPTY);

@@ -1,17 +1,24 @@
 package me.pieking1215.immersive_telephones.common.events;
 
+import me.pieking1215.immersive_telephones.common.Config;
 import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntity;
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
+import me.pieking1215.immersive_telephones.common.network.ImmersiveTelephonePacketHandler;
+import me.pieking1215.immersive_telephones.common.network.SyncServerConfigPacket;
 import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fml.network.PacketDistributor;
 
 import java.util.Optional;
 
@@ -62,4 +69,16 @@ public class EventHandler {
             ev.setUseItem(Event.Result.DENY);
         }
     }
+
+    @SubscribeEvent
+    public void onClientConnected(PlayerEvent.PlayerLoggedInEvent ev){
+        System.out.println("PlayerLoggedInEvent " + FMLEnvironment.dist + " " + ev.getPlayer());
+        if(FMLEnvironment.dist == Dist.DEDICATED_SERVER){
+            // send server config to client
+            ImmersiveTelephonePacketHandler.INSTANCE.send(
+                    PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)ev.getPlayer()),
+                    Config.SERVER_SP_OR_DEDICATED.makePacket());
+        }
+    }
+
 }
