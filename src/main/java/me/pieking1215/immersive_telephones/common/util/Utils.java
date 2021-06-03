@@ -4,12 +4,14 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 public class Utils {
 
-    // modified from https://pastebin.com/Cj26PggQ
-    private static void rotateShape(Direction to, VoxelShape shape, Map<Direction, VoxelShape> shapes) {
+    // modified from https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/?tab=comments#comment-391969
+    private static VoxelShape rotateShape(Direction to, VoxelShape shape) {
         VoxelShape[] buffer = new VoxelShape[] { shape, VoxelShapes.empty() };
 
         int times = (to.getHorizontalIndex() - Direction.NORTH.getHorizontalIndex() + 4) % 4;
@@ -20,14 +22,15 @@ public class Utils {
             buffer[1] = VoxelShapes.empty();
         }
 
-        shapes.put(to, buffer[0]);
+        return buffer[0];
     }
 
-    // modified from https://pastebin.com/Cj26PggQ
-    public static void generateRotatedShapes(VoxelShape shape, Map<Direction, VoxelShape> shapes) {
-        for (Direction direction : Direction.values()) {
-            rotateShape(direction, shape, shapes);
-        }
+    public static Map<Direction, VoxelShape> generateRotatedShapes(VoxelShape shape) {
+        Map<Direction, VoxelShape> shapes = new HashMap<>();
+
+        Arrays.stream(Direction.values()).forEach(d -> shapes.put(d, rotateShape(d, shape)));
+
+        return shapes;
     }
 
 }

@@ -41,7 +41,6 @@ import net.minecraftforge.common.util.Constants;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -53,13 +52,11 @@ public class TelephoneBlock extends Block {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty HANDSET = BooleanProperty.create("handset");
 
-    private static final Map<Direction, VoxelShape> FACING_SHAPES_WITH_HANDSET = new HashMap<>();
-    private static final Map<Direction, VoxelShape> FACING_SHAPES_BASE = new HashMap<>();
-
     @SuppressWarnings("SimplifyStreamApiCallChains")
     private static final VoxelShape SHAPE_WITH_HANDSET = Stream.of(
             Block.makeCuboidShape(4, 2, 0, 12, 14, 3)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
+    private static final Map<Direction, VoxelShape> FACING_SHAPES_WITH_HANDSET = Utils.generateRotatedShapes(SHAPE_WITH_HANDSET);
 
     private static final VoxelShape SHAPE_BASE = Stream.of(
             Block.makeCuboidShape(4, 2, 0, 12, 14, 1),
@@ -78,6 +75,7 @@ public class TelephoneBlock extends Block {
             Block.makeCuboidShape(7.25, 4.25, 1, 8.75, 5.75, 2),
             Block.makeCuboidShape(5.25, 4.25, 1, 6.75, 5.75, 2)
     ).reduce((v1, v2) -> VoxelShapes.combineAndSimplify(v1, v2, IBooleanFunction.OR)).get();
+    private static final Map<Direction, VoxelShape> FACING_SHAPES_BASE = Utils.generateRotatedShapes(SHAPE_BASE);
 
     private static final List<VoxelShape> BUTTON_SHAPES = Arrays.asList(
             Block.makeCuboidShape(5.25, 10.25, 1, 6.75, 11.75, 2),
@@ -94,6 +92,7 @@ public class TelephoneBlock extends Block {
             Block.makeCuboidShape(9.25, 4.25, 1, 10.75, 5.75, 2)
     );
 
+
     // this data structure is backwards from what you might expect
     private static final List<Map<Direction, VoxelShape>> DIR_BUTTON_SHAPES = new ArrayList<>();
 
@@ -103,13 +102,8 @@ public class TelephoneBlock extends Block {
                 .with(FACING, Direction.NORTH)
                 .with(HANDSET, true));
 
-        Utils.generateRotatedShapes(SHAPE_WITH_HANDSET, FACING_SHAPES_WITH_HANDSET);
-        Utils.generateRotatedShapes(SHAPE_BASE, FACING_SHAPES_BASE);
-
         for (VoxelShape buttonShape : BUTTON_SHAPES) {
-            Map<Direction, VoxelShape> shs = new HashMap<>();
-            Utils.generateRotatedShapes(buttonShape, shs);
-            DIR_BUTTON_SHAPES.add(shs);
+            DIR_BUTTON_SHAPES.add(Utils.generateRotatedShapes(buttonShape));
         }
     }
 
