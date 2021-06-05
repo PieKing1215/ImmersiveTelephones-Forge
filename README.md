@@ -1,10 +1,20 @@
 <h1>Immersive Telephones<br>
   <a href="https://www.curseforge.com/minecraft/mc-mods/immersive-telephones-forge"><img src="http://cf.way2muchnoise.eu/versions/%20For%20MC%20_immersive-telephones-forge_all(555-0C8E8E-fff-010101).svg" alt="Supported Versions"></a>
   <a href="https://github.com/PieKing1215/ImmersiveTelephones-Forge/blob/master/LICENSE"><img src="https://img.shields.io/github/license/PieKing1215/ImmersiveTelephones-Forge?style=flat&color=0C8E8E" alt="License"></a>
-  <a href="https://www.curseforge.com/minecraft/mc-mods/immersive-telephones-forge"><img src="http://cf.way2muchnoise.eu/full_immersive-telephones-forge_downloads(E04E14-555-fff-010101-1C1C1C).svg" alt="Download Count"></a>
+  <a href="https://www.curseforge.com/minecraft/mc-mods/immersive-telephones-forge"><img src="http://cf.way2muchnoise.eu/full_immersive-telephones-forge_downloads(E04E14-555-fff-010101-1C1C1C).svg" alt="CF Download Count"></a>
+  <a href="https://modrinth.com/mod/immersive-telephones-forge"><img src="https://waffle.coffee/modrinth/immersive-telephones-forge/downloads" alt="Modrinth Download Count"></a>
 </h1>
 
 ### Minecraft Forge mod that adds functional telephones for proximity chat
+
+<table>
+<tr>
+  <td>Forge</td>
+  <td><a href="https://github.com/PieKing1215/ImmersiveTelephones-Forge">GitHub</a></td>
+  <td><a href="https://www.curseforge.com/minecraft/mc-mods/immersive-telephones-forge">CurseForge</a></td>
+  <td><a href="https://modrinth.com/mod/immersive-telephones-forge">Modrinth</a></td>
+</tr>
+</table>
 
 Extension for [Simple Voice Chat](https://github.com/henkelmax/simple-voice-chat) 
 that uses [Immersive Engineering](https://github.com/BluSunrize/ImmersiveEngineering)
