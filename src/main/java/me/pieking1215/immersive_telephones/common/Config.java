@@ -9,7 +9,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-@SuppressWarnings("unused")
 public class Config {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
@@ -91,17 +90,18 @@ public class Config {
 
             try {
                 //noinspection unchecked
-                return new Atomic<C>(((Supplier<C>)defaultSupplier.get(cv)).get(), cv::get, cv::set);
+                return new Atomic<>(((Supplier<C>) defaultSupplier.get(cv)).get(), cv::get, cv::set);
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
 
-            return new Atomic<C>(null, () -> null, (v) -> {});
+            return new Atomic<>(null, () -> null, (v) -> {
+            });
         }
 
         public static <C> Atomic<C> of(C value){
             AtomicReference<C> val = new AtomicReference<>(value);
-            return new Atomic<C>(value, val::get, val::set);
+            return new Atomic<>(value, val::get, val::set);
         }
     }
 
