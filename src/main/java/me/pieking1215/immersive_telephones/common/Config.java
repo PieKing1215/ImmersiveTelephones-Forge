@@ -1,9 +1,12 @@
 package me.pieking1215.immersive_telephones.common;
 
+import com.google.common.base.Preconditions;
 import me.pieking1215.immersive_telephones.common.network.SyncServerConfigPacket;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.lang.reflect.Field;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
@@ -49,8 +52,10 @@ public class Config {
         }
     }
 
-    public static abstract class Atomic<T> {
+    public static class Atomic<T> {
         private final T defaultValue;
+        private final Supplier<T> getter;
+        private final Consumer<T> setter;
 
         private static Field defaultSupplier;
 
@@ -63,58 +68,40 @@ public class Config {
             }
         }
 
-        private Atomic(T defaultValue){
+        private Atomic(T defaultValue, Supplier<T> getter, Consumer<T> setter){
             this.defaultValue = defaultValue;
+            this.getter = getter;
+            this.setter = setter;
         }
 
-        public abstract void set(T value);
-        public abstract T get();
+        public void set(T value){
+            setter.accept(value);
+        }
+
+        public T get() {
+            return getter.get();
+        }
 
         public T getDefault(){
             return defaultValue;
         }
 
         public static <C> Atomic<C> wrap(ForgeConfigSpec.ConfigValue<C> cv) {
+            Preconditions.checkState(defaultSupplier != null);
+
             try {
                 //noinspection unchecked
-                return new Atomic<C>(((Supplier<C>)defaultSupplier.get(cv)).get()) {
-                    @Override
-                    public void set(C value) {
-                        cv.set(value);
-                    }
-
-                    @Override
-                    public C get() {
-                        return cv.get();
-                    }
-                };
-            }catch(Exception e){
+                return new Atomic<C>(((Supplier<C>)defaultSupplier.get(cv)).get(), cv::get, cv::set);
+            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
 
-            return new Atomic<C>(null) {
-                @Override
-                public void set(C value) {}
-
-                @Override
-                public C get() {return null;}
-            };
+            return new Atomic<C>(null, () -> null, (v) -> {});
         }
 
         public static <C> Atomic<C> of(C value){
-            return new Atomic<C>(value) {
-                C val = value;
-
-                @Override
-                public void set(C value) {
-                    val = value;
-                }
-
-                @Override
-                public C get() {
-                    return val;
-                }
-            };
+            AtomicReference<C> val = new AtomicReference<>(value);
+            return new Atomic<C>(value, val::get, val::set);
         }
     }
 

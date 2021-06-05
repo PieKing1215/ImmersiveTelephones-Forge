@@ -81,7 +81,7 @@ class ClientConfig {
                     , doubleValue.get())
 
                     .setSaveConsumer(readOnly ? v -> {} : doubleValue::set)
-                    .setDefaultValue(readOnly ? doubleValue.get() : doubleValue.getDefault()) // TODO: reflect into ForgeConfigSpec.ConfigValue or something to get the actual default
+                    .setDefaultValue(readOnly ? doubleValue.get() : doubleValue.getDefault())
                     .setTooltip(Arrays.stream(I18n.format("tooltip.config.immersive_telephones." + key).split("\n")).map(StringTextComponent::new).toArray(StringTextComponent[]::new))
                     .build();
             e.setEditable(!readOnly);
