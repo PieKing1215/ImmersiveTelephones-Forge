@@ -42,6 +42,6 @@ Remember it is extremely experimental right now.
 
 No known conflicts, please report any you find.
 
-Do not download this mod from anywhere other than the Immersive Telephones GitHub page or the Immersive Telephones Curseforge page.<br>
+Do not download this mod from anywhere other than the Immersive Telephones GitHub, Curseforge, or Modrinth page.<br>
 This mod may not be reposted to any other third-party websites.<br>
 [#StopModReposts](https://stopmodreposts.org)
