@@ -71,7 +71,6 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onClientConnected(PlayerEvent.PlayerLoggedInEvent ev){
-        System.out.println("PlayerLoggedInEvent " + FMLEnvironment.dist + " " + ev.getPlayer());
         if(FMLEnvironment.dist == Dist.DEDICATED_SERVER){
             // send server config to client
             ImmersiveTelephonePacketHandler.INSTANCE.send(
