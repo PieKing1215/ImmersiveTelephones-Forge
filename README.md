@@ -6,7 +6,7 @@
 </h1>
 
 ### Minecraft Forge mod that adds functional telephones for proximity chat
-test
+
 <table>
 <tr>
   <td>Forge</td>
@@ -26,8 +26,6 @@ Also note: the mod right now is basically a proof of concept and has only basic 
 There are a large amount of features planned.
 
 This mod obviously needs to be on both the server and clients.
-
-### [Releases](https://github.com/PieKing1215/ImmersiveTelephones-Forge/releases)
 
 Currently 1.16.5 Forge only. Ports may come later.<br>
 Requires [Simple Voice Chat](https://www.curseforge.com/minecraft/mc-mods/simple-voice-chat)<br>
