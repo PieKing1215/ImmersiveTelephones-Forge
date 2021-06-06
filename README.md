@@ -6,7 +6,7 @@
 </h1>
 
 ### Minecraft Forge mod that adds functional telephones for proximity chat
-test
+
 <table>
 <tr>
   <td>Forge</td>
