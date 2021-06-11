@@ -5,7 +5,7 @@ import blusunrize.immersiveengineering.api.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.wires.LocalWireNetwork;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
+import me.pieking1215.immersive_telephones.common.tile_entity.ICallable;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.BlockPosArgument;
@@ -30,9 +30,9 @@ public class ProbeConnectionCommand {
                     String s = i + ") " + p.toString();
                     IImmersiveConnectable connect = net.getConnector(p);
                     s += " : " + connect.getClass().getSimpleName();
-                    if(connect instanceof TelephoneTileEntity){
-                        TelephoneTileEntity e = (TelephoneTileEntity) connect;
-                        s += "(" + e.getNumber() + ")";
+                    if(connect instanceof ICallable){
+                        ICallable e = (ICallable) connect;
+                        s += "(" + e.getID() + ")";
                     }
                     source.getSource().sendFeedback(new StringTextComponent(s), true);
                     i++;

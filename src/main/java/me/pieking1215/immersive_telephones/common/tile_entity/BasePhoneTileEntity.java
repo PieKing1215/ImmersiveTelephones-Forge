@@ -9,6 +9,7 @@ import blusunrize.immersiveengineering.api.wires.ConnectionPoint;
 import blusunrize.immersiveengineering.api.wires.ConnectorTileHelper;
 import blusunrize.immersiveengineering.api.wires.GlobalWireNetwork;
 import blusunrize.immersiveengineering.api.wires.IImmersiveConnectable;
+import blusunrize.immersiveengineering.api.wires.LocalWireNetwork;
 import blusunrize.immersiveengineering.api.wires.WireType;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -29,7 +30,9 @@ import net.minecraftforge.client.model.data.IModelData;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnectable, ITickableTileEntity {
@@ -86,6 +89,24 @@ public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnect
     }
 
     //endregion
+
+    public List<ICallable> findConnectedCallables(){
+        List<ICallable> list = new ArrayList<>();
+
+        if(world == null) return list;
+
+        LocalWireNetwork net = GlobalWireNetwork.getNetwork(this.world).getNullableLocalNet(this.getPos());
+        if (net == null) return list;
+
+        for(BlockPos p : net.getConnectors()){
+            IImmersiveConnectable connect = net.getConnector(p);
+            if(connect instanceof ICallable && connect != this){
+                list.add((ICallable) connect);
+            }
+        }
+
+        return list;
+    }
 
     @Override
     public void setWorldAndPos(@Nonnull World worldIn, @Nonnull BlockPos pos) {

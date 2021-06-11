@@ -4,7 +4,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
 import me.pieking1215.immersive_telephones.common.network.ImmersiveTelephonePacketHandler;
 import me.pieking1215.immersive_telephones.common.network.StartCallPacket;
-import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
+import me.pieking1215.immersive_telephones.common.tile_entity.BasePhoneTileEntity;
+import me.pieking1215.immersive_telephones.common.tile_entity.ICallable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.button.Button;
@@ -14,13 +15,13 @@ import java.util.List;
 
 public class TelephoneScreen extends Screen {
 
-    private final List<TelephoneTileEntity> options;
-    private final TelephoneTileEntity tileEntity;
+    private final List<ICallable> options;
+    private final BasePhoneTileEntity tileEntity;
 
-    public TelephoneScreen(TelephoneTileEntity tileEntity) {
+    public TelephoneScreen(BasePhoneTileEntity tileEntity) {
         super(new StringTextComponent("Telephone Screen"));
         this.tileEntity = tileEntity;
-        this.options = tileEntity.findConnectedPhones();
+        this.options = tileEntity.findConnectedCallables();
     }
 
     @Override
@@ -28,12 +29,12 @@ public class TelephoneScreen extends Screen {
         super.init();
 
         for(int i = 0; i < options.size(); i++){
-            TelephoneTileEntity opt = options.get(i);
-            Button cb = new Button(10, 20 + (i * 22), 100, 20, new StringTextComponent(opt.getNumber()), (b) -> {
-                ImmersiveTelephone.LOGGER.debug("Calling {}", opt.getNumber());
+            ICallable opt = options.get(i);
+            Button cb = new Button(10, 20 + (i * 22), 100, 20, new StringTextComponent(opt.getID()), (b) -> {
+                ImmersiveTelephone.LOGGER.debug("Calling {}", opt.getID());
                 Minecraft.getInstance().displayGuiScreen(null);
 
-                StartCallPacket packet = new StartCallPacket(tileEntity.getPosition(), opt.getNumber());
+                StartCallPacket packet = new StartCallPacket(tileEntity.getPosition(), opt.getID());
                 ImmersiveTelephonePacketHandler.INSTANCE.sendToServer(packet);
 
             });
@@ -47,7 +48,7 @@ public class TelephoneScreen extends Screen {
     @Override
     public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 
-        Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, "telephone \"" + tileEntity.getNumber() + "\"" + " " + tileEntity.getUUID(), 10, 10, 0xffffff);
+        Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, "telephone \"" + tileEntity.getUUID() + "\"" + " " + tileEntity.getUUID(), 10, 10, 0xffffff);
 
         super.render(matrixStack, mouseX, mouseY, partialTicks);
     }

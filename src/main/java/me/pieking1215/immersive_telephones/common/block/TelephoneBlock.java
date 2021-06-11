@@ -201,7 +201,7 @@ public class TelephoneBlock extends Block {
 
                     if(it.isEmpty()) {
                         if (tel.isRinging()) {
-                            if (tel.findConnectedPhones().stream().anyMatch(t -> t == tel.getWhoRings())) {
+                            if (tel.findConnectedCallables().stream().anyMatch(t -> t == tel.getWhoRings())) {
                                 tel.answerPhone((ServerPlayerEntity) player);
                             }
 

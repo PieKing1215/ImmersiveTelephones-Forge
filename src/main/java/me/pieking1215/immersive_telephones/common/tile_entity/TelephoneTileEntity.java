@@ -1,8 +1,5 @@
 package me.pieking1215.immersive_telephones.common.tile_entity;
 
-import blusunrize.immersiveengineering.api.wires.GlobalWireNetwork;
-import blusunrize.immersiveengineering.api.wires.IImmersiveConnectable;
-import blusunrize.immersiveengineering.api.wires.LocalWireNetwork;
 import com.google.common.base.Preconditions;
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
 import me.pieking1215.immersive_telephones.common.Config;
@@ -29,6 +26,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -39,12 +37,13 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-public class TelephoneTileEntity extends BasePhoneTileEntity {
+public class TelephoneTileEntity extends BasePhoneTileEntity implements ICallable, IAudioReceiver {
     private String number = "000";
     private int color = 0xffffff;
 
-    private TelephoneTileEntity whoRings = null; // server only
+    private ICallable whoRings = null; // server only
 
     private long ringTime = -1;
 
@@ -52,7 +51,7 @@ public class TelephoneTileEntity extends BasePhoneTileEntity {
 
     // TODO: I think storing TEs like this might not be safe
     //       since if it unloads it'll be invalid
-    private final List<TelephoneTileEntity> inCallWith = new ArrayList<>();
+    private final List<ICallable> inCallWith = new ArrayList<>();
 
     private Entity handsetEntity = null;
 
@@ -95,10 +94,10 @@ public class TelephoneTileEntity extends BasePhoneTileEntity {
             }
 
             if(!dial.isEmpty() && world.getGameTime() - lastDial > 20 * 2){
-                findConnectedPhones().stream()
-                        .filter(t -> t.getNumber().equals(dial))
+                findConnectedCallables().stream()
+                        .filter(t -> t.getID().equals(dial))
                         .findFirst().ifPresent(
-                                other -> other.beingCalled(this));
+                                other -> other.onDialed(this));
                 dial = "";
             }
 
@@ -175,12 +174,15 @@ public class TelephoneTileEntity extends BasePhoneTileEntity {
 
                     // green particle line between phones in a call together
                     Vector3d from = new Vector3d(getPos().getX(), getPos().getY(), getPos().getZ());
-                    for(TelephoneTileEntity other : inCallWith) {
-                        for (float t = 0; t < 1.0f; t += 0.1f) {
-                            Vector3d v3 = from.add((new Vector3d(other.getPos().getX(), other.getPos().getY(), other.getPos().getZ()).subtract(from)).mul(t, t, t));
-                            v3 = v3.add(0.5, 0.5, 0.5);
+                    for(ICallable other : inCallWith) {
+                        if(other instanceof BasePhoneTileEntity){
+                            BasePhoneTileEntity ot = (BasePhoneTileEntity) other;
+                            for (float t = 0; t < 1.0f; t += 0.1f) {
+                                Vector3d v3 = from.add((new Vector3d(ot.getPos().getX(), ot.getPos().getY(), ot.getPos().getZ()).subtract(from)).mul(t, t, t));
+                                v3 = v3.add(0.5, 0.5, 0.5);
 
-                            sw.spawnParticle(ParticleTypes.HAPPY_VILLAGER, v3.x, v3.y, v3.z, 1, 0, 0, 0, 0.0f);
+                                sw.spawnParticle(ParticleTypes.HAPPY_VILLAGER, v3.x, v3.y, v3.z, 1, 0, 0, 0, 0.0f);
+                            }
                         }
                     }
 
@@ -192,10 +194,14 @@ public class TelephoneTileEntity extends BasePhoneTileEntity {
 
             if(whoRings != null) {
                 if(isRinging()) {
-                    long ringTimeLeft = ringTime - world.getGameTime();
-                    if (ringTimeLeft % 4 == 0 && ringTimeLeft % 40 < 30) {
-                        sw.spawnParticle(ParticleTypes.CRIT, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 2, 0.2, 0.3, 0.2, 0.1f);
-                        sw.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                    if(!whoRings.isStillCalling(this)){
+                        whoRings = null;
+                    }else {
+                        long ringTimeLeft = ringTime - world.getGameTime();
+                        if (ringTimeLeft % 4 == 0 && ringTimeLeft % 40 < 30) {
+                            sw.spawnParticle(ParticleTypes.CRIT, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 2, 0.2, 0.3, 0.2, 0.1f);
+                            sw.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                        }
                     }
                 }else if(ringTime == world.getGameTime()){
                     sw.spawnParticle(ParticleTypes.BARRIER, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1, 0, 0, 0, 0.0f);
@@ -226,24 +232,6 @@ public class TelephoneTileEntity extends BasePhoneTileEntity {
                 }
             }
         }
-    }
-
-    public List<TelephoneTileEntity> findConnectedPhones(){
-        List<TelephoneTileEntity> list = new ArrayList<>();
-
-        if(world == null) return list;
-
-        LocalWireNetwork net = GlobalWireNetwork.getNetwork(this.world).getNullableLocalNet(this.getPos());
-        if (net == null) return list;
-
-        for(BlockPos p : net.getConnectors()){
-            IImmersiveConnectable connect = net.getConnector(p);
-            if(connect instanceof TelephoneTileEntity && connect != this){
-                list.add((TelephoneTileEntity) connect);
-            }
-        }
-
-        return list;
     }
 
     @Override
@@ -308,7 +296,8 @@ public class TelephoneTileEntity extends BasePhoneTileEntity {
 
     }
 
-    public String getNumber(){
+    @Override
+    public String getID() {
         return number;
     }
 
@@ -321,17 +310,23 @@ public class TelephoneTileEntity extends BasePhoneTileEntity {
         return ringTime;
     }
 
-    public void beingCalled(TelephoneTileEntity calledBy) {
+    @Override
+    public void onDialed(ICallable dialedBy) {
         Preconditions.checkNotNull(world);
 
         if(!world.isRemote){
             // server side
 
             this.ringTime = world.getGameTime() + 20 * 10;
-            this.whoRings = calledBy;
+            this.whoRings = dialedBy;
 
             world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
         }
+    }
+
+    @Override
+    public boolean isStillCalling(ICallable other) {
+        return handsetEntity != null; //TODO: actually keep track of who I'm dialing
     }
 
     public boolean isRinging() {
@@ -339,46 +334,44 @@ public class TelephoneTileEntity extends BasePhoneTileEntity {
         return getRingTime() > world.getGameTime();
     }
 
-    public TelephoneTileEntity getWhoRings(){
+    public ICallable getWhoRings(){
         return whoRings;
     }
 
+    @Override
+    public void onAnsweredCall(ICallable answerer) {
+        // answerer is the other device which accepted our call
+        inCallWith.forEach(o -> {
+            answerer.onAddedToCall(this, o);
+            o.onAddedToCall(this, answerer);
+        });
+        addToCall(answerer);
+    }
+
+    @Override
+    public void onAddedToCall(ICallable whoAdded, ICallable added) {
+        // any random phone shouldn't be allowed to add itself
+        if(whoAdded != this && inCallWith.contains(whoAdded)){
+            addToCall(added);
+        }
+    }
+
     public void answerPhone(ServerPlayerEntity player) {
+        // server side
+
         Preconditions.checkNotNull(world);
 
         ringTime = -1;
 
-        if(whoRings.handsetEntity != null) {
-
+        if(whoRings.isStillCalling(this)) {
             inCall = true;
-
-            // if I answer and have other people already, add them to the new caller and the new caller to them
-            inCallWith.forEach(o -> {
-                o.addToCall(whoRings);
-                whoRings.addToCall(o);
-
-                // if the caller was also in a group add all of my group to theirs and vice versa
-                whoRings.inCallWith.forEach(o2 -> {
-                    o.addToCall(o2);
-                    o2.addToCall(o);
-                });
-            });
-
             inCallWith.add(whoRings);
+            whoRings.onAnsweredCall(this);
 
-            // if the caller had other people on the line add them all to us and us to all of them
-            whoRings.inCallWith.forEach(o -> {
-                addToCall(o);
-                o.addToCall(this);
-
-                // if I also have people in a group add all of their group to mine and vice versa
-                inCallWith.forEach(o2 -> {
-                    o2.addToCall(o);
-                    o.addToCall(o2);
-                });
+            inCallWith.forEach(o -> {
+                whoRings.onAddedToCall(this, o);
+                o.onAddedToCall(this, whoRings);
             });
-
-            whoRings.addToCall(this);
 
             whoRings = null;
         }
@@ -389,7 +382,7 @@ public class TelephoneTileEntity extends BasePhoneTileEntity {
     }
 
     @SuppressWarnings("WeakerAccess")
-    public void addToCall(TelephoneTileEntity other){
+    public void addToCall(ICallable other){
         Preconditions.checkNotNull(world);
 
         if(other == this || inCallWith.contains(other)){
@@ -463,8 +456,8 @@ public class TelephoneTileEntity extends BasePhoneTileEntity {
         inCall = false;
         handsetEntity = null;
 
-        for(TelephoneTileEntity te : inCallWith){
-            te.leftCall(this);
+        for(ICallable ca : inCallWith){
+            ca.onLeftCall(this);
         }
 
         inCallWith.clear();
@@ -475,14 +468,14 @@ public class TelephoneTileEntity extends BasePhoneTileEntity {
         world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
     }
 
-    private void leftCall(TelephoneTileEntity other){
-        inCallWith.remove(other);
+    @Override
+    public void onLeftCall(ICallable leaver) {
+        inCallWith.remove(leaver);
 
         if(inCallWith.isEmpty()){
             inCall = false;
             // don't reset interactingPlayer since out player hasn't hung up yet
         }
-
     }
 
     @Nullable
@@ -490,7 +483,7 @@ public class TelephoneTileEntity extends BasePhoneTileEntity {
         return handsetEntity;
     }
 
-    public List<TelephoneTileEntity> getInCallWith(){
+    public List<ICallable> getInCallWith(){
         return inCallWith;
     }
 
@@ -671,4 +664,18 @@ public class TelephoneTileEntity extends BasePhoneTileEntity {
         return Optional.empty();
     }
 
+    @Override
+    public World getReceiverWorld() {
+        return getWorld();
+    }
+
+    @Override
+    public UUID getReceiverUUID() {
+        return getUUID();
+    }
+
+    @Override
+    public BlockPos getReceiverPos() {
+        return getPos();
+    }
 }

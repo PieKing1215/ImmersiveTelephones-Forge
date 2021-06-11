@@ -5,6 +5,7 @@ import de.maxhenkel.voicechat.voice.common.NetworkMessage;
 import de.maxhenkel.voicechat.voice.common.SoundPacket;
 import de.maxhenkel.voicechat.voice.server.ClientConnection;
 import de.maxhenkel.voicechat.voice.server.Server;
+import me.pieking1215.immersive_telephones.common.tile_entity.IAudioReceiver;
 import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -39,19 +40,23 @@ public abstract class MixinServer {
                     float distance = 32;
 
                     t.getInCallWith().forEach(tel -> {
-                        if(tel.getWorld() == null) return;
+                        if(!(tel instanceof IAudioReceiver)) return;
 
-                        NetworkMessage msg = new NetworkMessage(new SoundPacket(tel.getUUID(), packet.getData(), packet.getSequenceNumber()));
-                        tel.getWorld()
+                        IAudioReceiver receiver = (IAudioReceiver)tel;
+
+                        if(receiver.getReceiverWorld() == null) return;
+
+                        NetworkMessage msg = new NetworkMessage(new SoundPacket(receiver.getReceiverUUID(), packet.getData(), packet.getSequenceNumber()));
+                        receiver.getReceiverWorld()
                                 .getEntitiesWithinAABB(
                                         PlayerEntity.class,
                                         new AxisAlignedBB(
-                                                tel.getPos().getX() - distance,
-                                                tel.getPos().getY() - distance,
-                                                tel.getPos().getZ() - distance,
-                                                tel.getPos().getX() + distance,
-                                                tel.getPos().getY() + distance,
-                                                tel.getPos().getZ() + distance
+                                                receiver.getReceiverPos().getX() - distance,
+                                                receiver.getReceiverPos().getY() - distance,
+                                                receiver.getReceiverPos().getZ() - distance,
+                                                receiver.getReceiverPos().getX() + distance,
+                                                receiver.getReceiverPos().getY() + distance,
+                                                receiver.getReceiverPos().getZ() + distance
                                         )
                                         , p -> !p.getUniqueID().equals(player.getUniqueID())
                                 ).stream()

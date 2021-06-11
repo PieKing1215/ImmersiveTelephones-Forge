@@ -42,10 +42,10 @@ public class StartCallPacket {
                     if(tileEntity instanceof TelephoneTileEntity){
                         TelephoneTileEntity te = (TelephoneTileEntity)tileEntity;
 
-                        te.findConnectedPhones().stream()
-                                .filter(t -> t.getNumber().equals(callee))
+                        te.findConnectedCallables().stream()
+                                .filter(t -> t.getID().equals(callee))
                                 .findFirst().ifPresent(
-                                        other -> other.beingCalled(te));
+                                        other -> other.onDialed(te));
                     }
                 }
             }
