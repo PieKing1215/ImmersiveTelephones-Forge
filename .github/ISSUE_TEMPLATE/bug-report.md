@@ -14,7 +14,7 @@ Additionally, give this issue a descriptive title. (eg. "Crash when opening craf
 **Describe the bug**
 A clear and concise description of what the bug is.
 If you have any leads, include them here.
-(eg. if the issue occurs only on multiplayer or only when some other mod does something)
+(eg. if the issue occurs only while riding a pig or only when you activate something from another mod)
 
 **To Reproduce**
 Describe how this issue can be reproduced.
