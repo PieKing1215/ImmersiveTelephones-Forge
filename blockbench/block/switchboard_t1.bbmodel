@@ -1,0 +1,80 @@
+{
+	"meta": {
+		"format_version": "3.6",
+		"creation_time": 1623524287,
+		"model_format": "java_block",
+		"box_uv": false
+	},
+	"name": "switchboard_t1",
+	"parent": "block/cube_all",
+	"ambientocclusion": true,
+	"front_gui_light": false,
+	"visible_box": [1, 1, 0],
+	"resolution": {
+		"width": 16,
+		"height": 16
+	},
+	"elements": [
+		{
+			"name": "cube",
+			"rescale": false,
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"autouv": 0,
+			"color": 7,
+			"locked": false,
+			"origin": [0, 0, 0],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": 0},
+				"east": {"uv": [0, 0, 16, 16], "texture": 1},
+				"south": {"uv": [0, 0, 16, 16], "texture": 2},
+				"west": {"uv": [0, 0, 16, 16], "texture": 1},
+				"up": {"uv": [0, 0, 16, 16], "texture": 1},
+				"down": {"uv": [0, 0, 16, 16], "texture": 1}
+			},
+			"uuid": "b471d330-3583-1a5a-cb61-02ab26de207d"
+		}
+	],
+	"outliner": ["b471d330-3583-1a5a-cb61-02ab26de207d"],
+	"textures": [
+		{
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\textures\\blocks\\switchboard_t1_front.png",
+			"name": "switchboard_t1_front.png",
+			"folder": "blocks",
+			"namespace": "immersive_telephones",
+			"id": "0",
+			"particle": false,
+			"visible": true,
+			"mode": "bitmap",
+			"saved": false,
+			"uuid": "6ee1c101-a3c5-273c-4736-2b5c1f9d9d27",
+			"source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAASElEQVQ4T2O8P3/+fwYKACPIAAUFBbKMePDgAQN1DWB0dAS75P/+/WCaEB/DBYQ0oMtT3wukhiT1vTAaBoQTziBOB6QmIGT1AIcvkdGXq2vmAAAAAElFTkSuQmCC"
+		},
+		{
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\textures\\blocks\\switchboard_t1_side.png",
+			"name": "switchboard_t1_side.png",
+			"folder": "blocks",
+			"namespace": "immersive_telephones",
+			"id": "1",
+			"particle": true,
+			"visible": true,
+			"mode": "bitmap",
+			"saved": false,
+			"uuid": "fdc3f0ce-d5fd-7e08-2e3f-ebabaf66a9ee",
+			"source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAALklEQVQ4T2O8P3/+fwYKACPIAAUFBbKMePDgAcOoAaNhMJoOGBioFwZkZUWoJgCwHFvRiISoggAAAABJRU5ErkJggg=="
+		},
+		{
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\textures\\blocks\\switchboard_t1_back.png",
+			"name": "switchboard_t1_back.png",
+			"folder": "blocks",
+			"namespace": "immersive_telephones",
+			"id": "2",
+			"particle": false,
+			"visible": true,
+			"mode": "bitmap",
+			"saved": true,
+			"uuid": "9234eb89-a9ca-5e3d-2e3a-8bfa5f519d58",
+			"source": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAWElEQVQ4T2O8P3/+fwYKACPIAAUFBbKMePDgAQPcgMSFC0kyZH58PAOGASABYgDIxTgN+PDhA14zBAQEGEYNGP5hQFFCIkYzTA1GSiRFM0wtPC+QoxmmBwBkwrXRvou0owAAAABJRU5ErkJggg=="
+		}
+	]
+}

@@ -23,6 +23,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
     @Override
     protected void registerStatesAndModels() {
         telephoneBlock();
+        switchboardT1Block();
     }
 
     private void telephoneBlock(){
@@ -36,6 +37,16 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .autoRotationData()
                 .build();
         disableUVLock(builder);
+    }
+
+    private void switchboardT1Block(){
+        ResourceLocation particle = modLoc("blocks/switchboard_t1_side");
+        VariantBlockStateBuilder builder = getVariantBuilder(BlockRegister.SWITCHBOARD_T1.get());
+        ConnectorBlockBuilder.builder(this.models(), builder, (res, mod) -> res.texture("particle", particle))
+                .fixedModel(models().getExistingFile(modLoc("block/switchboard_t1")))
+                .layers(RenderType.getSolid())
+                .autoRotationData()
+                .build();
     }
 
     private void disableUVLock(VariantBlockStateBuilder builder){

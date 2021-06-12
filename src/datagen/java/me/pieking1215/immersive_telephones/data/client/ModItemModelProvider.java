@@ -13,7 +13,6 @@ public class ModItemModelProvider extends ItemModelProvider {
     @Override
     protected void registerModels() {
         withExistingParent("telephone", modLoc("block/telephone_with_handset"));
-
-
+        withExistingParent("switchboard_t1", modLoc("block/switchboard_t1"));
     }
 }

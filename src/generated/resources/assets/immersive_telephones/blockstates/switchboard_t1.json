@@ -1,0 +1,23 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "immersive_telephones:block/switchboard_t1_connector",
+      "y": 180,
+      "uvlock": true
+    },
+    "facing=south": {
+      "model": "immersive_telephones:block/switchboard_t1_connector",
+      "uvlock": true
+    },
+    "facing=west": {
+      "model": "immersive_telephones:block/switchboard_t1_connector",
+      "y": 90,
+      "uvlock": true
+    },
+    "facing=east": {
+      "model": "immersive_telephones:block/switchboard_t1_connector",
+      "y": 270,
+      "uvlock": true
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "textures": {
+    "particle": "immersive_telephones:blocks/switchboard_t1_side"
+  },
+  "loader": "immersiveengineering:connector",
+  "base_model": "immersive_telephones:block/switchboard_t1",
+  "layers": [
+    "solid"
+  ]
+}
