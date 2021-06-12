@@ -15,9 +15,11 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -26,7 +28,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3i;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -35,9 +39,19 @@ import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
-public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnectable, ITickableTileEntity {
+public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnectable, ITickableTileEntity, ICallable, IAudioReceiver {
     private GlobalWireNetwork globalNet;
+
     private UUID tel_UUID;
+    private String number = "000";
+
+    protected ICallable whoRings = null; // server only
+    protected long ringTime = -1;
+
+    // TODO: I think storing TEs like this might not be safe
+    //       since if it unloads it'll be invalid
+    protected final List<ICallable> inCallWith = new ArrayList<>();
+    protected boolean inCall = false;
 
     public BasePhoneTileEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
@@ -150,6 +164,7 @@ public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnect
         super.write(nbt);
 
         nbt.putUniqueId("tel_UUID", tel_UUID);
+        nbt.putString("name", number);
 
         return nbt;
     }
@@ -158,6 +173,7 @@ public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnect
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
 
+        number = nbt.getString("name");
         if(nbt.contains("tel_UUID")) tel_UUID = nbt.getUniqueId("tel_UUID");
     }
 
@@ -166,6 +182,9 @@ public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnect
         CompoundNBT nbt = super.getUpdateTag();
 
         nbt.putUniqueId("tel_UUID", tel_UUID);
+        nbt.putString("name", number);
+        nbt.putLong("ringTime", ringTime);
+        nbt.putBoolean("inCall", inCall);
 
         return nbt;
     }
@@ -175,6 +194,9 @@ public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnect
         super.handleUpdateTag(state, nbt);
 
         tel_UUID = nbt.getUniqueId("tel_UUID");
+        number = nbt.getString("name");
+        ringTime = nbt.getLong("ringTime");
+        inCall = nbt.getBoolean("inCall");
     }
 
     @Nullable
@@ -196,6 +218,196 @@ public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnect
 
     @Override
     public void tick() {
+        Preconditions.checkNotNull(world);
 
+        if(!world.isRemote) {
+            // server side
+
+            if(inCall){
+                if(world.getGameTime() % 10 == 0){
+
+                    ServerWorld sw = (ServerWorld) world;
+
+                    // green particle line between phones in a call together
+                    Vector3d from = new Vector3d(getPos().getX(), getPos().getY(), getPos().getZ());
+                    for(ICallable other : inCallWith) {
+                        if(other instanceof BasePhoneTileEntity){
+                            BasePhoneTileEntity ot = (BasePhoneTileEntity) other;
+                            for (float t = 0; t < 1.0f; t += 0.1f) {
+                                Vector3d v3 = from.add((new Vector3d(ot.getPos().getX(), ot.getPos().getY(), ot.getPos().getZ()).subtract(from)).mul(t, t, t));
+                                v3 = v3.add(0.5, 0.5, 0.5);
+
+                                sw.spawnParticle(ParticleTypes.HAPPY_VILLAGER, v3.x, v3.y, v3.z, 1, 0, 0, 0, 0.0f);
+                            }
+                        }
+                    }
+
+                    // hearts above this phone
+                    sw.spawnParticle(ParticleTypes.HEART, pos.getX() + 0.5, pos.getY() + 0.75, pos.getZ() + 0.5, 1, 0, 0, 0, 0.0f);
+
+                }
+            }
+
+            if(whoRings != null && (!isRinging() || !whoRings.isStillCalling(this))){
+                onRingingCancelled();
+            }
+
+        }
     }
+
+    @Nullable
+    @Override
+    public World getReceiverWorld() {
+        return getWorld();
+    }
+
+    @Override
+    public UUID getReceiverUUID() {
+        return getUUID();
+    }
+
+    @Override
+    public BlockPos getReceiverPos() {
+        return getPos();
+    }
+
+    @Override
+    public void onDialed(ICallable dialedBy) {
+        Preconditions.checkNotNull(world);
+
+        if(!world.isRemote){
+            // server side
+
+            this.ringTime = world.getGameTime() + 20 * 10;
+            this.whoRings = dialedBy;
+
+            world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+        }
+    }
+
+    @Override
+    public boolean isStillCalling(ICallable other) {
+        return true; //TODO: actually keep track of who I'm dialing
+    }
+
+    @Override
+    public void onAnsweredCall(ICallable answerer) {
+        // answerer is the other device which accepted our call
+        inCallWith.forEach(o -> {
+            answerer.onAddedToCall(this, o);
+            o.onAddedToCall(this, answerer);
+        });
+        addToCall(answerer);
+    }
+
+    @Override
+    public void onAddedToCall(ICallable whoAdded, ICallable added) {
+        // any random phone shouldn't be allowed to add itself
+        if(whoAdded != this && inCallWith.contains(whoAdded)){
+            addToCall(added);
+        }
+    }
+
+    @Override
+    public void onLeftCall(ICallable leaver) {
+        inCallWith.remove(leaver);
+
+        if(inCallWith.isEmpty()){
+            inCall = false;
+            // don't reset interactingPlayer since out player hasn't hung up yet
+        }
+    }
+
+    @Override
+    public String getID() {
+        return number;
+    }
+
+    protected void onRingingCancelled(){
+        whoRings = null;
+    }
+
+    // player could be null if a particular subclass wants to have an automatic answer or something
+    public void answerPhone(@Nullable ServerPlayerEntity player) {
+        // server side
+
+        Preconditions.checkNotNull(world);
+
+        ringTime = -1;
+
+        if(whoRings.isStillCalling(this)) {
+            inCall = true;
+            inCallWith.add(whoRings);
+            whoRings.onAnsweredCall(this);
+
+            inCallWith.forEach(o -> {
+                whoRings.onAddedToCall(this, o);
+                o.onAddedToCall(this, whoRings);
+            });
+
+            whoRings = null;
+        }
+
+        world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public void addToCall(ICallable other){
+        Preconditions.checkNotNull(world);
+
+        if(other == this || inCallWith.contains(other)){
+            // bonus check because I definitely got the logic in answerPhone wrong
+            return;
+        }
+
+        inCall = true;
+        inCallWith.add(other);
+
+        world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+    }
+
+    public void setNumber(String displayName) {
+        this.number = displayName;
+    }
+
+    public void dial(String id){
+        findConnectedCallables().stream()
+                .filter(t -> t.getID().equals(id))
+                .findFirst().ifPresent(
+                other -> other.onDialed(this));
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public long getRingTime(){
+        return ringTime;
+    }
+
+    public boolean isRinging() {
+        if(world == null) return false;
+        return getRingTime() > world.getGameTime();
+    }
+
+    public ICallable getWhoRings(){
+        return whoRings;
+    }
+
+    public List<ICallable> getInCallWith(){
+        return inCallWith;
+    }
+
+    public void endCall(){
+        Preconditions.checkNotNull(world);
+
+        inCall = false;
+
+        for(ICallable ca : inCallWith){
+            ca.onLeftCall(this);
+        }
+
+        inCallWith.clear();
+
+        world.setBlockState(pos, this.getBlockState().with(TelephoneBlock.HANDSET, true));
+        world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
+    }
+
 }

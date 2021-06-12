@@ -34,6 +34,117 @@ public class TelephoneTileEntityRenderer extends TileEntityRenderer<TelephoneTil
         if(handset != null){
             renderCord(tileEntityIn, partialTicks, matrixStackIn, bufferIn, handset);
         }
+
+        // this does nothing since inCallWith is not synced to clients
+//        tileEntityIn.getInCallWith().forEach(w -> {
+//            if(w instanceof IAudioReceiver) {
+//                renderLine(partialTicks, matrixStackIn, bufferIn, Vector3d.copyCentered(tileEntityIn.getReceiverPos()), Vector3d.copyCentered(((IAudioReceiver) w).getReceiverPos()));
+//            }
+//        });
+
+    }
+
+    // based on MobRenderer::renderLeash
+    private void renderLine(float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, Vector3d pos1, Vector3d pos2) {
+        matrixStackIn.push();
+
+        double d0 = (double)(MathHelper.lerp(partialTicks, 0/*entityLivingIn.renderYawOffset*/, 0/*entityLivingIn.prevRenderYawOffset*/) * ((float)Math.PI / 180F)) + (Math.PI / 2D);
+
+        double d1 = Math.cos(d0) * pos1.z + Math.sin(d0) * pos1.x;
+        double d2 = Math.sin(d0) * pos1.z - Math.cos(d0) * pos1.x;
+        double d3 = pos1.getX() + d1;
+        double d4 = pos1.getY() + pos1.y;
+        double d5 = pos1.getZ() + d2;
+
+        matrixStackIn.translate(d1, pos1.y, d2);
+
+        float f = (float)(pos2.x - d3);
+        float f1 = (float)(pos2.y - d4);
+        float f2 = (float)(pos2.z - d5);
+
+        IVertexBuilder ivertexbuilder = bufferIn.getBuffer(RenderType.getLeash());
+        Matrix4f matrix4f = matrixStackIn.getLast().getMatrix();
+        BlockPos blockpos = new BlockPos(pos1);
+        BlockPos blockpos1 = new BlockPos(pos2);
+        int i = 15;
+        //int j = Minecraft.getInstance().getRenderManager().getRenderer(leashHolder).getBlockLight(leashHolder, blockpos1);
+        int j = 15;
+        int k = 15;
+        int l = 15;
+
+        float f4 = MathHelper.fastInvSqrt(f * f + f2 * f2) * 0.025F / 2.0F;
+        float f5 = f2 * f4;
+        float f6 = f * f4;
+
+        renderSide2(ivertexbuilder, matrix4f, f, f1, f2, i, j, k, l, 0.025F, 0.025F, f5, f6, partialTicks);
+        renderSide2(ivertexbuilder, matrix4f, f, f1, f2, i, j, k, l, 0.025F, 0.0F, f5, f6, partialTicks);
+
+        matrixStackIn.pop();
+    }
+
+    private static void renderSide2(IVertexBuilder bufferIn, Matrix4f matrixIn, float p_229119_2_, float p_229119_3_, float p_229119_4_, int blockLight, int holderBlockLight, int skyLight, int holderSkyLight, float p_229119_9_, float p_229119_10_, float p_229119_11_, float p_229119_12_, float partialTicks) {
+        int nSegments = 24;
+
+        for(int j = 0; j < nSegments; ++j) {
+            float f = (float)j / (nSegments - 1);
+            int k = (int)MathHelper.lerp(f, (float)blockLight, (float)holderBlockLight);
+            int l = (int)MathHelper.lerp(f, (float)skyLight, (float)holderSkyLight);
+            int i1 = LightTexture.packLight(k, l);
+            addVertexPair2(bufferIn, matrixIn, i1, p_229119_2_, p_229119_3_, p_229119_4_, p_229119_9_, p_229119_10_, nSegments, j, false, p_229119_11_, p_229119_12_, partialTicks);
+            addVertexPair2(bufferIn, matrixIn, i1, p_229119_2_, p_229119_3_, p_229119_4_, p_229119_9_, p_229119_10_, nSegments, j + 1, true, p_229119_11_, p_229119_12_, partialTicks);
+        }
+
+    }
+
+    private static void addVertexPair2(IVertexBuilder bufferIn, Matrix4f matrixIn, int packedLight, float deltaX, float deltaY, float deltaZ, float p_229120_6_, float p_229120_7_, int totalSegments, int segment, boolean p_229120_10_, float p_229120_11_, float p_229120_12_, float partialTicks) {
+        float r = 0.3F;
+        float g = 0.8F;
+        float b = 0F;
+
+        float thru = (float)segment / (float)totalSegments;
+
+        float thruX = deltaX * thru;
+
+        //        float thruForY = thru;
+        //        if(thru > 0.85){
+        //            float thruThru = (thru - 0.85f) / 0.15f;
+        //            thruForY = thru + (1f - thru) * thruThru;
+        //        }
+
+        //        float thruY = deltaY > 0.0F ?
+        //                (2f * deltaY * thruForY * thruForY - deltaY * thruForY) :
+        //                deltaY - 2f * deltaY * (1f - thruForY) * (1f - thruForY) + deltaY * (1f - thruForY);
+
+        float thruY = deltaY > 0f ?
+                deltaY * thru * thru :
+                deltaY - deltaY * (1.0F - thru) * (1.0F - thru);
+
+        float thruZ = deltaZ * thru;
+
+        if(Config.CLIENT.fancyCordRendering.get()) {
+            Vector3d forward = new Vector3d(deltaX, deltaY, deltaZ).normalize();
+            Vector3d horiz = forward.crossProduct(new Vector3d(0, 1, 0));
+            Vector3d up = forward.crossProduct(horiz);
+
+            Vector3d spiralOffsetRaw = new Vector3d(Math.sin(thru * totalSegments), Math.cos(thru * totalSegments), 0).scale(0.05f);
+
+            Vector3d spiralOffsetTransformed = horiz.scale(spiralOffsetRaw.x).add(up.scale(spiralOffsetRaw.y)).add(forward.scale(spiralOffsetRaw.z));
+
+
+            thruX += spiralOffsetTransformed.getX();
+            thruY += spiralOffsetTransformed.getY();
+            thruZ += spiralOffsetTransformed.getZ();
+        }
+
+        if (!p_229120_10_) {
+            bufferIn.pos(matrixIn, thruX + p_229120_11_, thruY + p_229120_6_ - p_229120_7_, thruZ - p_229120_12_).color(r, g, b, 1.0F).lightmap(packedLight).endVertex();
+        }
+
+        bufferIn.pos(matrixIn, thruX - p_229120_11_, thruY + p_229120_7_, thruZ + p_229120_12_).color(r, g, b, 1.0F).lightmap(packedLight).endVertex();
+        if (p_229120_10_) {
+            bufferIn.pos(matrixIn, thruX + p_229120_11_, thruY + p_229120_6_ - p_229120_7_, thruZ - p_229120_12_).color(r, g, b, 1.0F).lightmap(packedLight).endVertex();
+        }
+
     }
 
     // based on MobRenderer::renderLeash

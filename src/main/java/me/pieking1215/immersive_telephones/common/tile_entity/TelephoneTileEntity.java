@@ -2,77 +2,43 @@ package me.pieking1215.immersive_telephones.common.tile_entity;
 
 import com.google.common.base.Preconditions;
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
-import me.pieking1215.immersive_telephones.common.Config;
 import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntity;
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
 import me.pieking1215.immersive_telephones.common.item.ItemRegister;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.HandSide;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.util.Constants;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-public class TelephoneTileEntity extends BasePhoneTileEntity implements ICallable, IAudioReceiver {
-    private String number = "000";
+public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICallable, IAudioReceiver {
     private int color = 0xffffff;
 
-    private ICallable whoRings = null; // server only
+    private String keypadInput = "";
 
-    private long ringTime = -1;
-
-    private boolean inCall = false;
-
-    // TODO: I think storing TEs like this might not be safe
-    //       since if it unloads it'll be invalid
-    private final List<ICallable> inCallWith = new ArrayList<>();
-
-    private Entity handsetEntity = null;
-
-    private String dial = "";
-
-    private long lastDial = 0;
-    private int lastButton = -1;
-    private int missingHandsetEntityID = -1;
-
-    // TODO: this whole concept is insanely stupid on so many levels
-    @OnlyIn(Dist.CLIENT)
-    public Object clientHandItemMatrix4f;
-    @OnlyIn(Dist.CLIENT)
-    public Object clientCameraMatrix4f;
+    private long lastKeypadInputTime = 0;
+    private int lastKeypadInputIndex = -1;
 
     public TelephoneTileEntity() {
         super(TileEntityRegister.TELEPHONE.get());
+        cordLength = 6;
     }
 
     @Override
     public void tick() {
+        super.tick();
         Preconditions.checkNotNull(world);
 
         if(!world.isRemote) {
@@ -80,155 +46,15 @@ public class TelephoneTileEntity extends BasePhoneTileEntity implements ICallabl
             ServerWorld sw = (ServerWorld) this.world;
             //ServerPlayerEntity pl = interactingPlayer == null ? null : (ServerPlayerEntity) world.getPlayerByUuid(interactingPlayer);
 
-            if(world.getGameTime() % 10 == 0 && !getBlockState().get(TelephoneBlock.HANDSET) && handsetEntity == null){
-                // the handset entity got lost
-
-                sw.getLoadedEntitiesWithinAABB(HandsetEntity.class, AxisAlignedBB.fromVector(Vector3d.copyCentered(getPos())).grow(20)).stream()
-                        .filter(e -> isTheHandset(e.getItem()))
-                        .findFirst().ifPresent(this::disconnectHandset);
-
-                sw.getLoadedEntitiesWithinAABB(ServerPlayerEntity.class, AxisAlignedBB.fromVector(Vector3d.copyCentered(getPos())).grow(20)).stream()
-                        .filter(e -> isTheHandset(e.getHeldItemMainhand())
-                                  || isTheHandset(e.getHeldItemOffhand()))
-                        .findFirst().ifPresent(this::reconnectHandset);
-            }
-
-            if(!dial.isEmpty() && world.getGameTime() - lastDial > 20 * 2){
-                findConnectedCallables().stream()
-                        .filter(t -> t.getID().equals(dial))
-                        .findFirst().ifPresent(
-                                other -> other.onDialed(this));
-                dial = "";
-            }
-
-            if(handsetEntity != null) {
-
-                // TODO: extract some of these constants into a cordLength field
-
-                float f = (float)Math.sqrt(handsetEntity.getDistanceSq(Vector3d.copyCentered(getPos())));
-                if(f > 6.0f){
-                    float sFactor = 0f; // spread (higher -> lower result)
-                    float aFactor = 8f; // inverse amplitude (higher -> lower result)
-
-                    float scale = (-((sFactor + 6) / (f + sFactor)) + 1) / aFactor;
-                    double d0 = ((this.getPos().getX() + 0.5) - handsetEntity.getPosX()) / (double) f;
-                    double d1 = ((this.getPos().getY() + 0.5) - handsetEntity.getPosY()) / (double) f;
-                    double d2 = ((this.getPos().getZ() + 0.5) - handsetEntity.getPosZ()) / (double) f;
-                    Vector3d add = new Vector3d(Math.copySign(d0 * d0 * 0.4D, d0), Math.copySign(d1 * d1 * 0.4D, d1), Math.copySign(d2 * d2 * 0.4D, d2));
-                    handsetEntity.setMotion(handsetEntity.getMotion().add(add.normalize().scale(scale)));
-                }
-
-                if(handsetEntity instanceof ServerPlayerEntity) {
-                    ServerPlayerEntity pl = (ServerPlayerEntity) handsetEntity;
-
-                    double maxDist = Config.getActiveServerConfig().maxHandsetDistance.get();
-                    boolean dropIfPresent = this.getPos().distanceSq(pl.getPositionVec(), true) > maxDist * maxDist;
-
-                    //boolean found = false;
-
-                    for (int i = 0; i < pl.inventory.getSizeInventory(); i++) {
-                        ItemStack stack = pl.inventory.getStackInSlot(i);
-                        if (isTheHandset(stack)) {
-                            //found = true;
-
-                            if (dropIfPresent || (pl.getHeldItemMainhand() != stack && pl.getHeldItemOffhand() != stack) || (pl.openContainer != null && pl.openContainer != pl.container)) {
-                                pl.inventory.setInventorySlotContents(i, ItemStack.EMPTY);
-
-                                HandsetEntity item = new HandsetEntity(this.world, pl.getPosX(), pl.getPosYEye(), pl.getPosZ(), stack);
-                                Vector3d vel = new Vector3d(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ()).subtract(item.getPositionVec()).scale(0.04);
-                                item.setMotion(vel.x, vel.y, vel.z);
-                                item.setPickupDelay(40);
-                                item.setThrowerId(pl.getUniqueID());
-                                this.world.addEntity(item);
-
-                                handsetEntity = item;
-
-                                world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-                            }
-                        }
-                    }
-
-//                    if(!found){
-//                        // couldn't find the handset
-//
-//                        // this doesn't work on the server
-//                        //if(isTheHandset(pl.inventory.getItemStack())){
-//                        //    pl.inventory.setItemStack(ItemStack.EMPTY);
-//                        //}
-//
-//                        ItemEntity item = new ItemEntity(this.world, pl.getPosX(), pl.getPosYEye(), pl.getPosZ(), createHandset());
-//                        Vector3d vel = new Vector3d(this.getPos().getX(), this.getPos().getY(), this.getPos().getZ()).subtract(item.getPositionVec()).scale(0.1);
-//                        item.setVelocity(vel.x, vel.y, vel.z);
-//                        item.setPickupDelay(40);
-//                        item.setThrowerId(pl.getUniqueID());
-//                        this.world.addEntity(item);
-//
-//                        interactingPlayer = null;
-//                    }
-                }
-
-            }
-
-            if(inCall){
-                if(world.getGameTime() % 10 == 0){
-
-                    // green particle line between phones in a call together
-                    Vector3d from = new Vector3d(getPos().getX(), getPos().getY(), getPos().getZ());
-                    for(ICallable other : inCallWith) {
-                        if(other instanceof BasePhoneTileEntity){
-                            BasePhoneTileEntity ot = (BasePhoneTileEntity) other;
-                            for (float t = 0; t < 1.0f; t += 0.1f) {
-                                Vector3d v3 = from.add((new Vector3d(ot.getPos().getX(), ot.getPos().getY(), ot.getPos().getZ()).subtract(from)).mul(t, t, t));
-                                v3 = v3.add(0.5, 0.5, 0.5);
-
-                                sw.spawnParticle(ParticleTypes.HAPPY_VILLAGER, v3.x, v3.y, v3.z, 1, 0, 0, 0, 0.0f);
-                            }
-                        }
-                    }
-
-                    // hearts above this phone
-                    sw.spawnParticle(ParticleTypes.HEART, pos.getX() + 0.5, pos.getY() + 0.75, pos.getZ() + 0.5, 1, 0, 0, 0, 0.0f);
-
-                }
+            if(!keypadInput.isEmpty() && world.getGameTime() - lastKeypadInputTime > 20 * 2){
+                dial(keypadInput);
             }
 
             if(whoRings != null) {
-                if(isRinging()) {
-                    if(!whoRings.isStillCalling(this)){
-                        whoRings = null;
-                    }else {
-                        long ringTimeLeft = ringTime - world.getGameTime();
-                        if (ringTimeLeft % 4 == 0 && ringTimeLeft % 40 < 30) {
-                            sw.spawnParticle(ParticleTypes.CRIT, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 2, 0.2, 0.3, 0.2, 0.1f);
-                            sw.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 1.0f, 1.0f);
-                        }
-                    }
-                }else if(ringTime == world.getGameTime()){
-                    sw.spawnParticle(ParticleTypes.BARRIER, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1, 0, 0, 0, 0.0f);
-                    sw.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.UI_TOAST_IN, SoundCategory.BLOCKS, 1.0f, 1.0f);
-                }
-            }
-        }else{
-            // client
-
-            if(world.getGameTime() % 20 == 0 && handsetEntity == null && missingHandsetEntityID != -1){
-                handsetEntity = world.getEntityByID(missingHandsetEntityID);
-            }
-
-            if(handsetEntity != null) {
-
-                float f = (float) Math.sqrt(handsetEntity.getDistanceSq(Vector3d.copyCentered(getPos())));
-                if (f > 6.0f) {
-
-                    float sFactor = 0f; // spread (higher -> lower result)
-                    float aFactor = 8f; // inverse amplitude (higher -> lower result)
-
-                    float scale = (-((sFactor + 6) / (f + sFactor)) + 1) / aFactor;
-                    double d0 = ((this.getPos().getX() + 0.5) - handsetEntity.getPosX()) / (double) f;
-                    double d1 = ((this.getPos().getY() + 0.5) - handsetEntity.getPosY()) / (double) f;
-                    double d2 = ((this.getPos().getZ() + 0.5) - handsetEntity.getPosZ()) / (double) f;
-                    Vector3d add = new Vector3d(Math.copySign(d0 * d0 * 0.4D, d0), Math.copySign(d1 * d1 * 0.4D, d1), Math.copySign(d2 * d2 * 0.4D, d2));
-                    handsetEntity.setMotion(handsetEntity.getMotion().add(add.normalize().scale(scale)));
+                long ringTimeLeft = ringTime - world.getGameTime();
+                if (ringTimeLeft % 4 == 0 && ringTimeLeft % 40 < 30) {
+                    sw.spawnParticle(ParticleTypes.CRIT, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 2, 0.2, 0.3, 0.2, 0.1f);
+                    sw.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 1.0f, 1.0f);
                 }
             }
         }
@@ -238,7 +64,6 @@ public class TelephoneTileEntity extends BasePhoneTileEntity implements ICallabl
     public CompoundNBT write(CompoundNBT nbt) {
         super.write(nbt);
 
-        nbt.putString("name", number);
         nbt.putInt("color", color);
 
         return nbt;
@@ -248,7 +73,6 @@ public class TelephoneTileEntity extends BasePhoneTileEntity implements ICallabl
     public void read(BlockState state, CompoundNBT nbt) {
         super.read(state, nbt);
 
-        number = nbt.getString("name");
         if(nbt.contains("color")) color = nbt.getInt("color");
 
     }
@@ -257,11 +81,7 @@ public class TelephoneTileEntity extends BasePhoneTileEntity implements ICallabl
     public CompoundNBT getUpdateTag() {
         CompoundNBT nbt = super.getUpdateTag();
 
-        nbt.putString("name", number);
         nbt.putInt("color", color);
-        nbt.putLong("ringTime", ringTime);
-        nbt.putBoolean("inCall", inCall);
-        if(handsetEntity != null) nbt.putInt("handsetEntity", handsetEntity.getEntityId());
 
         return nbt;
     }
@@ -270,24 +90,9 @@ public class TelephoneTileEntity extends BasePhoneTileEntity implements ICallabl
     public void handleUpdateTag(BlockState state, CompoundNBT nbt) {
         super.handleUpdateTag(state, nbt);
 
-        number = nbt.getString("name");
         if(nbt.contains("color")) color = nbt.getInt("color");
-        ringTime = nbt.getLong("ringTime");
-        inCall = nbt.getBoolean("inCall");
 
         Preconditions.checkNotNull(world);
-
-        if(nbt.contains("handsetEntity")){
-            handsetEntity = world.getEntityByID(nbt.getInt("handsetEntity"));
-            if(handsetEntity == null){
-                missingHandsetEntityID = nbt.getInt("handsetEntity");
-            }else{
-                missingHandsetEntityID = -1;
-            }
-        }else{
-            handsetEntity = null;
-            missingHandsetEntityID = -1;
-        }
 
         if(world.isRemote){
             // client side
@@ -297,194 +102,10 @@ public class TelephoneTileEntity extends BasePhoneTileEntity implements ICallabl
     }
 
     @Override
-    public String getID() {
-        return number;
-    }
-
-    public void setNumber(String displayName) {
-        this.number = displayName;
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public long getRingTime(){
-        return ringTime;
-    }
-
-    @Override
-    public void onDialed(ICallable dialedBy) {
-        Preconditions.checkNotNull(world);
-
-        if(!world.isRemote){
-            // server side
-
-            this.ringTime = world.getGameTime() + 20 * 10;
-            this.whoRings = dialedBy;
-
-            world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-        }
-    }
-
-    @Override
-    public boolean isStillCalling(ICallable other) {
-        return handsetEntity != null; //TODO: actually keep track of who I'm dialing
-    }
-
-    public boolean isRinging() {
-        if(world == null) return false;
-        return getRingTime() > world.getGameTime();
-    }
-
-    public ICallable getWhoRings(){
-        return whoRings;
-    }
-
-    @Override
-    public void onAnsweredCall(ICallable answerer) {
-        // answerer is the other device which accepted our call
-        inCallWith.forEach(o -> {
-            answerer.onAddedToCall(this, o);
-            o.onAddedToCall(this, answerer);
-        });
-        addToCall(answerer);
-    }
-
-    @Override
-    public void onAddedToCall(ICallable whoAdded, ICallable added) {
-        // any random phone shouldn't be allowed to add itself
-        if(whoAdded != this && inCallWith.contains(whoAdded)){
-            addToCall(added);
-        }
-    }
-
-    public void answerPhone(ServerPlayerEntity player) {
-        // server side
-
-        Preconditions.checkNotNull(world);
-
-        ringTime = -1;
-
-        if(whoRings.isStillCalling(this)) {
-            inCall = true;
-            inCallWith.add(whoRings);
-            whoRings.onAnsweredCall(this);
-
-            inCallWith.forEach(o -> {
-                whoRings.onAddedToCall(this, o);
-                o.onAddedToCall(this, whoRings);
-            });
-
-            whoRings = null;
-        }
-
-        if(handsetEntity == null) pickUpHandset(player);
-
-        world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public void addToCall(ICallable other){
-        Preconditions.checkNotNull(world);
-
-        if(other == this || inCallWith.contains(other)){
-            // bonus check because I definitely got the logic in answerPhone wrong
-            return;
-        }
-
-        inCall = true;
-        inCallWith.add(other);
-
-        world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-    }
-
-    public void pickUpHandset(ServerPlayerEntity player) {
-        Preconditions.checkNotNull(world);
-
-        handsetEntity = player;
-
-        player.setHeldItem(Hand.MAIN_HAND, createHandset());
-
-        world.playSound(null, getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5, SoundEvents.UI_BUTTON_CLICK, SoundCategory.BLOCKS, 1.0f, 1.0f);
-
-        world.setBlockState(pos, this.getBlockState().with(TelephoneBlock.HANDSET, false));
-        world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-    }
-
-    public void reconnectHandset(ServerPlayerEntity player){
-        Preconditions.checkNotNull(world);
-
-        handsetEntity = player;
-
-        world.setBlockState(pos, this.getBlockState().with(TelephoneBlock.HANDSET, false));
-        world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-    }
-
-    public void disconnectHandset(Entity entityItem) {
-        Preconditions.checkNotNull(world);
-
-        handsetEntity = entityItem;
-
-        if(handsetEntity instanceof HandsetEntity){
-            HandsetItem.setColor(((HandsetEntity)handsetEntity).getItem(), this.color);
-        }
-
-        world.setBlockState(pos, this.getBlockState().with(TelephoneBlock.HANDSET, false));
-        world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-    }
-
-    public boolean isTheHandset(ItemStack stack){
-        if(stack.getItem() instanceof HandsetItem && stack.hasTag()) {
-            Preconditions.checkNotNull(stack.getTag());
-            return stack.getTag().getInt("connected_x") == getPos().getX()
-                && stack.getTag().getInt("connected_y") == getPos().getY()
-                && stack.getTag().getInt("connected_z") == getPos().getZ();
-        }
-
-        return false;
-    }
-
-    private ItemStack createHandset(){
-        ItemStack stack = new ItemStack(ItemRegister.TELEPHONE_HANDSET.get(), 1);
-
-        HandsetItem.write(stack, this.getPos(), this.getColor());
-
-        return stack;
-    }
-
     public void endCall() {
-        Preconditions.checkNotNull(world);
+        super.endCall();
 
-        inCall = false;
-        handsetEntity = null;
-
-        for(ICallable ca : inCallWith){
-            ca.onLeftCall(this);
-        }
-
-        inCallWith.clear();
-
-        dial = "";
-
-        world.setBlockState(pos, this.getBlockState().with(TelephoneBlock.HANDSET, true));
-        world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
-    }
-
-    @Override
-    public void onLeftCall(ICallable leaver) {
-        inCallWith.remove(leaver);
-
-        if(inCallWith.isEmpty()){
-            inCall = false;
-            // don't reset interactingPlayer since out player hasn't hung up yet
-        }
-    }
-
-    @Nullable
-    public Entity getHandsetEntity(){
-        return handsetEntity;
-    }
-
-    public List<ICallable> getInCallWith(){
-        return inCallWith;
+        keypadInput = "";
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -502,48 +123,48 @@ public class TelephoneTileEntity extends BasePhoneTileEntity implements ICallabl
     public void pressButton(ServerPlayerEntity player, int i) {
         Preconditions.checkNotNull(world);
 
-        if(i == lastButton && world.getGameTime() - lastDial < 5) return;
+        if(i == lastKeypadInputIndex && world.getGameTime() - lastKeypadInputTime < 5) return;
 
         // this switch is terrible but whatever
         switch(i){
             case 0:
-                dial += "1";
+                keypadInput += "1";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.259921f);
                 break;
             case 1:
-                dial += "2";
+                keypadInput += "2";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.334840f);
                 break;
             case 2:
-                dial += "3";
+                keypadInput += "3";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.414214f);
                 break;
             case 3:
-                dial += "4";
+                keypadInput += "4";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.498307f);
                 break;
             case 4:
-                dial += "5";
+                keypadInput += "5";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.587401f);
                 break;
             case 5:
-                dial += "6";
+                keypadInput += "6";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.681793f);
                 break;
             case 6:
-                dial += "7";
+                keypadInput += "7";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.781797f);
                 break;
             case 7:
-                dial += "8";
+                keypadInput += "8";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.887749f);
                 break;
             case 8:
-                dial += "9";
+                keypadInput += "9";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 2.0f);
                 break;
             case 10:
-                dial += "0";
+                keypadInput += "0";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.189207f);
                 break;
             case 9:
@@ -554,40 +175,32 @@ public class TelephoneTileEntity extends BasePhoneTileEntity implements ICallabl
                 break;
         }
 
-        player.sendMessage(new StringTextComponent("press button " + i + " \"" + dial + "\""), Util.DUMMY_UUID);
+        player.sendMessage(new StringTextComponent("press button " + i + " \"" + keypadInput + "\""), Util.DUMMY_UUID);
 
-        lastDial = world.getGameTime();
-        lastButton = i;
-    }
-
-    @Override
-    public void remove() {
-        Preconditions.checkNotNull(world);
-
-        if(!world.isRemote){
-            // server
-
-            if(handsetEntity != null){
-                if(handsetEntity instanceof HandsetEntity){
-                    handsetEntity.remove();
-                }else if(handsetEntity instanceof ItemEntity){
-                    // backup functionality
-                    handsetEntity.remove();
-                }else if(handsetEntity instanceof PlayerEntity){
-                    int slot = ((PlayerEntity)handsetEntity).inventory.getSlotFor(createHandset()); //TODO: !!! CRASH: getSlotFor is client only but we are the server here
-                    if(slot != -1) ((PlayerEntity)handsetEntity).inventory.removeStackFromSlot(slot);
-                    if(((PlayerEntity)handsetEntity).getHeldItemOffhand().isItemEqual(createHandset())){
-                        ((PlayerEntity)handsetEntity).setHeldItem(Hand.OFF_HAND, ItemStack.EMPTY);
-                    }
-                }
-            }
-        }
-
-        super.remove();
+        lastKeypadInputTime = world.getGameTime();
+        lastKeypadInputIndex = i;
     }
 
     public int getColor() {
         return color;
+    }
+
+    @Override
+    public void disconnectHandset(Entity entityItem) {
+        super.disconnectHandset(entityItem);
+
+        if(entityItem instanceof HandsetEntity){
+            HandsetItem.setColor(((HandsetEntity)entityItem).getItem(), this.color);
+        }
+    }
+
+    @Override
+    protected ItemStack createHandset() {
+        ItemStack stack = new ItemStack(ItemRegister.TELEPHONE_HANDSET.get(), 1);
+
+        HandsetItem.write(stack, this.getPos(), this.getColor());
+
+        return stack;
     }
 
     public void dyed(DyeColor color) {
@@ -635,47 +248,25 @@ public class TelephoneTileEntity extends BasePhoneTileEntity implements ICallabl
         world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
     }
 
-    @Nonnull
-    public HandSide getHoldingHand(PlayerEntity holder) {
-        if(handsetEntity != holder) return holder.getPrimaryHand();
+    @Override
+    protected void onRingingCancelled() {
+        super.onRingingCancelled();
+        Preconditions.checkNotNull(world);
 
-        if(isTheHandset(holder.getHeldItemMainhand())){
-            return holder.getPrimaryHand();
-        }else if(isTheHandset(holder.getHeldItemOffhand())){
-            return holder.getPrimaryHand().opposite();
+        if(!world.isRemote) {
+            // server side
+
+            ServerWorld sw = (ServerWorld) world;
+
+            // call missed or cancelled
+            sw.spawnParticle(ParticleTypes.BARRIER, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 1, 0, 0, 0, 0.0f);
+            sw.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.UI_TOAST_IN, SoundCategory.BLOCKS, 1.0f, 1.0f);
         }
-
-        return holder.getPrimaryHand();
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public Optional<ItemStack> findHandsetItem(){
-        if(handsetEntity instanceof HandsetEntity){
-            return Optional.of(((HandsetEntity)handsetEntity).getItem());
-        }else if(handsetEntity instanceof PlayerEntity){
-            PlayerEntity pl = (PlayerEntity)handsetEntity;
-
-            if(isTheHandset(pl.getHeldItemMainhand())){
-                return Optional.of(pl.getHeldItemMainhand());
-            }else if(isTheHandset(pl.getHeldItemOffhand())){
-                return Optional.of(pl.getHeldItemOffhand());
-            }
-        }
-        return Optional.empty();
     }
 
     @Override
-    public World getReceiverWorld() {
-        return getWorld();
-    }
-
-    @Override
-    public UUID getReceiverUUID() {
-        return getUUID();
-    }
-
-    @Override
-    public BlockPos getReceiverPos() {
-        return getPos();
+    public void dial(String id) {
+        super.dial(id);
+        this.keypadInput = "";
     }
 }
