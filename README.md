@@ -3,6 +3,7 @@
   <a href="https://github.com/PieKing1215/ImmersiveTelephones-Forge/blob/master/LICENSE"><img src="https://img.shields.io/github/license/PieKing1215/ImmersiveTelephones-Forge?style=flat&color=0C8E8E" alt="License"></a>
   <a href="https://www.curseforge.com/minecraft/mc-mods/immersive-telephones-forge"><img src="http://cf.way2muchnoise.eu/full_immersive-telephones-forge_downloads(E04E14-555-fff-010101-1C1C1C).svg" alt="CF Download Count"></a>
   <a href="https://modrinth.com/mod/immersive-telephones-forge"><img src="https://waffle.coffee/modrinth/immersive-telephones-forge/downloads" alt="Modrinth Download Count"></a>
+  <a href="https://ko-fi.com/X8X34Y6MZ"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Donate on ko-fi" width="160px"></a>
 </h1>
 
 ### Minecraft Forge mod that adds functional telephones for proximity chat
