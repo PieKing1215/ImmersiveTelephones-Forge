@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
-public interface IAudioReceiver {
+public interface IAudioReceiver extends IHasID {
 
     @Nullable
     World getReceiverWorld();

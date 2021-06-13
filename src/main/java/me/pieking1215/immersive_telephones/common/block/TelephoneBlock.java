@@ -201,9 +201,10 @@ public class TelephoneBlock extends Block {
 
                     if(it.isEmpty()) {
                         if (tel.isRinging()) {
-                            if (tel.findConnectedCallables().stream().anyMatch(t -> t == tel.getWhoRings())) {
+                            // TODO: update this check to work with switchboards
+//                            if (tel.findConnectedCallables().stream().anyMatch(t -> t == tel.getWhoRings())) {
                                 tel.answerPhone((ServerPlayerEntity) player);
-                            }
+//                            }
 
                             return ActionResultType.CONSUME;
                         } else {

@@ -11,9 +11,12 @@ import blusunrize.immersiveengineering.api.wires.GlobalWireNetwork;
 import blusunrize.immersiveengineering.api.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.wires.LocalWireNetwork;
 import blusunrize.immersiveengineering.api.wires.WireType;
+import blusunrize.immersiveengineering.common.blocks.metal.EnergyConnectorTileEntity;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
+import me.pieking1215.immersive_telephones.common.block.switchboard.BaseSwitchboardBlock;
+import me.pieking1215.immersive_telephones.common.tile_entity.switchboard.BaseSwitchboardTileEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
@@ -37,7 +40,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnectable, ITickableTileEntity, ICallable, IAudioReceiver {
     private GlobalWireNetwork globalNet;
@@ -343,6 +349,12 @@ public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnect
             inCallWith.forEach(o -> {
                 whoRings.onAddedToCall(this, o);
                 o.onAddedToCall(this, whoRings);
+
+                inCallWith.forEach(o2 -> {
+                    o.onAddedToCall(this, o2);
+                    o2.onAddedToCall(this, o);
+                });
+
             });
 
             whoRings = null;
@@ -371,10 +383,27 @@ public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnect
     }
 
     public void dial(String id){
-        findConnectedCallables().stream()
-                .filter(t -> t.getID().equals(id))
-                .findFirst().ifPresent(
-                other -> other.onDialed(this));
+        findSwitchboards().map(sb -> sb.findTileEntitiesWithType(ICallable.class, id))
+                .filter(Optional::isPresent).map(Optional::get)
+                .findFirst().ifPresent(other -> other.onDialed(this));
+    }
+
+    public Stream<BaseSwitchboardTileEntity> findSwitchboards(){
+        if(world == null) return Stream.empty();
+
+        LocalWireNetwork net = GlobalWireNetwork.getNetwork(this.world).getNullableLocalNet(this.getPos());
+        if (net == null) return Stream.empty();
+
+        return net.getConnectors().stream().map(p -> {
+            TileEntity te = world.getTileEntity(p);
+            if(!(te instanceof EnergyConnectorTileEntity)) return null;
+
+            BlockPos p2 = p.offset(((EnergyConnectorTileEntity)te).getFacing());
+            TileEntity te2 = world.getTileEntity(p2);
+            if(!(te2 instanceof BaseSwitchboardTileEntity)) return null;
+
+            return (BaseSwitchboardTileEntity) te2;
+        }).filter(Objects::nonNull);
     }
 
     @SuppressWarnings("WeakerAccess")

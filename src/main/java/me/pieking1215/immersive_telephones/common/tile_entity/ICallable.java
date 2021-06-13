@@ -1,7 +1,6 @@
 package me.pieking1215.immersive_telephones.common.tile_entity;
 
-public interface ICallable {
-
+public interface ICallable extends IHasID {
 
     /**
      * Run when another device dials this one
@@ -35,7 +34,5 @@ public interface ICallable {
      * @param leaver The device that left
      */
     void onLeftCall(ICallable leaver);
-
-    String getID();
 
 }

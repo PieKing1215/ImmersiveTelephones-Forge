@@ -1,16 +1,18 @@
 package me.pieking1215.immersive_telephones.common.block.switchboard;
 
-import com.mojang.brigadier.LiteralMessage;
-import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
+import blusunrize.immersiveengineering.api.wires.GlobalWireNetwork;
+import blusunrize.immersiveengineering.api.wires.IImmersiveConnectable;
+import blusunrize.immersiveengineering.api.wires.LocalWireNetwork;
+import me.pieking1215.immersive_telephones.common.tile_entity.ICallable;
 import me.pieking1215.immersive_telephones.common.tile_entity.switchboard.SwitchboardTier1TileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
@@ -22,10 +24,8 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.Optional;
 
-public class SwitchboardTier1Block extends BaseSwitchboardBlock {
+public class SwitchboardTier1Block extends BaseSwitchboardBlock<SwitchboardTier1TileEntity> {
     public SwitchboardTier1Block(Properties properties) {
         super(properties);
     }
@@ -40,6 +40,12 @@ public class SwitchboardTier1Block extends BaseSwitchboardBlock {
             for(int i = 0; i < 4; i++) {
                 player.sendMessage(new StringTextComponent(i + ") " + worldIn.getBlockState(pos.offset(state.get(FACING), i + 1)).toString()), Util.DUMMY_UUID);
             }
+
+            getTileEntity(worldIn, pos).ifPresent(te -> {
+                te.testConnection((ServerPlayerEntity) player);
+            });
+
+
 
             return ActionResultType.SUCCESS;
         }else{
