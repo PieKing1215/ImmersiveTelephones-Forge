@@ -20,6 +20,9 @@ public class ItemRegister {
     public static final RegistryObject<BlockItem> SWITCHBOARD_T1 = ITEMS.register("switchboard_t1",
             () -> new BlockItem(BlockRegister.SWITCHBOARD_T1.get(), new Item.Properties().group(ItemGroup.REDSTONE)));
 
+    public static final RegistryObject<BlockItem> AUDIO_ROUTER_T1 = ITEMS.register("audio_router_t1",
+            () -> new BlockItem(BlockRegister.AUDIO_ROUTER_T1.get(), new Item.Properties().group(ItemGroup.REDSTONE)));
+
     public static final RegistryObject<Item> TELEPHONE_HANDSET = ITEMS.register("handset",
             () -> new HandsetItem(new Item.Properties()
                     .group(ItemGroup.REDSTONE)

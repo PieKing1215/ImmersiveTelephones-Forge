@@ -24,6 +24,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
     protected void registerStatesAndModels() {
         telephoneBlock();
         switchboardT1Block();
+        audioRouterT1Block();
     }
 
     private void telephoneBlock(){
@@ -46,6 +47,15 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .fixedModel(models().getExistingFile(modLoc("block/switchboard_t1")))
                 .layers(RenderType.getSolid())
                 .autoRotationData()
+                .build();
+    }
+
+    private void audioRouterT1Block(){
+        ResourceLocation particle = modLoc("blocks/audio_router_t1");
+        VariantBlockStateBuilder builder = getVariantBuilder(BlockRegister.AUDIO_ROUTER_T1.get());
+        ConnectorBlockBuilder.builder(this.models(), builder, (res, mod) -> res.texture("particle", particle))
+                .fixedModel(models().getExistingFile(modLoc("block/audio_router_t1")))
+                .layers(RenderType.getSolid())
                 .build();
     }
 

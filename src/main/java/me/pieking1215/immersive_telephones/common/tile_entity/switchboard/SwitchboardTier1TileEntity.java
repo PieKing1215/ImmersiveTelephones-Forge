@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 public class SwitchboardTier1TileEntity extends BaseSwitchboardTileEntity {
     public SwitchboardTier1TileEntity() {
         super(TileEntityRegister.SWITCHBOARD_T1.get());
+        this.routerCapacity = 4;
     }
 
     public void testConnection(ServerPlayerEntity player){

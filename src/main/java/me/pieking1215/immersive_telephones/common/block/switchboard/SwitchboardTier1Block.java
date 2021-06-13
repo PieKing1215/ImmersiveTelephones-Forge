@@ -1,9 +1,5 @@
 package me.pieking1215.immersive_telephones.common.block.switchboard;
 
-import blusunrize.immersiveengineering.api.wires.GlobalWireNetwork;
-import blusunrize.immersiveengineering.api.wires.IImmersiveConnectable;
-import blusunrize.immersiveengineering.api.wires.LocalWireNetwork;
-import me.pieking1215.immersive_telephones.common.tile_entity.ICallable;
 import me.pieking1215.immersive_telephones.common.tile_entity.switchboard.SwitchboardTier1TileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

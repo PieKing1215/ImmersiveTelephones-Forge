@@ -5,6 +5,7 @@ import blusunrize.immersiveengineering.api.wires.GlobalWireNetwork;
 import blusunrize.immersiveengineering.api.wires.LocalWireNetwork;
 import blusunrize.immersiveengineering.common.blocks.metal.EnergyConnectorTileEntity;
 import com.google.common.base.Preconditions;
+import me.pieking1215.immersive_telephones.common.block.router.ICapacityHandler;
 import me.pieking1215.immersive_telephones.common.block.switchboard.BaseSwitchboardBlock;
 import me.pieking1215.immersive_telephones.common.tile_entity.IHasID;
 import net.minecraft.tileentity.TileEntity;
@@ -20,6 +21,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class BaseSwitchboardTileEntity extends TileEntity {
+
+    protected int routerCapacity = 0;
+
     public BaseSwitchboardTileEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
     }
@@ -49,8 +53,6 @@ public class BaseSwitchboardTileEntity extends TileEntity {
             return null;
         }).filter(Objects::nonNull).distinct().map(sb -> sb.getCapacityForType(type)).reduce(Integer::sum).orElse(0);
 
-        System.out.println("!!! SKIP " + skip);
-
         return net.stream().map(c -> {
             TileEntity te = world.getTileEntity(c.getPosition());
             if(te != null && type.isAssignableFrom(te.getClass())){
@@ -62,8 +64,27 @@ public class BaseSwitchboardTileEntity extends TileEntity {
     }
 
     public <T extends IHasID> int getCapacityForType(Class<T> type){
-        return 1;
+        Preconditions.checkNotNull(world);
+
+        int sum = 0;
+        for(int i = 0; i < routerCapacity; i++) {
+            BlockPos pos = getPos().offset(getBlockState().get(BaseSwitchboardBlock.FACING), i + 1);
+
+            TileEntity te = world.getTileEntity(pos);
+            if(te instanceof ICapacityHandler){
+                sum += ((ICapacityHandler) te).getCapacity(type);
+            }
+
+            if(world.getBlockState(pos).getBlock() instanceof ICapacityHandler){
+                sum += ((ICapacityHandler) world.getBlockState(pos).getBlock()).getCapacity(type);
+            }
+
+        }
+
+        return sum;
     }
+
+
 
     public Collection<ConnectionPoint> scanConnectedNetworks(){
         Preconditions.checkNotNull(world);
