@@ -1,18 +1,17 @@
 package me.pieking1215.immersive_telephones.common.tile_entity;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import de.maxhenkel.voicechat.voice.common.MicPacket;
+import net.minecraft.util.math.vector.Vector3d;
 
-import javax.annotation.Nullable;
 import java.util.UUID;
 
-public interface IAudioReceiver extends IHasID {
-
-    @Nullable
-    World getReceiverWorld();
+public interface IAudioReceiver {
 
     UUID getReceiverUUID();
 
-    BlockPos getReceiverPos();
+    Vector3d getReceiverPos();
+
+    // server side
+    void recieveAudio(MicPacket packet);
 
 }

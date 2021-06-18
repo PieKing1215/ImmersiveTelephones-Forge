@@ -1,5 +1,7 @@
 package me.pieking1215.immersive_telephones.common.tile_entity;
 
+import java.util.Optional;
+
 public interface ICallable extends IHasID {
 
     /**
@@ -34,5 +36,10 @@ public interface ICallable extends IHasID {
      * @param leaver The device that left
      */
     void onLeftCall(ICallable leaver);
+
+    default <T> Optional<T> getFunctionality(Class<T> type){
+        //noinspection unchecked
+        return type.isAssignableFrom(this.getClass()) ? Optional.of((T)this) : Optional.empty();
+    }
 
 }

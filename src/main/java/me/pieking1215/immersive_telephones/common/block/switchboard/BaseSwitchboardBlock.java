@@ -1,6 +1,5 @@
 package me.pieking1215.immersive_telephones.common.block.switchboard;
 
-import me.pieking1215.immersive_telephones.common.tile_entity.ICallable;
 import me.pieking1215.immersive_telephones.common.tile_entity.switchboard.BaseSwitchboardTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.state.DirectionProperty;
@@ -25,6 +24,7 @@ public class BaseSwitchboardBlock<TE extends BaseSwitchboardTileEntity> extends 
 
     @Nonnull
     public Optional<TE> getTileEntity(World world, BlockPos pos){
+        //noinspection deprecation
         if(!world.isBlockLoaded(pos)) return Optional.empty();
 
         TileEntity te = world.getTileEntity(pos);

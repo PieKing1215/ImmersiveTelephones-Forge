@@ -7,6 +7,7 @@ import blusunrize.immersiveengineering.common.blocks.metal.EnergyConnectorTileEn
 import com.google.common.base.Preconditions;
 import me.pieking1215.immersive_telephones.common.block.router.ICapacityHandler;
 import me.pieking1215.immersive_telephones.common.block.switchboard.BaseSwitchboardBlock;
+import me.pieking1215.immersive_telephones.common.tile_entity.ICallable;
 import me.pieking1215.immersive_telephones.common.tile_entity.IHasID;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
@@ -26,6 +27,10 @@ public class BaseSwitchboardTileEntity extends TileEntity {
 
     public BaseSwitchboardTileEntity(TileEntityType<?> tileEntityTypeIn) {
         super(tileEntityTypeIn);
+    }
+
+    public Optional<ICallable> findCallable(String id){
+        return findTileEntitiesWithType(ICallable.class, id);
     }
 
     public <T extends IHasID> Optional<T> findTileEntitiesWithType(Class<T> type, String id){
@@ -63,7 +68,7 @@ public class BaseSwitchboardTileEntity extends TileEntity {
         }).filter(Objects::nonNull).skip(skip).limit(getCapacityForType(type)).filter(c -> c.getID().equals(id)).findFirst();
     }
 
-    public <T extends IHasID> int getCapacityForType(Class<T> type){
+    public <T> int getCapacityForType(Class<T> type){
         Preconditions.checkNotNull(world);
 
         int sum = 0;
@@ -84,7 +89,40 @@ public class BaseSwitchboardTileEntity extends TileEntity {
         return sum;
     }
 
+    public <T> boolean isFunctional(Class<T> type, T obj){
+        Preconditions.checkNotNull(world);
 
+        Collection<ConnectionPoint> net = scanConnectedNetworks();
+        AtomicBoolean stopCounting = new AtomicBoolean(false);
+        int skip = net.stream().map(c -> {
+            if(stopCounting.get()) return null; // if already found self in the stream
+
+            TileEntity te = world.getTileEntity(c.getPosition());
+            if(te instanceof EnergyConnectorTileEntity){
+                BlockPos p2 = c.getPosition().offset(((EnergyConnectorTileEntity) te).getFacing());
+                TileEntity te2 = world.getTileEntity(p2);
+
+                if(te2 == this) {
+                    stopCounting.set(true);
+                    return null;
+                }
+
+                if(te2 instanceof BaseSwitchboardTileEntity){
+                    return (BaseSwitchboardTileEntity)te2;
+                }
+            }
+            return null;
+        }).filter(Objects::nonNull).distinct().map(sb -> sb.getCapacityForType(type)).reduce(Integer::sum).orElse(0);
+
+        return net.stream().map(c -> {
+            TileEntity te = world.getTileEntity(c.getPosition());
+            if(te != null && type.isAssignableFrom(te.getClass())){
+                //noinspection unchecked
+                return (T)te;
+            }
+            return null;
+        }).filter(Objects::nonNull).skip(skip).limit(getCapacityForType(type)).anyMatch(c -> c == obj);
+    }
 
     public Collection<ConnectionPoint> scanConnectedNetworks(){
         Preconditions.checkNotNull(world);

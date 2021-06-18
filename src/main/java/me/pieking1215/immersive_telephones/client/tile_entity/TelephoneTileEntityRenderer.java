@@ -82,7 +82,7 @@ public class TelephoneTileEntityRenderer extends TileEntityRenderer<TelephoneTil
         matrixStackIn.pop();
     }
 
-    private static void renderSide2(IVertexBuilder bufferIn, Matrix4f matrixIn, float p_229119_2_, float p_229119_3_, float p_229119_4_, int blockLight, int holderBlockLight, int skyLight, int holderSkyLight, float p_229119_9_, float p_229119_10_, float p_229119_11_, float p_229119_12_, float partialTicks) {
+    private static void renderSide2(IVertexBuilder bufferIn, Matrix4f matrixIn, float p_229119_2_, float p_229119_3_, float p_229119_4_, int blockLight, int holderBlockLight, int skyLight, int holderSkyLight, @SuppressWarnings("SameParameterValue") float p_229119_9_, float p_229119_10_, float p_229119_11_, float p_229119_12_, float partialTicks) {
         int nSegments = 24;
 
         for(int j = 0; j < nSegments; ++j) {

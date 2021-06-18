@@ -1,11 +1,8 @@
 package me.pieking1215.immersive_telephones.common.tile_entity.switchboard;
 
-import blusunrize.immersiveengineering.api.wires.GlobalWireNetwork;
-import blusunrize.immersiveengineering.api.wires.IImmersiveConnectable;
-import blusunrize.immersiveengineering.api.wires.LocalWireNetwork;
-import blusunrize.immersiveengineering.api.wires.WireApi;
-import blusunrize.immersiveengineering.api.wires.utils.WireUtils;
 import blusunrize.immersiveengineering.common.blocks.metal.EnergyConnectorTileEntity;
+import me.pieking1215.immersive_telephones.common.tile_entity.IAudioProvider;
+import me.pieking1215.immersive_telephones.common.tile_entity.IAudioReceiver;
 import me.pieking1215.immersive_telephones.common.tile_entity.ICallable;
 import me.pieking1215.immersive_telephones.common.tile_entity.TileEntityRegister;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -14,6 +11,7 @@ import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class SwitchboardTier1TileEntity extends BaseSwitchboardTileEntity {
@@ -34,7 +32,7 @@ public class SwitchboardTier1TileEntity extends BaseSwitchboardTileEntity {
                 BlockPos p2 = c.getPosition().offset(((EnergyConnectorTileEntity) te).getFacing());
                 TileEntity te2 = world.getTileEntity(p2);
                 if(te2 instanceof BaseSwitchboardTileEntity){
-                    player.sendMessage(new StringTextComponent(p2.toString() + (p2 == this.getPos() ? " *" : "")), Util.DUMMY_UUID);
+                    player.sendMessage(new StringTextComponent(p2 + (p2 == this.getPos() ? " *" : "")), Util.DUMMY_UUID);
                 }
             }
         });
@@ -51,13 +49,31 @@ public class SwitchboardTier1TileEntity extends BaseSwitchboardTileEntity {
         player.sendMessage(new StringTextComponent("======="), Util.DUMMY_UUID);
 
         Stream.of("111", "222", "333", "444").forEach(s -> {
-            if(findTileEntitiesWithType(ICallable.class, s).isPresent()){
-                player.sendMessage(new StringTextComponent(s + ": Found"), Util.DUMMY_UUID);
+            Optional<ICallable> call = findCallable(s);
+            if(call.isPresent()){
+                player.sendMessage(new StringTextComponent(s + ": Found " + Stream.of(ICallable.class, IAudioProvider.class, IAudioReceiver.class)
+                        .map(type -> msg(call.get(), type))
+                        .reduce((a,b) -> a + " " + b).get()), Util.DUMMY_UUID);
             }else{
                 player.sendMessage(new StringTextComponent(s + ": Not found"), Util.DUMMY_UUID);
             }
         });
 
+        player.sendMessage(new StringTextComponent("======="), Util.DUMMY_UUID);
+        Stream.of(ICallable.class, IAudioProvider.class, IAudioReceiver.class).forEach(type ->
+                player.sendMessage(new StringTextComponent(type.getSimpleName() + " " + getCapacityForType(type)), Util.DUMMY_UUID));
+
     }
 
+    <T> String msg(ICallable call, Class<T> type){
+        Optional<T> o = call.getFunctionality(type);
+        return o.map(t -> (this.isFunctional(type, t) ? "true" : "false")).orElse("nofunc");
+    }
+
+    @Override
+    public <T> int getCapacityForType(Class<T> type) {
+        int cap = super.getCapacityForType(type);
+        if(type == ICallable.class) cap += 2;
+        return cap;
+    }
 }

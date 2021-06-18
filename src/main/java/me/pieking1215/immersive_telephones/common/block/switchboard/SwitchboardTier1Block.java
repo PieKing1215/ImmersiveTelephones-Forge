@@ -34,12 +34,11 @@ public class SwitchboardTier1Block extends BaseSwitchboardBlock<SwitchboardTier1
             // server
             player.sendMessage(new StringTextComponent("clicked switchboard"), Util.DUMMY_UUID);
             for(int i = 0; i < 4; i++) {
-                player.sendMessage(new StringTextComponent(i + ") " + worldIn.getBlockState(pos.offset(state.get(FACING), i + 1)).toString()), Util.DUMMY_UUID);
+                player.sendMessage(new StringTextComponent(i + ") " + worldIn.getBlockState(pos.offset(state.get(FACING), i + 1))), Util.DUMMY_UUID);
             }
 
-            getTileEntity(worldIn, pos).ifPresent(te -> {
-                te.testConnection((ServerPlayerEntity) player);
-            });
+            getTileEntity(worldIn, pos).ifPresent(te ->
+                    te.testConnection((ServerPlayerEntity) player));
 
 
 

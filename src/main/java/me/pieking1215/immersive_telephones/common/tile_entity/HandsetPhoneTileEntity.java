@@ -1,6 +1,11 @@
 package me.pieking1215.immersive_telephones.common.tile_entity;
 
 import com.google.common.base.Preconditions;
+import de.maxhenkel.voicechat.Main;
+import de.maxhenkel.voicechat.voice.common.MicPacket;
+import de.maxhenkel.voicechat.voice.common.NetworkMessage;
+import de.maxhenkel.voicechat.voice.common.SoundPacket;
+import de.maxhenkel.voicechat.voice.server.Server;
 import me.pieking1215.immersive_telephones.common.Config;
 import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntity;
@@ -27,6 +32,7 @@ import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 import java.util.Optional;
 
 public class HandsetPhoneTileEntity extends BasePhoneTileEntity {
@@ -310,5 +316,39 @@ public class HandsetPhoneTileEntity extends BasePhoneTileEntity {
     @Override
     public boolean isStillCalling(ICallable other) {
         return handsetEntity != null; //TODO: actually keep track of who I'm dialing
+    }
+
+    @Override
+    public boolean shouldProvideAudio(PlayerEntity player) {
+        return player.equals(handsetEntity);
+    }
+
+    @Override
+    public void recieveAudio(MicPacket packet) {
+        Preconditions.checkNotNull(world);
+        Preconditions.checkState(!world.isRemote);
+
+        // server
+
+        Preconditions.checkNotNull(Main.SERVER_VOICE_EVENTS.getServer());
+
+        Server voiceServer = Main.SERVER_VOICE_EVENTS.getServer();
+
+        // gather all players within 32 blocks of a phone that is in a call with this phone
+        float distance = 32;
+
+        NetworkMessage msg = new NetworkMessage(new SoundPacket(getReceiverUUID(), packet.getData(), packet.getSequenceNumber()));
+        world.getEntitiesWithinAABB(PlayerEntity.class,
+                        AxisAlignedBB.fromVector(getReceiverPos()).grow(distance)
+                ).stream()
+                .map(pl -> voiceServer.getConnections().get(pl.getUniqueID()))
+                .filter(Objects::nonNull)
+                .forEach(c -> {
+                    try {
+                        c.send(voiceServer, msg);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 }

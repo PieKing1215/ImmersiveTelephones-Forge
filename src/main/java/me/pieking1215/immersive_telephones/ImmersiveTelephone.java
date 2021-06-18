@@ -13,6 +13,7 @@ import me.pieking1215.immersive_telephones.common.ServerProxy;
 import me.pieking1215.immersive_telephones.common.tile_entity.TileEntityRegister;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
@@ -23,6 +24,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.ArrayDeque;
+import java.util.Queue;
+
 @Mod("immersive_telephones")
 public class ImmersiveTelephone {
     public static final String MOD_ID = "immersive_telephones";
@@ -30,6 +34,8 @@ public class ImmersiveTelephone {
     public static final Logger LOGGER = LogManager.getLogger();
 
     public static final IProxy proxy = DistExecutor.safeRunForDist(() -> ClientProxy::new, () -> ServerProxy::new);
+
+    public static final Queue<Runnable> SCHEDULED = new ArrayDeque<>();
 
     public ImmersiveTelephone() {
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
@@ -53,4 +59,12 @@ public class ImmersiveTelephone {
     public void onRegisterCommands(RegisterCommandsEvent event) {
         ProbeConnectionCommand.register(event.getDispatcher());
     }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event){
+        while(!SCHEDULED.isEmpty()){
+            SCHEDULED.poll().run();
+        }
+    }
+
 }

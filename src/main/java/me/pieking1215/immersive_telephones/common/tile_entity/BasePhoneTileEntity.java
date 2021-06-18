@@ -11,13 +11,12 @@ import blusunrize.immersiveengineering.api.wires.GlobalWireNetwork;
 import blusunrize.immersiveengineering.api.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.api.wires.LocalWireNetwork;
 import blusunrize.immersiveengineering.api.wires.WireType;
-import blusunrize.immersiveengineering.common.blocks.metal.EnergyConnectorTileEntity;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
 import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
-import me.pieking1215.immersive_telephones.common.block.switchboard.BaseSwitchboardBlock;
-import me.pieking1215.immersive_telephones.common.tile_entity.switchboard.BaseSwitchboardTileEntity;
+import me.pieking1215.immersive_telephones.common.util.Utils;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.NetworkManager;
@@ -40,12 +39,11 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
-public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnectable, ITickableTileEntity, ICallable, IAudioReceiver {
+public abstract class BasePhoneTileEntity extends TileEntity implements IImmersiveConnectable, ITickableTileEntity, ICallable, IAudioReceiver, IAudioProvider {
     private GlobalWireNetwork globalNet;
 
     private UUID tel_UUID;
@@ -261,20 +259,14 @@ public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnect
         }
     }
 
-    @Nullable
-    @Override
-    public World getReceiverWorld() {
-        return getWorld();
-    }
-
     @Override
     public UUID getReceiverUUID() {
         return getUUID();
     }
 
     @Override
-    public BlockPos getReceiverPos() {
-        return getPos();
+    public Vector3d getReceiverPos() {
+        return Vector3d.copyCentered(getPos());
     }
 
     @Override
@@ -383,27 +375,9 @@ public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnect
     }
 
     public void dial(String id){
-        findSwitchboards().map(sb -> sb.findTileEntitiesWithType(ICallable.class, id))
+        Utils.findSwitchboards(this).map(sb -> sb.findCallable(id))
                 .filter(Optional::isPresent).map(Optional::get)
                 .findFirst().ifPresent(other -> other.onDialed(this));
-    }
-
-    public Stream<BaseSwitchboardTileEntity> findSwitchboards(){
-        if(world == null) return Stream.empty();
-
-        LocalWireNetwork net = GlobalWireNetwork.getNetwork(this.world).getNullableLocalNet(this.getPos());
-        if (net == null) return Stream.empty();
-
-        return net.getConnectors().stream().map(p -> {
-            TileEntity te = world.getTileEntity(p);
-            if(!(te instanceof EnergyConnectorTileEntity)) return null;
-
-            BlockPos p2 = p.offset(((EnergyConnectorTileEntity)te).getFacing());
-            TileEntity te2 = world.getTileEntity(p2);
-            if(!(te2 instanceof BaseSwitchboardTileEntity)) return null;
-
-            return (BaseSwitchboardTileEntity) te2;
-        }).filter(Objects::nonNull);
     }
 
     @SuppressWarnings("WeakerAccess")
@@ -439,4 +413,8 @@ public class BasePhoneTileEntity extends TileEntity implements IImmersiveConnect
         world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
     }
 
+    @Override
+    public Collection<IAudioReceiver> getRecievers(PlayerEntity source) {
+        return inCallWith.stream().filter(t -> t instanceof IAudioReceiver).map(t -> (IAudioReceiver)t).collect(Collectors.toList());
+    }
 }
