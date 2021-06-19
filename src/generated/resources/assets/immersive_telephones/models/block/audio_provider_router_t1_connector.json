@@ -1,0 +1,10 @@
+{
+  "textures": {
+    "particle": "immersive_telephones:blocks/audio_provider_router_t1"
+  },
+  "loader": "immersiveengineering:connector",
+  "base_model": "immersive_telephones:block/audio_provider_router_t1",
+  "layers": [
+    "solid"
+  ]
+}

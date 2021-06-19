@@ -24,7 +24,8 @@ public class ModBlockStateProvider extends BlockStateProvider {
     protected void registerStatesAndModels() {
         telephoneBlock();
         switchboardT1Block();
-        audioRouterT1Block();
+        audioProviderRouterT1Block();
+        audioReceiverRouterT1Block();
     }
 
     private void telephoneBlock(){
@@ -50,11 +51,20 @@ public class ModBlockStateProvider extends BlockStateProvider {
                 .build();
     }
 
-    private void audioRouterT1Block(){
-        ResourceLocation particle = modLoc("blocks/audio_router_t1");
-        VariantBlockStateBuilder builder = getVariantBuilder(BlockRegister.AUDIO_ROUTER_T1.get());
+    private void audioProviderRouterT1Block(){
+        ResourceLocation particle = modLoc("blocks/audio_provider_router_t1");
+        VariantBlockStateBuilder builder = getVariantBuilder(BlockRegister.AUDIO_PROVIDER_ROUTER_T1.get());
         ConnectorBlockBuilder.builder(this.models(), builder, (res, mod) -> res.texture("particle", particle))
-                .fixedModel(models().getExistingFile(modLoc("block/audio_router_t1")))
+                .fixedModel(models().getExistingFile(modLoc("block/audio_provider_router_t1")))
+                .layers(RenderType.getSolid())
+                .build();
+    }
+
+    private void audioReceiverRouterT1Block(){
+        ResourceLocation particle = modLoc("blocks/audio_receiver_router_t1");
+        VariantBlockStateBuilder builder = getVariantBuilder(BlockRegister.AUDIO_RECEIVER_ROUTER_T1.get());
+        ConnectorBlockBuilder.builder(this.models(), builder, (res, mod) -> res.texture("particle", particle))
+                .fixedModel(models().getExistingFile(modLoc("block/audio_receiver_router_t1")))
                 .layers(RenderType.getSolid())
                 .build();
     }

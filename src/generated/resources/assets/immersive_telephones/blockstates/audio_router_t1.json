@@ -1,8 +1,0 @@
-{
-  "variants": {
-    "": {
-      "model": "immersive_telephones:block/audio_router_t1_connector",
-      "uvlock": true
-    }
-  }
-}

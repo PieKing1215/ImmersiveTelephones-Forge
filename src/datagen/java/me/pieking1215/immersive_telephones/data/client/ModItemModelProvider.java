@@ -14,6 +14,7 @@ public class ModItemModelProvider extends ItemModelProvider {
     protected void registerModels() {
         withExistingParent("telephone", modLoc("block/telephone_with_handset"));
         withExistingParent("switchboard_t1", modLoc("block/switchboard_t1"));
-        withExistingParent("audio_router_t1", modLoc("block/audio_router_t1"));
+        withExistingParent("audio_provider_router_t1", modLoc("block/audio_provider_router_t1"));
+        withExistingParent("audio_receiver_router_t1", modLoc("block/audio_receiver_router_t1"));
     }
 }

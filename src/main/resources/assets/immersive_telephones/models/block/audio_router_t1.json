@@ -1,7 +1,0 @@
-{
-	"parent": "block/cube_all",
-	"textures": {
-		"all": "immersive_telephones:blocks/audio_router_t1",
-		"particle": "immersive_telephones:blocks/audio_router_t1"
-	}
-}
