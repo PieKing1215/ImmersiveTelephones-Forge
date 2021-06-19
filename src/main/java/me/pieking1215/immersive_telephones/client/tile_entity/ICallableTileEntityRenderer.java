@@ -47,7 +47,7 @@ public class ICallableTileEntityRenderer<T extends TileEntity & ICallable> exten
             float textWidth = -Minecraft.getInstance().fontRenderer.getStringPropertyWidth(displayNameIn);
 
             //drawEntityText
-            Minecraft.getInstance().fontRenderer.func_243247_a(displayNameIn, textWidth, 0, 0xffffffff, false, matrixStackIn.getLast().getMatrix(), bufferIn, false, bgCol, packedLightIn);
+            Minecraft.getInstance().fontRenderer.func_243247_a(displayNameIn, textWidth/2, 0, 0xffffffff, false, matrixStackIn.getLast().getMatrix(), bufferIn, false, bgCol, packedLightIn);
 
             matrixStackIn.pop();
         }
