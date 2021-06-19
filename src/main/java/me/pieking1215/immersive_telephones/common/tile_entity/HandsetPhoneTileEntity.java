@@ -6,6 +6,7 @@ import de.maxhenkel.voicechat.voice.common.MicPacket;
 import de.maxhenkel.voicechat.voice.common.NetworkMessage;
 import de.maxhenkel.voicechat.voice.common.SoundPacket;
 import de.maxhenkel.voicechat.voice.server.Server;
+import me.pieking1215.immersive_telephones.ImmersiveTelephone;
 import me.pieking1215.immersive_telephones.common.Config;
 import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntity;
@@ -350,5 +351,21 @@ public class HandsetPhoneTileEntity extends BasePhoneTileEntity {
                         e.printStackTrace();
                     }
                 });
+    }
+
+
+
+    @Override
+    public Vector3d getPlaybackPosition() {
+        if(handsetEntity != null){
+            return handsetEntity.getPositionVec();
+        }
+
+        return Vector3d.copyCentered(pos);
+    }
+
+    @Override
+    public boolean shouldBeMono() {
+        return ImmersiveTelephone.proxy.getLocalPlayer() == handsetEntity;
     }
 }

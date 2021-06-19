@@ -43,7 +43,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-public abstract class BasePhoneTileEntity extends TileEntity implements IImmersiveConnectable, ITickableTileEntity, ICallable, IAudioReceiver, IAudioProvider {
+public abstract class BasePhoneTileEntity extends TileEntity implements IImmersiveConnectable, ITickableTileEntity, ICallable, IAudioReceiver, IAudioProvider, IAudioPlayerHandler {
     private GlobalWireNetwork globalNet;
 
     private UUID tel_UUID;
@@ -235,8 +235,8 @@ public abstract class BasePhoneTileEntity extends TileEntity implements IImmersi
                     // green particle line between phones in a call together
                     Vector3d from = new Vector3d(getPos().getX(), getPos().getY(), getPos().getZ());
                     for(ICallable other : inCallWith) {
-                        if(other instanceof BasePhoneTileEntity){
-                            BasePhoneTileEntity ot = (BasePhoneTileEntity) other;
+                        if(other instanceof TileEntity){
+                            TileEntity ot = (TileEntity) other;
                             for (float t = 0; t < 1.0f; t += 0.1f) {
                                 Vector3d v3 = from.add((new Vector3d(ot.getPos().getX(), ot.getPos().getY(), ot.getPos().getZ()).subtract(from)).mul(t, t, t));
                                 v3 = v3.add(0.5, 0.5, 0.5);
@@ -416,5 +416,20 @@ public abstract class BasePhoneTileEntity extends TileEntity implements IImmersi
     @Override
     public Collection<IAudioReceiver> getRecievers(PlayerEntity source) {
         return inCallWith.stream().filter(t -> t instanceof IAudioReceiver).map(t -> (IAudioReceiver)t).collect(Collectors.toList());
+    }
+
+    @Override
+    public UUID getChannelUUID() {
+        return tel_UUID;
+    }
+
+    @Override
+    public Vector3d getPlaybackPosition() {
+        return Vector3d.copyCentered(pos);
+    }
+
+    @Override
+    public boolean shouldBeMono() {
+        return false;
     }
 }

@@ -6,11 +6,13 @@ import de.maxhenkel.voicechat.voice.client.Client;
 import me.pieking1215.immersive_telephones.client.ClientConfig;
 import me.pieking1215.immersive_telephones.common.IProxy;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntity;
+import me.pieking1215.immersive_telephones.common.tile_entity.IAudioPlayerHandler;
 import me.pieking1215.immersive_telephones.mixin.client.MixinClientAccessor;
 import me.pieking1215.immersive_telephones.client.screen.TelephoneScreen;
 import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
 import me.pieking1215.immersive_telephones.client.voice.TelephoneAudioChannel;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.EntityRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.client.event.InputEvent;
@@ -32,18 +34,23 @@ public class ClientProxy implements IProxy {
     }
 
     @Override
-    public void registerTelephoneAudioChannel(TelephoneTileEntity te) {
+    public void registerTelephoneAudioChannel(IAudioPlayerHandler te) {
         Client c = Main.CLIENT_VOICE_EVENTS.getClient();
         if(c == null) return;
 
-        TelephoneAudioChannel ch = new TelephoneAudioChannel(c, te.getUUID(), te.getPos(), te);
+        TelephoneAudioChannel ch = new TelephoneAudioChannel(c, te.getChannelUUID(), te);
         ch.start();
-        AudioChannel old = ((MixinClientAccessor)c).getAudioChannels().put(te.getUUID(), ch);
+        AudioChannel old = ((MixinClientAccessor)c).getAudioChannels().put(te.getChannelUUID(), ch);
         if(old != null) old.closeAndKill();
     }
 
     @Override
     public void loadConfig() {
         ClientConfig.registerClothConfig();
+    }
+
+    @Override
+    public PlayerEntity getLocalPlayer() {
+        return Minecraft.getInstance().player;
     }
 }

@@ -45,5 +45,12 @@ public class BlockRegister {
                     .harvestLevel(-1)
                     .sound(SoundType.METAL)));
 
+    public static final RegistryObject<SpeakerBlock> SPEAKER = BLOCKS.register("speaker",
+            () -> new SpeakerBlock(AbstractBlock.Properties.create(Material.PISTON)
+                    .hardnessAndResistance(1f, 30f)
+                    .harvestTool(ToolType.PICKAXE)
+                    .harvestLevel(-1)
+                    .sound(SoundType.METAL)));
+
 
 }

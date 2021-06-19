@@ -1,0 +1,10 @@
+{
+  "textures": {
+    "particle": "immersive_telephones:blocks/speaker_off"
+  },
+  "loader": "immersiveengineering:connector",
+  "base_model": "immersive_telephones:block/speaker_off",
+  "layers": [
+    "solid"
+  ]
+}
