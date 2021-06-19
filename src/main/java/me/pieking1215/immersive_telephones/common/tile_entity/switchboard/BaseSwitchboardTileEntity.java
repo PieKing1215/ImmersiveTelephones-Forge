@@ -93,19 +93,11 @@ public class BaseSwitchboardTileEntity extends TileEntity {
         Preconditions.checkNotNull(world);
 
         Collection<ConnectionPoint> net = scanConnectedNetworks();
-        AtomicBoolean stopCounting = new AtomicBoolean(false);
-        int skip = net.stream().map(c -> {
-            if(stopCounting.get()) return null; // if already found self in the stream
-
+        int sumCapacity = net.stream().map(c -> {
             TileEntity te = world.getTileEntity(c.getPosition());
             if(te instanceof EnergyConnectorTileEntity){
                 BlockPos p2 = c.getPosition().offset(((EnergyConnectorTileEntity) te).getFacing());
                 TileEntity te2 = world.getTileEntity(p2);
-
-                if(te2 == this) {
-                    stopCounting.set(true);
-                    return null;
-                }
 
                 if(te2 instanceof BaseSwitchboardTileEntity){
                     return (BaseSwitchboardTileEntity)te2;
@@ -114,14 +106,25 @@ public class BaseSwitchboardTileEntity extends TileEntity {
             return null;
         }).filter(Objects::nonNull).distinct().map(sb -> sb.getCapacityForType(type)).reduce(Integer::sum).orElse(0);
 
-        return net.stream().map(c -> {
+        // find index of obj in net
+        boolean found = false;
+        int index = 0;
+        for (ConnectionPoint c : net) {
             TileEntity te = world.getTileEntity(c.getPosition());
             if(te != null && type.isAssignableFrom(te.getClass())){
-                //noinspection unchecked
-                return (T)te;
+                if(te == obj) {
+                    found = true;
+                    break;
+                }
+                index++;
             }
-            return null;
-        }).filter(Objects::nonNull).skip(skip).limit(getCapacityForType(type)).anyMatch(c -> c == obj);
+        }
+
+        if(found){
+            return index < sumCapacity;
+        }
+
+        return false;
     }
 
     public Collection<ConnectionPoint> scanConnectedNetworks(){
