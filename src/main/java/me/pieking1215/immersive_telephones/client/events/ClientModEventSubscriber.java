@@ -1,13 +1,15 @@
 package me.pieking1215.immersive_telephones.client.events;
 
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
+import me.pieking1215.immersive_telephones.client.tile_entity.ICallableTileEntityRenderer;
+import me.pieking1215.immersive_telephones.client.tile_entity.MultiTERenderer;
 import me.pieking1215.immersive_telephones.common.block.BlockRegister;
 import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
 import me.pieking1215.immersive_telephones.common.entity.EntityRegister;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntityRenderer;
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
 import me.pieking1215.immersive_telephones.common.item.ItemRegister;
-import me.pieking1215.immersive_telephones.client.tile_entity.TelephoneTileEntityRenderer;
+import me.pieking1215.immersive_telephones.client.tile_entity.HandsetPhoneTileEntityRenderer;
 import me.pieking1215.immersive_telephones.common.tile_entity.TileEntityRegister;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
@@ -26,7 +28,10 @@ public class ClientModEventSubscriber {
 
     @SubscribeEvent
     public static void onFMLClientSetupEvent(final FMLClientSetupEvent ev){
-        ClientRegistry.bindTileEntityRenderer(TileEntityRegister.TELEPHONE.get(), TelephoneTileEntityRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(TileEntityRegister.TELEPHONE.get(),
+                d -> new MultiTERenderer<>(d,
+                        new ICallableTileEntityRenderer<>(d),
+                        new HandsetPhoneTileEntityRenderer(d)));
 
         RenderTypeLookup.setRenderLayer(BlockRegister.TELEPHONE_BLOCK.get(),
                 rt -> rt == RenderType.getSolid() || rt == RenderType.getCutout());

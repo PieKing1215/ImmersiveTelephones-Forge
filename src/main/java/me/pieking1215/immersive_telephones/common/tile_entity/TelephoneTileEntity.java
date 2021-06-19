@@ -2,7 +2,6 @@ package me.pieking1215.immersive_telephones.common.tile_entity;
 
 import com.google.common.base.Preconditions;
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
-import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntity;
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
 import me.pieking1215.immersive_telephones.common.item.ItemRegister;
@@ -13,12 +12,9 @@ import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
@@ -106,18 +102,6 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
         super.endCall();
 
         keypadInput = "";
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public Vector3d getCordConnectionPos() {
-        Direction side = getBlockState().get(TelephoneBlock.FACING);
-        return new Vector3d(0.5 + side.getXOffset() * (7.0/16.0), 2.5 / 16.0, 0.5 + side.getZOffset() * (7.0/16.0));
-    }
-
-    @Override
-    public AxisAlignedBB getRenderBoundingBox() {
-        // disable culling
-        return INFINITE_EXTENT_AABB;
     }
 
     public void pressButton(ServerPlayerEntity player, int i) {
