@@ -137,7 +137,7 @@ public class SpeakerTileEntity extends TileEntity implements ICallable, IAudioRe
     public void onAddedToCall(ICallable whoAdded, ICallable added) {
         Preconditions.checkNotNull(world);
 
-        if(whoAdded != this && inCallWith.contains(whoAdded)){
+        if(whoAdded != this && inCallWith.contains(whoAdded) && added instanceof IAudioProvider){
             if(added == this || inCallWith.contains(added)){
                 // bonus check because I definitely got the logic in answerPhone wrong
                 return;
