@@ -22,7 +22,7 @@ public class ICallableTileEntityRenderer<T extends TileEntity & ICallable> exten
 
     @Override
     public void render(T tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
-        renderName(tileEntityIn, new StringTextComponent(tileEntityIn.getID()), matrixStackIn, bufferIn, combinedLightIn);
+        renderName(tileEntityIn, new StringTextComponent(tileEntityIn.getID()), matrixStackIn, bufferIn, 15728640);
     }
 
     // based on EntityRenderer::renderName
