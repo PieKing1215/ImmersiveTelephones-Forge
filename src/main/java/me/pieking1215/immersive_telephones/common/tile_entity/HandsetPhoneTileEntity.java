@@ -20,6 +20,7 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.SoundCategory;
@@ -353,8 +354,6 @@ public class HandsetPhoneTileEntity extends BasePhoneTileEntity {
                 });
     }
 
-
-
     @Override
     public Vector3d getPlaybackPosition() {
         if(handsetEntity != null){
@@ -367,5 +366,17 @@ public class HandsetPhoneTileEntity extends BasePhoneTileEntity {
     @Override
     public boolean shouldBeMono() {
         return ImmersiveTelephone.proxy.getLocalPlayer() == handsetEntity;
+    }
+
+    @SuppressWarnings("WeakerAccess")
+    public Vector3d getCordConnectionPos() {
+        Direction side = getBlockState().get(TelephoneBlock.FACING);
+        return new Vector3d(0.5 + side.getXOffset() * (7.0/16.0), 2.5 / 16.0, 0.5 + side.getZOffset() * (7.0/16.0));
+    }
+
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+        // disable culling
+        return INFINITE_EXTENT_AABB;
     }
 }

@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.pieking1215.immersive_telephones.common.Config;
+import me.pieking1215.immersive_telephones.common.tile_entity.HandsetPhoneTileEntity;
 import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -23,13 +24,13 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector4f;
 import net.minecraft.world.LightType;
 
-public class TelephoneTileEntityRenderer extends TileEntityRenderer<TelephoneTileEntity> {
-    public TelephoneTileEntityRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+public class HandsetPhoneTileEntityRenderer extends TileEntityRenderer<HandsetPhoneTileEntity> {
+    public HandsetPhoneTileEntityRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
     }
 
     @Override
-    public void render(TelephoneTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
+    public void render(HandsetPhoneTileEntity tileEntityIn, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int combinedLightIn, int combinedOverlayIn) {
         Entity handset = tileEntityIn.getHandsetEntity();
         if(handset != null){
             renderCord(tileEntityIn, partialTicks, matrixStackIn, bufferIn, handset);
@@ -148,7 +149,7 @@ public class TelephoneTileEntityRenderer extends TileEntityRenderer<TelephoneTil
     }
 
     // based on MobRenderer::renderLeash
-    private <E extends Entity> void renderCord(TelephoneTileEntity te, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, E holder) {
+    private <E extends Entity> void renderCord(HandsetPhoneTileEntity te, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, E holder) {
         matrixStackIn.push();
 
         Vector3d vector3d = holder.getLeashPosition(partialTicks);
@@ -188,7 +189,7 @@ public class TelephoneTileEntityRenderer extends TileEntityRenderer<TelephoneTil
         matrixStackIn.pop();
     }
 
-    private Vector3d getHoldingPos(TelephoneTileEntity te, PlayerEntity holder, float partialTicks) {
+    private Vector3d getHoldingPos(HandsetPhoneTileEntity te, PlayerEntity holder, float partialTicks) {
         HandSide holdingHand = te.getHoldingHand(holder);
 
         if(!Config.CLIENT.accurateCordAttachment.get() || (Minecraft.getInstance().player == holder && Minecraft.getInstance().gameSettings.getPointOfView() == PointOfView.FIRST_PERSON)){
@@ -239,7 +240,7 @@ public class TelephoneTileEntityRenderer extends TileEntityRenderer<TelephoneTil
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static void renderSide(IVertexBuilder bufferIn, Matrix4f matrixIn, float p_229119_2_, float p_229119_3_, float p_229119_4_, int blockLight, int holderBlockLight, int skyLight, int holderSkyLight, float p_229119_9_, float p_229119_10_, float p_229119_11_, float p_229119_12_, float partialTicks, Entity holder, TelephoneTileEntity te) {
+    private static void renderSide(IVertexBuilder bufferIn, Matrix4f matrixIn, float p_229119_2_, float p_229119_3_, float p_229119_4_, int blockLight, int holderBlockLight, int skyLight, int holderSkyLight, float p_229119_9_, float p_229119_10_, float p_229119_11_, float p_229119_12_, float partialTicks, Entity holder, HandsetPhoneTileEntity te) {
         int nSegments = Config.CLIENT.fancyCordRendering.get() ? 80 : 24;
 
         for(int j = 0; j < nSegments; ++j) {
@@ -254,18 +255,20 @@ public class TelephoneTileEntityRenderer extends TileEntityRenderer<TelephoneTil
     }
 
     @SuppressWarnings("unused")
-    private static void addVertexPair(IVertexBuilder bufferIn, Matrix4f matrixIn, int packedLight, float deltaX, float deltaY, float deltaZ, float p_229120_6_, float p_229120_7_, int totalSegments, int segment, boolean p_229120_10_, float p_229120_11_, float p_229120_12_, float partialTicks, Entity holder, TelephoneTileEntity te) {
+    private static void addVertexPair(IVertexBuilder bufferIn, Matrix4f matrixIn, int packedLight, float deltaX, float deltaY, float deltaZ, float p_229120_6_, float p_229120_7_, int totalSegments, int segment, boolean p_229120_10_, float p_229120_11_, float p_229120_12_, float partialTicks, Entity holder, HandsetPhoneTileEntity te) {
         float r = 0.625F;
         float g = 0.6F;
         float b = 0.55F;
 
-        float telR = (te.getColor() >> 16 & 255) / 255f;
-        float telG = (te.getColor() >> 8 & 255) / 255f;
-        float telB = (te.getColor() & 255) / 255f;
+        if(te instanceof TelephoneTileEntity) {
+            float telR = (((TelephoneTileEntity)te).getColor() >> 16 & 255) / 255f;
+            float telG = (((TelephoneTileEntity)te).getColor() >> 8 & 255) / 255f;
+            float telB = (((TelephoneTileEntity)te).getColor() & 255) / 255f;
 
-        r = 0.8f * r + 0.2f * telR;
-        g = 0.8f * g + 0.2f * telG;
-        b = 0.8f * b + 0.2f * telB;
+            r = 0.8f * r + 0.2f * telR;
+            g = 0.8f * g + 0.2f * telG;
+            b = 0.8f * b + 0.2f * telB;
+        }
 
         if (segment % 2 == 0) {
             r *= 0.85F;

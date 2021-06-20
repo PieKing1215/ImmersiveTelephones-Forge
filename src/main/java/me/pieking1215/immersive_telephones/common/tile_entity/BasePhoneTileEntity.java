@@ -198,7 +198,13 @@ public abstract class BasePhoneTileEntity extends TileEntity implements IImmersi
         super.handleUpdateTag(state, nbt);
 
         tel_UUID = nbt.getUniqueId("tel_UUID");
+
+        // TODO: the client doesn't *need* to know this
+        //       could offer a server config option to prevent sending the number to clients
+        //       would give improved security at the cost of some (future) visual things not working
+        //         (if the config option is off, could still give a way to make individual devices secure)
         number = nbt.getString("name");
+
         ringTime = nbt.getLong("ringTime");
         inCall = nbt.getBoolean("inCall");
     }
