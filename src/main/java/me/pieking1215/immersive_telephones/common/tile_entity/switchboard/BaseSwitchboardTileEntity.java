@@ -60,9 +60,18 @@ public class BaseSwitchboardTileEntity extends TileEntity {
 
         return net.stream().map(c -> {
             TileEntity te = world.getTileEntity(c.getPosition());
-            if(te != null && type.isAssignableFrom(te.getClass())){
-                //noinspection unchecked
-                return (T)te;
+            if(te != null) {
+                if (type.isAssignableFrom(te.getClass())) {
+                    //noinspection unchecked
+                    return (T) te;
+                } else if (te instanceof EnergyConnectorTileEntity) {
+                    EnergyConnectorTileEntity conn = (EnergyConnectorTileEntity) te;
+                    TileEntity te2 = world.getTileEntity(c.getPosition().offset(conn.getFacing()));
+                    if (te2 != null && type.isAssignableFrom(te2.getClass())) {
+                        //noinspection unchecked
+                        return (T) te2;
+                    }
+                }
             }
             return null;
         }).filter(Objects::nonNull).skip(skip).limit(getCapacityForType(type)).filter(c -> c.getID().equals(id)).findFirst();
@@ -111,12 +120,24 @@ public class BaseSwitchboardTileEntity extends TileEntity {
         int index = 0;
         for (ConnectionPoint c : net) {
             TileEntity te = world.getTileEntity(c.getPosition());
-            if(te != null && type.isAssignableFrom(te.getClass())){
-                if(te == obj) {
-                    found = true;
-                    break;
+            if(te != null) {
+                if (type.isAssignableFrom(te.getClass())) {
+                    if (te == obj) {
+                        found = true;
+                        break;
+                    }
+                    index++;
+                }else if(te instanceof EnergyConnectorTileEntity){
+                    EnergyConnectorTileEntity conn = (EnergyConnectorTileEntity) te;
+                    TileEntity te2 = world.getTileEntity(c.getPosition().offset(conn.getFacing()));
+                    if(te2 != null && type.isAssignableFrom(te2.getClass())){
+                        if (te2 == obj) {
+                            found = true;
+                            break;
+                        }
+                        index++;
+                    }
                 }
-                index++;
             }
         }
 

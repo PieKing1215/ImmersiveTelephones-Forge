@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "active=false": {
+      "model": "immersive_telephones:block/speaker_off_connector",
+      "uvlock": true
+    },
+    "active=true": {
+      "model": "immersive_telephones:block/speaker_on_connector",
+      "uvlock": true
+    }
+  }
+}

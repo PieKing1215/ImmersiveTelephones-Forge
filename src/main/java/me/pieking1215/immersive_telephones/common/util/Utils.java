@@ -10,10 +10,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.util.math.shapes.VoxelShapes;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Utils {
@@ -56,12 +61,17 @@ public class Utils {
     public static Stream<BaseSwitchboardTileEntity> findSwitchboards(TileEntity teIn){
         if(teIn.getWorld() == null) return Stream.empty();
 
-        // TODO: this currently only works for TEs directly connected to the network
-        //       should be more like BaseSwitchboardTileEntity::scanConnectedNetworks
-        LocalWireNetwork net = GlobalWireNetwork.getNetwork(teIn.getWorld()).getNullableLocalNet(teIn.getPos());
-        if (net == null) return Stream.empty();
+        List<LocalWireNetwork> nets;
 
-        return net.getConnectors().stream().map(p -> {
+        LocalWireNetwork net = GlobalWireNetwork.getNetwork(teIn.getWorld()).getNullableLocalNet(teIn.getPos());
+        if (net == null) {
+            nets = Arrays.stream(Direction.values()).map(d -> GlobalWireNetwork.getNetwork(teIn.getWorld()).getNullableLocalNet(teIn.getPos().offset(d)))
+                    .filter(Objects::nonNull).distinct().collect(Collectors.toList());
+        }else{
+            nets = Collections.singletonList(net);
+        }
+
+        return nets.stream().map(LocalWireNetwork::getConnectors).flatMap(Collection::stream).map(p -> {
             TileEntity te = teIn.getWorld().getTileEntity(p);
             if(!(te instanceof EnergyConnectorTileEntity)) return null;
 

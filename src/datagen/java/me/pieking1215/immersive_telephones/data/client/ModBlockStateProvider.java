@@ -3,6 +3,7 @@ package me.pieking1215.immersive_telephones.data.client;
 import blusunrize.immersiveengineering.data.blockstates.ConnectorBlockBuilder;
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
 import me.pieking1215.immersive_telephones.common.block.BlockRegister;
+import me.pieking1215.immersive_telephones.common.block.SpeakerBlock;
 import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.DataGenerator;
@@ -26,6 +27,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         switchboardT1Block();
         audioProviderRouterT1Block();
         audioReceiverRouterT1Block();
+        speakerBlock();
     }
 
     private void telephoneBlock(){
@@ -65,6 +67,17 @@ public class ModBlockStateProvider extends BlockStateProvider {
         VariantBlockStateBuilder builder = getVariantBuilder(BlockRegister.AUDIO_RECEIVER_ROUTER_T1.get());
         ConnectorBlockBuilder.builder(this.models(), builder, (res, mod) -> res.texture("particle", particle))
                 .fixedModel(models().getExistingFile(modLoc("block/audio_receiver_router_t1")))
+                .layers(RenderType.getSolid())
+                .build();
+    }
+
+    private void speakerBlock(){
+        ResourceLocation particle = modLoc("blocks/speaker_off");
+        VariantBlockStateBuilder builder = getVariantBuilder(BlockRegister.SPEAKER.get());
+        ConnectorBlockBuilder.builder(this.models(), builder, (res, mod) -> res.texture("particle", particle))
+                .binaryModel(SpeakerBlock.ACTIVE,
+                        models().getExistingFile(modLoc("block/speaker_off")),
+                        models().getExistingFile(modLoc("block/speaker_on")))
                 .layers(RenderType.getSolid())
                 .build();
     }

@@ -20,4 +20,7 @@ public class TileEntityRegister {
     public static final RegistryObject<TileEntityType<SwitchboardTier1TileEntity>> SWITCHBOARD_T1 = TILE_ENTITIES.register("switchboard_t1",
             () -> TileEntityType.Builder.create(SwitchboardTier1TileEntity::new, BlockRegister.SWITCHBOARD_T1.get()).build(null));
 
+    @SuppressWarnings("ConstantConditions")
+    public static final RegistryObject<TileEntityType<SpeakerTileEntity>> SPEAKER = TILE_ENTITIES.register("speaker",
+            () -> TileEntityType.Builder.create(SpeakerTileEntity::new, BlockRegister.SPEAKER.get()).build(null));
 }
