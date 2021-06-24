@@ -22,7 +22,6 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.Util;
-import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
@@ -53,7 +52,7 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
 
     protected Entity slamHandsetEntity = null;
 
-    protected List<Pair<String, Pair<String, Boolean>>> recievedAnimations = new ArrayList<>();
+    protected final List<Pair<String, Pair<String, Boolean>>> recievedAnimations = new ArrayList<>();
 
     public TelephoneTileEntity() {
         super(TileEntityRegister.TELEPHONE.get());
@@ -371,10 +370,6 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
 
             if(controller.getAnimationState() == AnimationState.Stopped) return PlayState.STOP;
 
-            return PlayState.CONTINUE;
-        }
-
-        if(controller.getName().equals("keypad")) {
             return PlayState.CONTINUE;
         }
 

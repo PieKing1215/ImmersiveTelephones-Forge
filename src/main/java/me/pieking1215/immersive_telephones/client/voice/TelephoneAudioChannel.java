@@ -6,13 +6,10 @@ import de.maxhenkel.voicechat.voice.client.AudioChannel;
 import de.maxhenkel.voicechat.voice.client.Client;
 import de.maxhenkel.voicechat.voice.common.Utils;
 import me.pieking1215.immersive_telephones.common.tile_entity.IAudioPlayerHandler;
-import me.pieking1215.immersive_telephones.common.tile_entity.IAudioReceiver;
 import me.pieking1215.immersive_telephones.mixin.client.MixinAudioChannelAccessor;
-import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3d;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.UUID;

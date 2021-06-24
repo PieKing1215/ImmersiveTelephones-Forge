@@ -22,6 +22,7 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
+@SuppressWarnings("EntityConstructor")
 public class HandsetEntity extends ItemEntity {
 
     HandsetEntity(EntityType<? extends HandsetEntity> p_i50217_1_, World world) {
