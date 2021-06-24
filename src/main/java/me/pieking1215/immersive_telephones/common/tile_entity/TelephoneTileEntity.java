@@ -41,6 +41,8 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
     private long lastKeypadInputTime = 0;
     private int lastKeypadInputIndex = -1;
 
+    protected Entity slamHandsetEntity = null;
+
     public TelephoneTileEntity() {
         super(TileEntityRegister.TELEPHONE.get());
         cordLength = 6;
@@ -50,6 +52,8 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
     public void tick() {
         super.tick();
         Preconditions.checkNotNull(world);
+
+        if(getHandsetEntity() != null) slamHandsetEntity = getHandsetEntity();
 
         if(!world.isRemote) {
             // server
@@ -311,7 +315,10 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
 
                 boolean earlySlammedHandset = false; // since slammedHandset isn't synced until later
 
-                if(getHandsetEntity() instanceof PlayerEntity) earlySlammedHandset = !getHandsetEntity().isOnGround();
+                if(slamHandsetEntity instanceof PlayerEntity) {
+                    earlySlammedHandset = !slamHandsetEntity.isOnGround();
+                    slamHandsetEntity = null;
+                }
 
                 event.getController().markNeedsReload();
                 event.getController().setAnimation(new AnimationBuilder()
