@@ -1,11 +1,15 @@
 package me.pieking1215.immersive_telephones.common.tile_entity;
 
 import com.google.common.base.Preconditions;
+import com.mojang.datafixers.util.Pair;
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
 import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntity;
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
 import me.pieking1215.immersive_telephones.common.item.ItemRegister;
+import me.pieking1215.immersive_telephones.common.network.AnimationPacket;
+import me.pieking1215.immersive_telephones.common.network.IRecieveAnimationPacket;
+import me.pieking1215.immersive_telephones.common.network.ImmersiveTelephonePacketHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -18,9 +22,11 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.network.PacketDistributor;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -31,7 +37,11 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICallable, IAudioReceiver, IAnimatable {
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICallable, IAudioReceiver, IAnimatable, IRecieveAnimationPacket {
     private final AnimationFactory manager = new AnimationFactory(this);
 
     private int color = 0xffffff;
@@ -42,6 +52,8 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
     private int lastKeypadInputIndex = -1;
 
     protected Entity slamHandsetEntity = null;
+
+    protected List<Pair<String, Pair<String, Boolean>>> recievedAnimations = new ArrayList<>();
 
     public TelephoneTileEntity() {
         super(TileEntityRegister.TELEPHONE.get());
@@ -127,54 +139,73 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
 
         if(i == lastKeypadInputIndex && world.getGameTime() - lastKeypadInputTime < 5) return;
 
+        String animationToPlay = null;
+
         // this switch is terrible but whatever
         switch(i){
             case 0:
                 keypadInput += "1";
+                animationToPlay = "animation.telephone_block.button.1";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.259921f);
                 break;
             case 1:
                 keypadInput += "2";
+                animationToPlay = "animation.telephone_block.button.2";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.334840f);
                 break;
             case 2:
                 keypadInput += "3";
+                animationToPlay = "animation.telephone_block.button.3";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.414214f);
                 break;
             case 3:
                 keypadInput += "4";
+                animationToPlay = "animation.telephone_block.button.4";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.498307f);
                 break;
             case 4:
                 keypadInput += "5";
+                animationToPlay = "animation.telephone_block.button.5";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.587401f);
                 break;
             case 5:
                 keypadInput += "6";
+                animationToPlay = "animation.telephone_block.button.6";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.681793f);
                 break;
             case 6:
                 keypadInput += "7";
+                animationToPlay = "animation.telephone_block.button.7";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.781797f);
                 break;
             case 7:
                 keypadInput += "8";
+                animationToPlay = "animation.telephone_block.button.8";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.887749f);
                 break;
             case 8:
                 keypadInput += "9";
+                animationToPlay = "animation.telephone_block.button.9";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 2.0f);
                 break;
             case 10:
                 keypadInput += "0";
+                animationToPlay = "animation.telephone_block.button.0";
                 world.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 0.5f, 1.189207f);
                 break;
             case 9:
                 // *
+                animationToPlay = "animation.telephone_block.button.star";
                 break;
             case 11:
                 // #
+                animationToPlay = "animation.telephone_block.button.pound";
                 break;
+        }
+
+        if(animationToPlay != null) {
+            AnimationPacket pk = new AnimationPacket(getPos(), "keypad", animationToPlay, false);
+            ImmersiveTelephonePacketHandler.INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> world.getChunkAt(getPos())), pk);
         }
 
         player.sendMessage(new StringTextComponent("press button " + i + " \"" + keypadInput + "\""), Util.DUMMY_UUID);
@@ -280,6 +311,16 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
     {
         AnimationController<?> controller = event.getController();
 
+        Iterator<Pair<String, Pair<String, Boolean>>> iterator = recievedAnimations.iterator();
+        while(iterator.hasNext()){
+            Pair<String, Pair<String, Boolean>> next = iterator.next();
+            if(next.getFirst().equals(controller.getName())){
+                event.getController().markNeedsReload();
+                event.getController().setAnimation(new AnimationBuilder().addAnimation(next.getSecond().getFirst(), next.getSecond().getSecond()));
+                iterator.remove();
+            }
+        }
+
         if(controller.getName().equals("ringer")) {
             event.getController().transitionLengthTicks = 0;
             if(getBlockState().get(TelephoneBlock.HANDSET) && isRinging()){
@@ -333,6 +374,10 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
             return PlayState.CONTINUE;
         }
 
+        if(controller.getName().equals("keypad")) {
+            return PlayState.CONTINUE;
+        }
+
         return PlayState.CONTINUE;
     }
 
@@ -345,6 +390,10 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
         AnimationController<?> handsetController = new AnimationController<>(this, "handset", 0, this::predicate);
         animationData.addAnimationController(handsetController);
         handsetController.registerSoundListener(this::soundListener);
+
+        AnimationController<?> keypadController = new AnimationController<>(this, "keypad", 0, this::predicate);
+        animationData.addAnimationController(keypadController);
+        keypadController.registerSoundListener(this::soundListener);
     }
 
     private <A extends IAnimatable> void soundListener(SoundKeyframeEvent<A> event) {
@@ -364,6 +413,11 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
     @Override
     public AnimationFactory getFactory() {
         return manager;
+    }
+
+    @Override
+    public void recieveAnimationPacket(String channel, String animation, boolean loop) {
+        recievedAnimations.add(Pair.of(channel, Pair.of(animation, loop)));
     }
 
     //endregion

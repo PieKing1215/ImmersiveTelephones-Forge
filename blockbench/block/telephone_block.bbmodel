@@ -1,7 +1,7 @@
 {
 	"meta": {
 		"format_version": "3.6",
-		"creation_time": 1624487390,
+		"creation_time": 1624501950,
 		"model_format": "animated_entity_model",
 		"box_uv": false
 	},
@@ -22,6 +22,7 @@
 			"autouv": 0,
 			"color": 5,
 			"locked": false,
+			"visibility": false,
 			"rotation": [180, 0, 180],
 			"origin": [0, 0, 0],
 			"faces": {
@@ -949,22 +950,144 @@
 			"origin": [8, 8, 8],
 			"uuid": "0764001f-c340-9159-9513-ad99977883a5",
 			"export": true,
-			"isOpen": false,
-			"locked": false,
-			"visibility": true,
-			"autouv": 0,
-			"children": ["ccf495bf-5e4e-42f9-c3ff-c4e8e612d64c", "86501c4b-1841-14a5-eed2-b4805292c9dc", "c25aefb3-cc21-3e02-00dc-a1572277932d", "cd242f08-79c1-b364-5fe5-4726d65d7a6e", "f1379461-b343-9ba1-cee9-95443040f464", "40b4bf6b-b923-9d95-d706-d0bcbb010d53", "bccd9c19-8f8c-7a4b-9409-7de3ad4cb7f2", "04bb7404-bcb6-92e3-7230-f598d440ee81", "0d913f01-678b-3c55-16e2-8e9e3624c51b", "0d579fd7-50dc-3681-1c40-8eadacdfff8e", "8c086da5-d2c4-e7fd-0e26-d0fbe67e775a", "7696e94b-484a-7cee-fac5-e2f621227fbd"]
-		},
-		{
-			"name": "buttons_overlay",
-			"origin": [8, 8, 8],
-			"uuid": "4fec1ba6-ca4b-cf57-b161-b6413bc7ca92",
-			"export": true,
 			"isOpen": true,
 			"locked": false,
 			"visibility": true,
 			"autouv": 0,
-			"children": ["e762852b-e486-60f6-7d5f-387c057fedb7", "4e209943-f3c8-ca92-2417-47df2f57341e", "be27b6c7-44b6-7c37-73b8-4eb84145b57e", "262c89e4-0c04-fc3b-063b-a1b8d16c3545", "5a71715c-8ef1-cf1b-bdd5-01e214e0fd8c", "f2135038-65c0-4714-421f-72e5a690dadf", "40d5b638-a735-24d6-1bde-3e909e13dfbf", "4e1103cc-947e-8191-9fcc-c1c13ffcb71c", "70895494-9781-0635-1c1d-bd4827ba6622", "3c675a2c-7216-4628-11d5-6a3ccdc8ba79", "e054b314-28f4-38b3-5224-6708ff5a0f61", "8bc6516b-848e-0038-c191-9bae2b333488"]
+			"children": [
+				{
+					"name": "button_1",
+					"origin": [8, 8, 8],
+					"uuid": "8a0d1e35-3c95-92cb-b926-1be7176f77e1",
+					"export": true,
+					"isOpen": false,
+					"locked": false,
+					"visibility": true,
+					"autouv": 0,
+					"children": ["7696e94b-484a-7cee-fac5-e2f621227fbd", "8bc6516b-848e-0038-c191-9bae2b333488"]
+				},
+				{
+					"name": "button_2",
+					"origin": [8, 8, 8],
+					"uuid": "a34bf092-79ef-50ce-14a0-f724a2053deb",
+					"export": true,
+					"isOpen": false,
+					"locked": false,
+					"visibility": true,
+					"autouv": 0,
+					"children": ["ccf495bf-5e4e-42f9-c3ff-c4e8e612d64c", "e762852b-e486-60f6-7d5f-387c057fedb7"]
+				},
+				{
+					"name": "button_3",
+					"origin": [8, 8, 8],
+					"uuid": "9a08f9be-be9a-ebe0-1d5b-a4ba5f012580",
+					"export": true,
+					"isOpen": false,
+					"locked": false,
+					"visibility": true,
+					"autouv": 0,
+					"children": ["86501c4b-1841-14a5-eed2-b4805292c9dc", "4e209943-f3c8-ca92-2417-47df2f57341e"]
+				},
+				{
+					"name": "button_4",
+					"origin": [8, 8, 8],
+					"uuid": "b7132c41-eb66-b459-e95b-6f17579328ab",
+					"export": true,
+					"isOpen": false,
+					"locked": false,
+					"visibility": true,
+					"autouv": 0,
+					"children": ["0d913f01-678b-3c55-16e2-8e9e3624c51b", "70895494-9781-0635-1c1d-bd4827ba6622"]
+				},
+				{
+					"name": "button_5",
+					"origin": [8, 8, 8],
+					"uuid": "019b6afb-880c-b357-ce8a-c29ee1b5d571",
+					"export": true,
+					"isOpen": false,
+					"locked": false,
+					"visibility": true,
+					"autouv": 0,
+					"children": ["40b4bf6b-b923-9d95-d706-d0bcbb010d53", "f2135038-65c0-4714-421f-72e5a690dadf"]
+				},
+				{
+					"name": "button_6",
+					"origin": [8, 8, 8],
+					"uuid": "21cee3d7-d8c0-ad78-3c4a-5cd0fc6b5dbc",
+					"export": true,
+					"isOpen": false,
+					"locked": false,
+					"visibility": true,
+					"autouv": 0,
+					"children": ["c25aefb3-cc21-3e02-00dc-a1572277932d", "be27b6c7-44b6-7c37-73b8-4eb84145b57e"]
+				},
+				{
+					"name": "button_7",
+					"origin": [8, 8, 8],
+					"uuid": "addb9856-6cd1-88fd-c672-c2d19b19b760",
+					"export": true,
+					"isOpen": false,
+					"locked": false,
+					"visibility": true,
+					"autouv": 0,
+					"children": ["0d579fd7-50dc-3681-1c40-8eadacdfff8e", "3c675a2c-7216-4628-11d5-6a3ccdc8ba79"]
+				},
+				{
+					"name": "button_8",
+					"origin": [8, 8, 8],
+					"uuid": "5a899b65-2dd2-86a4-7c89-382fba921b3b",
+					"export": true,
+					"isOpen": false,
+					"locked": false,
+					"visibility": true,
+					"autouv": 0,
+					"children": ["bccd9c19-8f8c-7a4b-9409-7de3ad4cb7f2", "40d5b638-a735-24d6-1bde-3e909e13dfbf"]
+				},
+				{
+					"name": "button_9",
+					"origin": [8, 8, 8],
+					"uuid": "52d4a12c-6549-acc8-fbd4-065d9c3830cc",
+					"export": true,
+					"isOpen": false,
+					"locked": false,
+					"visibility": true,
+					"autouv": 0,
+					"children": ["cd242f08-79c1-b364-5fe5-4726d65d7a6e", "262c89e4-0c04-fc3b-063b-a1b8d16c3545"]
+				},
+				{
+					"name": "button_star",
+					"origin": [8, 8, 8],
+					"uuid": "ed6b14da-6397-378d-7f8c-b5a387f6e7a5",
+					"export": true,
+					"isOpen": false,
+					"locked": false,
+					"visibility": true,
+					"autouv": 0,
+					"children": ["8c086da5-d2c4-e7fd-0e26-d0fbe67e775a", "e054b314-28f4-38b3-5224-6708ff5a0f61"]
+				},
+				{
+					"name": "button_0",
+					"origin": [8, 8, 8],
+					"uuid": "cae99d14-dd92-e4b7-536c-d4102f917e2f",
+					"export": true,
+					"isOpen": false,
+					"locked": false,
+					"visibility": true,
+					"autouv": 0,
+					"children": ["04bb7404-bcb6-92e3-7230-f598d440ee81", "4e1103cc-947e-8191-9fcc-c1c13ffcb71c"]
+				},
+				{
+					"name": "button_pound",
+					"origin": [8, 8, 8],
+					"uuid": "6274c338-e852-1270-78bd-0c9fb48cd819",
+					"export": true,
+					"isOpen": false,
+					"locked": false,
+					"visibility": true,
+					"autouv": 0,
+					"children": ["f1379461-b343-9ba1-cee9-95443040f464", "5a71715c-8ef1-cf1b-bdd5-01e214e0fd8c"]
+				}
+			]
 		},
 		{
 			"name": "VoxelShapes",
@@ -1815,7 +1938,7 @@
 			"blend_weight": "",
 			"length": 0.45833,
 			"snapping": 48,
-			"selected": true,
+			"selected": false,
 			"saved": true,
 			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\animations\\telephone_block.animation.json",
 			"animators": {
@@ -2124,6 +2247,762 @@
 							"time": 0.27083,
 							"color": -1,
 							"interpolation": "linear"
+						}
+					]
+				}
+			}
+		},
+		{
+			"uuid": "6ed88fbe-4dd9-131a-25ec-617f2337d81f",
+			"name": "animation.telephone_block.button.1",
+			"loop": "once",
+			"override": false,
+			"anim_time_update": "",
+			"blend_weight": "",
+			"length": 0.25,
+			"snapping": 12,
+			"selected": false,
+			"saved": true,
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\animations\\telephone_block.animation.json",
+			"animators": {
+				"8a0d1e35-3c95-92cb-b926-1be7176f77e1": {
+					"name": "button_1",
+					"keyframes": [
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "d38691c6-4429-c3c5-ba18-bd7515c55c70",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": 0,
+									"y": 0,
+									"z": -0.5
+								}
+							],
+							"uuid": "fe2c3e29-232d-0a38-af6c-77308619b458",
+							"time": 0.08333,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "75e05250-5c0f-597f-c9b7-3deed8c56cc6",
+							"time": 0.25,
+							"color": -1,
+							"interpolation": "linear",
+							"easing": "easeInSine"
+						}
+					]
+				}
+			}
+		},
+		{
+			"uuid": "a9ce7008-dd0d-7519-a537-01ba3e9b9c84",
+			"name": "animation.telephone_block.button.2",
+			"loop": "once",
+			"override": false,
+			"anim_time_update": "",
+			"blend_weight": "",
+			"length": 0.25,
+			"snapping": 12,
+			"selected": false,
+			"saved": true,
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\animations\\telephone_block.animation.json",
+			"animators": {
+				"a34bf092-79ef-50ce-14a0-f724a2053deb": {
+					"name": "button_2",
+					"keyframes": [
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "e2ab4496-20e5-e787-d82a-7aaccbbd2507",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": 0,
+									"y": 0,
+									"z": -0.5
+								}
+							],
+							"uuid": "e9a5ceeb-f8e4-3b99-f25f-1274ccc6c436",
+							"time": 0.08333,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "59298415-649f-69d3-ea40-f2c3e063e330",
+							"time": 0.25,
+							"color": -1,
+							"interpolation": "linear",
+							"easing": "easeInSine"
+						}
+					]
+				}
+			}
+		},
+		{
+			"uuid": "3f6ef723-a39f-ae6a-cb0b-7160e17d2bfa",
+			"name": "animation.telephone_block.button.3",
+			"loop": "once",
+			"override": false,
+			"anim_time_update": "",
+			"blend_weight": "",
+			"length": 0.25,
+			"snapping": 12,
+			"selected": false,
+			"saved": true,
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\animations\\telephone_block.animation.json",
+			"animators": {
+				"9a08f9be-be9a-ebe0-1d5b-a4ba5f012580": {
+					"name": "button_3",
+					"keyframes": [
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "065fb7cf-8393-290a-0023-fc9cf8d4ebd4",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": 0,
+									"y": 0,
+									"z": -0.5
+								}
+							],
+							"uuid": "c7b336f4-6353-05c0-7991-d65c449a6519",
+							"time": 0.08333,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "8cc6fb04-e748-8e7e-cf4e-f66b4ca6e32c",
+							"time": 0.25,
+							"color": -1,
+							"interpolation": "linear",
+							"easing": "easeInSine"
+						}
+					]
+				}
+			}
+		},
+		{
+			"uuid": "5c06a598-8ab9-718b-756f-f8d686c2ccbd",
+			"name": "animation.telephone_block.button.4",
+			"loop": "once",
+			"override": false,
+			"anim_time_update": "",
+			"blend_weight": "",
+			"length": 0.25,
+			"snapping": 12,
+			"selected": false,
+			"saved": true,
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\animations\\telephone_block.animation.json",
+			"animators": {
+				"b7132c41-eb66-b459-e95b-6f17579328ab": {
+					"name": "button_4",
+					"keyframes": [
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "8d5a087b-ca69-47b2-6d92-c7aa162f9828",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": 0,
+									"y": 0,
+									"z": -0.5
+								}
+							],
+							"uuid": "07c7f366-e745-b2a3-904c-be1e0392de20",
+							"time": 0.08333,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "4706bbad-0bff-8e26-6f48-c91d622761f3",
+							"time": 0.25,
+							"color": -1,
+							"interpolation": "linear",
+							"easing": "easeInSine"
+						}
+					]
+				}
+			}
+		},
+		{
+			"uuid": "71cf2190-8394-998d-cb1d-43da29924553",
+			"name": "animation.telephone_block.button.5",
+			"loop": "once",
+			"override": false,
+			"anim_time_update": "",
+			"blend_weight": "",
+			"length": 0.25,
+			"snapping": 12,
+			"selected": false,
+			"saved": true,
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\animations\\telephone_block.animation.json",
+			"animators": {
+				"019b6afb-880c-b357-ce8a-c29ee1b5d571": {
+					"name": "button_5",
+					"keyframes": [
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "3e1e9887-e83d-fccd-fd3d-662031aa1db0",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": 0,
+									"y": 0,
+									"z": -0.5
+								}
+							],
+							"uuid": "ae9d4e4a-4c9b-2973-e6cd-7c70b622a814",
+							"time": 0.08333,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "5477fa28-4d4f-68a3-a48f-788aef9b91d1",
+							"time": 0.25,
+							"color": -1,
+							"interpolation": "linear",
+							"easing": "easeInSine"
+						}
+					]
+				}
+			}
+		},
+		{
+			"uuid": "b1df2b48-3cb5-39c8-3685-0b06e2865626",
+			"name": "animation.telephone_block.button.6",
+			"loop": "once",
+			"override": false,
+			"anim_time_update": "",
+			"blend_weight": "",
+			"length": 0.25,
+			"snapping": 12,
+			"selected": false,
+			"saved": true,
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\animations\\telephone_block.animation.json",
+			"animators": {
+				"21cee3d7-d8c0-ad78-3c4a-5cd0fc6b5dbc": {
+					"name": "button_6",
+					"keyframes": [
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "66d511cb-1c8c-6e9f-4b33-2eac9dac724d",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": 0,
+									"y": 0,
+									"z": -0.5
+								}
+							],
+							"uuid": "263fea8d-61c3-f0ae-a9d6-de9edf1428e6",
+							"time": 0.08333,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "809734be-774e-87de-703c-c48b00e1deeb",
+							"time": 0.25,
+							"color": -1,
+							"interpolation": "linear",
+							"easing": "easeInSine"
+						}
+					]
+				}
+			}
+		},
+		{
+			"uuid": "87d9bf2e-3db7-57b0-d926-be5ea34b14ff",
+			"name": "animation.telephone_block.button.7",
+			"loop": "once",
+			"override": false,
+			"anim_time_update": "",
+			"blend_weight": "",
+			"length": 0.25,
+			"snapping": 12,
+			"selected": false,
+			"saved": true,
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\animations\\telephone_block.animation.json",
+			"animators": {
+				"addb9856-6cd1-88fd-c672-c2d19b19b760": {
+					"name": "button_7",
+					"keyframes": [
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "5e958aca-c374-aa1c-5cad-0f50fa9890f3",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": 0,
+									"y": 0,
+									"z": -0.5
+								}
+							],
+							"uuid": "46b53b36-d592-eabe-4afb-a569993517ae",
+							"time": 0.08333,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "0152d5b7-3441-abd6-f7f2-c3f7db062afd",
+							"time": 0.25,
+							"color": -1,
+							"interpolation": "linear",
+							"easing": "easeInSine"
+						}
+					]
+				}
+			}
+		},
+		{
+			"uuid": "5097650c-e865-6795-260e-8e23f0cd7aeb",
+			"name": "animation.telephone_block.button.8",
+			"loop": "once",
+			"override": false,
+			"anim_time_update": "",
+			"blend_weight": "",
+			"length": 0.25,
+			"snapping": 12,
+			"selected": false,
+			"saved": true,
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\animations\\telephone_block.animation.json",
+			"animators": {
+				"5a899b65-2dd2-86a4-7c89-382fba921b3b": {
+					"name": "button_8",
+					"keyframes": [
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "06e0b3f0-8b9b-dc7c-5103-546b540b7688",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": 0,
+									"y": 0,
+									"z": -0.5
+								}
+							],
+							"uuid": "f0b198db-43d0-b524-0db8-c0ed298ee348",
+							"time": 0.08333,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "6b28fe13-1028-6691-9ad0-672e49af80ad",
+							"time": 0.25,
+							"color": -1,
+							"interpolation": "linear",
+							"easing": "easeInSine"
+						}
+					]
+				}
+			}
+		},
+		{
+			"uuid": "985adfde-0eee-ac15-ee72-a99cacccf385",
+			"name": "animation.telephone_block.button.9",
+			"loop": "once",
+			"override": false,
+			"anim_time_update": "",
+			"blend_weight": "",
+			"length": 0.25,
+			"snapping": 12,
+			"selected": false,
+			"saved": true,
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\animations\\telephone_block.animation.json",
+			"animators": {
+				"52d4a12c-6549-acc8-fbd4-065d9c3830cc": {
+					"name": "button_9",
+					"keyframes": [
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "83612266-61ac-154d-2036-739362b6e6bc",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": 0,
+									"y": 0,
+									"z": -0.5
+								}
+							],
+							"uuid": "11c7b63d-5478-4ae1-d1a6-823231302152",
+							"time": 0.08333,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "f8110df0-ec46-c2e8-adaa-9513c9eed196",
+							"time": 0.25,
+							"color": -1,
+							"interpolation": "linear",
+							"easing": "easeInSine"
+						}
+					]
+				}
+			}
+		},
+		{
+			"uuid": "a0788bf9-233c-2246-4f45-2446f0263850",
+			"name": "animation.telephone_block.button.star",
+			"loop": "once",
+			"override": false,
+			"anim_time_update": "",
+			"blend_weight": "",
+			"length": 0.25,
+			"snapping": 12,
+			"selected": false,
+			"saved": true,
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\animations\\telephone_block.animation.json",
+			"animators": {
+				"ed6b14da-6397-378d-7f8c-b5a387f6e7a5": {
+					"name": "button_star",
+					"keyframes": [
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "639dabe9-1543-51a0-dea6-81bf47562ba0",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": 0,
+									"y": 0,
+									"z": -0.5
+								}
+							],
+							"uuid": "dc28da36-bc9a-2e20-22bc-ec311b0cdc1e",
+							"time": 0.08333,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "08256bca-82be-ea0c-1900-670dc387e05b",
+							"time": 0.25,
+							"color": -1,
+							"interpolation": "linear",
+							"easing": "easeInSine"
+						}
+					]
+				}
+			}
+		},
+		{
+			"uuid": "3031221c-2c39-64e0-dcfc-d1c8ae71d34e",
+			"name": "animation.telephone_block.button.0",
+			"loop": "once",
+			"override": false,
+			"anim_time_update": "",
+			"blend_weight": "",
+			"length": 0.25,
+			"snapping": 12,
+			"selected": false,
+			"saved": true,
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\animations\\telephone_block.animation.json",
+			"animators": {
+				"cae99d14-dd92-e4b7-536c-d4102f917e2f": {
+					"name": "button_0",
+					"keyframes": [
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "474014e3-89ff-3897-e0a5-120a95d3d44d",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": 0,
+									"y": 0,
+									"z": -0.5
+								}
+							],
+							"uuid": "7700f607-6266-c3b1-104f-3a9727c6c688",
+							"time": 0.08333,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "6527cc44-77f4-5819-0b26-f32430b6a29d",
+							"time": 0.25,
+							"color": -1,
+							"interpolation": "linear",
+							"easing": "easeInSine"
+						}
+					]
+				}
+			}
+		},
+		{
+			"uuid": "eff48873-094d-2b69-62dc-5eea659ca2cb",
+			"name": "animation.telephone_block.button.pound",
+			"loop": "once",
+			"override": false,
+			"anim_time_update": "",
+			"blend_weight": "",
+			"length": 0.25,
+			"snapping": 12,
+			"selected": true,
+			"saved": true,
+			"path": "..\\..\\..\\src\\main\\resources\\assets\\immersive_telephones\\animations\\telephone_block.animation.json",
+			"animators": {
+				"6274c338-e852-1270-78bd-0c9fb48cd819": {
+					"name": "button_pound",
+					"keyframes": [
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "f33e3ac8-78b2-0a6b-592a-22b9c00ea67c",
+							"time": 0,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": 0,
+									"y": 0,
+									"z": -0.5
+								}
+							],
+							"uuid": "b9822683-d668-658c-e2cc-3dab74a70adb",
+							"time": 0.08333,
+							"color": -1,
+							"interpolation": "linear"
+						},
+						{
+							"channel": "position",
+							"data_points": [
+								{
+									"x": "0",
+									"y": "0",
+									"z": "0"
+								}
+							],
+							"uuid": "9e2bf8d1-0ee9-0e4f-9ea9-bb40730ca5ae",
+							"time": 0.25,
+							"color": -1,
+							"interpolation": "linear",
+							"easing": "easeInSine"
 						}
 					]
 				}
