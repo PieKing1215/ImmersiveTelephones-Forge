@@ -21,7 +21,6 @@ import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
-import software.bernie.geckolib3.GeckoLib;
 import software.bernie.geckolib3.core.AnimationState;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -31,8 +30,6 @@ import software.bernie.geckolib3.core.event.SoundKeyframeEvent;
 import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICallable, IAudioReceiver, IAnimatable {
     private final AnimationFactory manager = new AnimationFactory(this);
