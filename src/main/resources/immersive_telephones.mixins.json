@@ -12,7 +12,8 @@
     "client.MixinBipedModel",
     "client.MixinPlayerRenderer",
     "client.MixinHeldItemLayer",
-    "client.MixinMatrixStackAccessor"
+    "client.MixinMatrixStackAccessor",
+    "client.MixinBakedConnectionModel"
   ],
   "server": [
     "server.MixinServer"

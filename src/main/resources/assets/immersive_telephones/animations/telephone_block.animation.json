@@ -1,0 +1,302 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.telephone_block.ringing": {
+			"loop": true,
+			"animation_length": 1,
+			"bones": {
+				"handsetBone": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.0833": {
+							"vector": [0, 0, 1]
+						},
+						"0.1667": {
+							"vector": [0, 0, 0]
+						},
+						"0.25": {
+							"vector": [0, 0, -1]
+						},
+						"0.3333": {
+							"vector": [0, 0, 0]
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.0833": {
+							"vector": [0.25, 0.75, 0.5],
+							"easing": "easeInSine"
+						},
+						"0.1667": {
+							"vector": [0, 0, 0],
+							"easing": "easeOutSine"
+						},
+						"0.25": {
+							"vector": [-0.25, 0.5, 0.5],
+							"easing": "easeInSine"
+						},
+						"0.3333": {
+							"vector": [0, 0, 0],
+							"easing": "easeOutSine"
+						},
+						"0.4167": {
+							"vector": [0, 0.5, 0],
+							"easing": "easeInSine"
+						},
+						"0.5": {
+							"vector": [0, 0, 0],
+							"easing": "easeOutSine"
+						}
+					},
+					"scale": {
+						"0.0": {
+							"vector": [1, 1, 1]
+						},
+						"0.0833": {
+							"vector": [1.07, 1.05, 1.05]
+						},
+						"0.1667": {
+							"vector": [1, 1, 1]
+						},
+						"0.25": {
+							"vector": [1.07, 1.05, 1.05]
+						},
+						"0.3333": {
+							"vector": [1, 1, 1]
+						},
+						"0.4167": {
+							"vector": [1.01, 1.01, 1.01]
+						},
+						"0.5": {
+							"vector": [1, 1, 1]
+						}
+					}
+				}
+			},
+			"sound_effects": {
+				"0.0": {
+					"effect": "ringSound"
+				}
+			}
+		},
+		"animation.telephone_block.hide_handset": {
+			"animation_length": 0.33333,
+			"bones": {
+				"handsetBone": {
+					"rotation": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.0417": {
+							"vector": [3, 0, 0]
+						},
+						"0.1042": {
+							"vector": [3, 0, 0]
+						},
+						"0.3333": {
+							"vector": [67.5, 0, 0],
+							"easing": "easeInSine"
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.0417": {
+							"vector": [0, 5.5, 1.4],
+							"easing": "easeOutSine"
+						},
+						"0.1042": {
+							"vector": [0, 4.25, 1.9],
+							"easing": "easeInSine"
+						},
+						"0.3333": {
+							"vector": [0, 7, 8],
+							"easing": "easeInOutSine"
+						}
+					},
+					"scale": {
+						"0.0": {
+							"vector": [1, 1, 1]
+						},
+						"0.0417": {
+							"vector": [1, 1, 1]
+						},
+						"0.1042": {
+							"vector": [1, 1, 1]
+						},
+						"0.2708": {
+							"vector": [0.5, 0.5, 0.5]
+						},
+						"0.3333": {
+							"vector": [0, 0, 0]
+						}
+					}
+				}
+			}
+		},
+		"animation.telephone_block.hide_handset.hold": {
+			"loop": true,
+			"bones": {
+				"handsetBone": {
+					"rotation": {
+						"vector": [67.5, 0, 0]
+					},
+					"position": {
+						"vector": [0, 7, 1],
+						"easing": "linear"
+					},
+					"scale": {
+						"vector": [0, 0, 0]
+					}
+				}
+			}
+		},
+		"animation.telephone_block.place_handset": {
+			"animation_length": 0.20833,
+			"bones": {
+				"handsetBone": {
+					"rotation": {
+						"0.0": {
+							"vector": [67.5, 0, 0],
+							"easing": "easeInSine"
+						},
+						"0.1042": {
+							"vector": [6.58, 0, 0]
+						},
+						"0.1458": {
+							"vector": [3, 0, 0]
+						},
+						"0.1875": {
+							"vector": [0, 0, 0]
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 4, 8],
+							"easing": "easeInOutSine"
+						},
+						"0.1042": {
+							"vector": [0, 3.75, 1.4],
+							"easing": "easeInOutSine"
+						},
+						"0.1458": {
+							"vector": [0, 4, 1.4],
+							"easing": "easeOutSine"
+						},
+						"0.1875": {
+							"vector": [0, 0, 0]
+						}
+					},
+					"scale": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.1042": {
+							"vector": [0.9444, 0.9444, 0.9444],
+							"easing": "easeOutQuad"
+						},
+						"0.1458": {
+							"vector": [1, 1, 1]
+						},
+						"0.1875": {
+							"vector": [1, 1, 1]
+						}
+					}
+				}
+			},
+			"sound_effects": {
+				"0.1875": {
+					"effect": "placeSound"
+				}
+			}
+		},
+		"animation.telephone_block.place_handset.slam": {
+			"animation_length": 0.45833,
+			"bones": {
+				"handsetBone": {
+					"rotation": {
+						"0.0": {
+							"vector": [67.5, 0, 0],
+							"easing": "easeInSine"
+						},
+						"0.1042": {
+							"vector": [6.58, 0, 0]
+						},
+						"0.2083": {
+							"vector": [3, 0, 0]
+						},
+						"0.25": {
+							"vector": [0, 0, 0]
+						},
+						"0.2708": {
+							"vector": [0, 0, 5]
+						},
+						"0.3125": {
+							"vector": [0, 0, -5]
+						},
+						"0.3542": {
+							"vector": [0, 0, 2.5]
+						},
+						"0.3958": {
+							"vector": [0, 0, -2.5]
+						},
+						"0.4583": {
+							"vector": [0, 0, 0]
+						}
+					},
+					"position": {
+						"0.0": {
+							"vector": [0, 4, 8],
+							"easing": "easeInOutSine"
+						},
+						"0.1042": {
+							"vector": [0, 6.25, 1.4],
+							"easing": "easeInOutSine"
+						},
+						"0.2083": {
+							"vector": [0, 9.5, 1.4],
+							"easing": "easeOutSine"
+						},
+						"0.25": {
+							"vector": [0, 0, 0]
+						}
+					},
+					"scale": {
+						"0.0": {
+							"vector": [0, 0, 0]
+						},
+						"0.1042": {
+							"vector": [0.9444, 0.9444, 0.9444],
+							"easing": "easeOutQuad"
+						},
+						"0.2083": {
+							"vector": [1.4, 0.8, 1]
+						},
+						"0.2292": {
+							"vector": [1.1, 0.95, 1]
+						},
+						"0.25": {
+							"vector": [0.9, 1.05, 1]
+						},
+						"0.2708": {
+							"vector": [1.4, 0.8, 1]
+						},
+						"0.3958": {
+							"vector": [1, 1, 1]
+						}
+					}
+				}
+			},
+			"sound_effects": {
+				"0.2708": {
+					"effect": "placeSound"
+				}
+			}
+		}
+	}
+}

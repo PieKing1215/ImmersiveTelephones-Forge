@@ -1,0 +1,7 @@
+{
+	"textures": {
+		"0": "immersive_telephones:blocks/telephone",
+		"particle": "immersive_telephones:blocks/telephone"
+	},
+	"elements": []
+}

@@ -5,6 +5,7 @@ import me.pieking1215.immersive_telephones.common.item.HandsetItem;
 import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
 import me.pieking1215.immersive_telephones.common.util.Utils;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -218,7 +219,6 @@ public class TelephoneBlock extends Block {
 
                         if(player.isSneaking() && it.getItem() instanceof HandsetItem && tel.isTheHandset(it)){
                             // hang up
-                            checkNotNull(tel.getWorld()).playSound(null, tel.getPos().getX() + 0.5, tel.getPos().getY() + 0.5, tel.getPos().getZ() + 0.5, player.isOnGround() ? SoundEvents.UI_BUTTON_CLICK : SoundEvents.BLOCK_ANVIL_LAND, SoundCategory.BLOCKS, 1.0f, 1.0f);
                             player.setHeldItem(Hand.MAIN_HAND, ItemStack.EMPTY);
                             tel.endCall();
 
@@ -310,4 +310,10 @@ public class TelephoneBlock extends Block {
         }
         return 0xffffff;
     }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
 }

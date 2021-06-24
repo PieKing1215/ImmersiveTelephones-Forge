@@ -17,6 +17,7 @@ plugins {
 
 repositories {
     maven {	name = "BlameJared";	url = "https://maven.blamejared.com/" }         // IE & CT Files
+    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
 }
 
 apply plugin: 'net.minecraftforge.gradle'
@@ -130,6 +131,9 @@ dependencies {
     // www.curseforge.com/minecraft/mc-mods/simple-voice-chat
     runtimeOnly fg.deobf("curse.maven:simple_voice_chat-416089:${build_voicechat_version}")
     compileOnly fg.deobf("curse.maven:simple_voice_chat-416089:${build_voicechat_version}")
+
+    runtimeOnly fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.41')
+    compileOnly fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.41')
 
     // utility / testing
 

@@ -2,11 +2,14 @@ package me.pieking1215.immersive_telephones.common.tile_entity;
 
 import com.google.common.base.Preconditions;
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
+import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntity;
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
 import me.pieking1215.immersive_telephones.common.item.ItemRegister;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
@@ -18,8 +21,22 @@ import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
+import software.bernie.geckolib3.GeckoLib;
+import software.bernie.geckolib3.core.AnimationState;
+import software.bernie.geckolib3.core.IAnimatable;
+import software.bernie.geckolib3.core.PlayState;
+import software.bernie.geckolib3.core.builder.AnimationBuilder;
+import software.bernie.geckolib3.core.controller.AnimationController;
+import software.bernie.geckolib3.core.event.SoundKeyframeEvent;
+import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
+import software.bernie.geckolib3.core.manager.AnimationData;
+import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICallable, IAudioReceiver {
+import static com.google.common.base.Preconditions.checkNotNull;
+
+public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICallable, IAudioReceiver, IAnimatable {
+    private final AnimationFactory manager = new AnimationFactory(this);
+
     private int color = 0xffffff;
 
     private String keypadInput = "";
@@ -49,8 +66,8 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
             if(whoRings != null) {
                 long ringTimeLeft = ringTime - world.getGameTime();
                 if (ringTimeLeft % 4 == 0 && ringTimeLeft % 40 < 30) {
-                    sw.spawnParticle(ParticleTypes.CRIT, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 2, 0.2, 0.3, 0.2, 0.1f);
-                    sw.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 1.0f, 1.0f);
+//                    sw.spawnParticle(ParticleTypes.CRIT, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 2, 0.2, 0.3, 0.2, 0.1f);
+//                    sw.playSound(null, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 1.0f, 1.0f);
                 }
             }
         }
@@ -253,4 +270,97 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
         super.dial(id);
         this.keypadInput = "";
     }
+
+    //region <gecko>
+
+    private boolean _prevHandsetState = false;
+    private boolean _prevHandsetState_set = false;
+    private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event)
+    {
+        AnimationController<?> controller = event.getController();
+
+        if(controller.getName().equals("ringer")) {
+            event.getController().transitionLengthTicks = 0;
+            if(getBlockState().get(TelephoneBlock.HANDSET) && isRinging()){
+                event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.telephone_block.ringing", true));
+                return PlayState.CONTINUE;
+            }
+
+            return PlayState.STOP;
+        }
+
+        if(controller.getName().equals("handset")){
+            event.getController().transitionLengthTicks = 0;
+
+            boolean nowHandset = getBlockState().get(TelephoneBlock.HANDSET);
+            if(!_prevHandsetState_set){
+
+                if(!nowHandset){
+                    event.getController().markNeedsReload();
+                    event.getController().setAnimation(new AnimationBuilder()
+                            .addAnimation("animation.telephone_block.hide_handset.hold", true));
+                }
+
+                _prevHandsetState = nowHandset;
+                _prevHandsetState_set = true;
+            }
+
+            if(!nowHandset && _prevHandsetState) {
+                event.getController().markNeedsReload();
+                event.getController().setAnimation(new AnimationBuilder()
+                        .addAnimation("animation.telephone_block.hide_handset", false)
+                        .addAnimation("animation.telephone_block.hide_handset.hold", true));
+            }else if(nowHandset && !_prevHandsetState){
+
+                boolean earlySlammedHandset = false; // since slammedHandset isn't synced until later
+
+                if(getHandsetEntity() instanceof PlayerEntity) earlySlammedHandset = !getHandsetEntity().isOnGround();
+
+                event.getController().markNeedsReload();
+                event.getController().setAnimation(new AnimationBuilder()
+                        .addAnimation(earlySlammedHandset ? "animation.telephone_block.place_handset.slam"
+                                : "animation.telephone_block.place_handset", false));
+            }
+
+            _prevHandsetState = nowHandset;
+
+            if(controller.getAnimationState() == AnimationState.Stopped) return PlayState.STOP;
+
+            return PlayState.CONTINUE;
+        }
+
+        return PlayState.CONTINUE;
+    }
+
+    @Override
+    public void registerControllers(AnimationData animationData) {
+        AnimationController<?> ringController = new AnimationController<>(this, "ringer", 0, this::predicate);
+        animationData.addAnimationController(ringController);
+        ringController.registerSoundListener(this::soundListener);
+
+        AnimationController<?> handsetController = new AnimationController<>(this, "handset", 0, this::predicate);
+        animationData.addAnimationController(handsetController);
+        handsetController.registerSoundListener(this::soundListener);
+    }
+
+    private <A extends IAnimatable> void soundListener(SoundKeyframeEvent<A> event) {
+        PlayerEntity pl = ImmersiveTelephone.proxy.getLocalPlayer();
+        if(!(pl instanceof ClientPlayerEntity)) return;
+
+        if(event.getController().getName().equals("ringer")) {
+            //sw.spawnParticle(ParticleTypes.CRIT, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 2, 0.2, 0.3, 0.2, 0.1f);
+            ((ClientPlayerEntity) pl).worldClient.playSound(getPos(), SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 1.0f, 1.0f, false);
+        }else if(event.getController().getName().equals("handset")){
+            if(event.getController().getCurrentAnimation().animationName.startsWith("animation.telephone_block.place_handset")) {
+                ((ClientPlayerEntity) pl).worldClient.playSound(getPos(), event.getController().getCurrentAnimation().animationName.endsWith(".slam") ? SoundEvents.BLOCK_ANVIL_LAND : SoundEvents.UI_BUTTON_CLICK, SoundCategory.BLOCKS, 1.0f, 1.0f, false);
+            }
+        }
+    }
+
+    @Override
+    public AnimationFactory getFactory() {
+        return manager;
+    }
+
+    //endregion
 }

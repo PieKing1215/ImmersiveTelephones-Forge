@@ -3,7 +3,7 @@
     "particle": "immersive_telephones:blocks/telephone"
   },
   "loader": "immersiveengineering:connector",
-  "base_model": "immersive_telephones:block/telephone_with_handset",
+  "base_model": "immersive_telephones:block/empty",
   "layers": [
     "cutout"
   ]
