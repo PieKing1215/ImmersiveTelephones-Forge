@@ -205,7 +205,7 @@ public class HandsetPhoneTileEntity extends BasePhoneTileEntity {
 
         player.setHeldItem(Hand.MAIN_HAND, createHandset());
 
-        world.playSound(null, getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5, SoundEvents.UI_BUTTON_CLICK, SoundCategory.BLOCKS, 1.0f, 1.0f);
+        world.playSound(null, getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 1.0f, 1.0f);
 
         world.setBlockState(pos, this.getBlockState().with(TelephoneBlock.HANDSET, false));
         world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);

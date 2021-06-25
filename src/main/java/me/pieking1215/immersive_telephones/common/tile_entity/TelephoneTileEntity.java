@@ -400,7 +400,7 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
             ((ClientPlayerEntity) pl).worldClient.playSound(getPos(), SoundEvents.BLOCK_NOTE_BLOCK_BIT, SoundCategory.BLOCKS, 1.0f, 1.0f, false);
         }else if(event.getController().getName().equals("handset")){
             if(event.getController().getCurrentAnimation().animationName.startsWith("animation.telephone_block.place_handset")) {
-                ((ClientPlayerEntity) pl).worldClient.playSound(getPos(), event.getController().getCurrentAnimation().animationName.endsWith(".slam") ? SoundEvents.BLOCK_ANVIL_LAND : SoundEvents.UI_BUTTON_CLICK, SoundCategory.BLOCKS, 1.0f, 1.0f, false);
+                ((ClientPlayerEntity) pl).worldClient.playSound(getPos(), event.getController().getCurrentAnimation().animationName.endsWith(".slam") ? SoundEvents.BLOCK_ANVIL_LAND : SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 1.0f, 1.0f, false);
             }
         }
     }
