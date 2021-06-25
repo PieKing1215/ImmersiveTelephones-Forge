@@ -114,6 +114,11 @@ public class TelephoneBlock extends Block {
     }
 
     @Override
+    public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+        return FACING_SHAPES_WITH_HANDSET.get(state.get(FACING));
+    }
+
+    @Override
     public boolean hasTileEntity(BlockState state) {
         return true;
     }

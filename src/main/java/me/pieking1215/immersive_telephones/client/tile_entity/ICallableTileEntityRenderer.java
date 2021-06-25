@@ -30,7 +30,7 @@ public class ICallableTileEntityRenderer<T extends TileEntity & ICallable> exten
             matrixStackIn.push();
 
             //noinspection ConstantConditions,deprecation
-            AxisAlignedBB aabb = tileEntityIn.getBlockState().getBlock().getShape(tileEntityIn.getBlockState(),
+            AxisAlignedBB aabb = tileEntityIn.getBlockState().getBlock().getCollisionShape(tileEntityIn.getBlockState(),
                     tileEntityIn.getWorld(),
                     tileEntityIn.getPos(),
                     ISelectionContext.dummy()).getBoundingBox();
