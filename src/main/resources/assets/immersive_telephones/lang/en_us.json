@@ -10,6 +10,6 @@
   "config.immersive_telephones.handsetPose": "Handset Pose",
   "tooltip.config.immersive_telephones.handsetPose": "When holding a handset, players hold it to their head",
 
-  "block.immersive_telephones.telephone": "Telephone",
+  "block.immersive_telephones.telephone_t1": "Telephone",
   "item.immersive_telephones.handset": "Handset"
 }

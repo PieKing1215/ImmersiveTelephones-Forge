@@ -13,7 +13,7 @@ import blusunrize.immersiveengineering.api.wires.LocalWireNetwork;
 import blusunrize.immersiveengineering.api.wires.WireType;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneBlock;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTier1Block;
 import me.pieking1215.immersive_telephones.common.block.IAudioPlayerHandler;
 import me.pieking1215.immersive_telephones.common.block.IAudioProvider;
 import me.pieking1215.immersive_telephones.common.block.IAudioReceiver;
@@ -101,7 +101,7 @@ public abstract class BasePhoneTileEntity extends TileEntity implements IImmersi
 
     @Override
     public Vector3d getConnectionOffset(@Nonnull Connection connection, ConnectionPoint connectionPoint) {
-        Direction side = getBlockState().get(TelephoneBlock.FACING);
+        Direction side = getBlockState().get(TelephoneTier1Block.FACING);
         return new Vector3d(0.5 + side.getXOffset() * (7.0/16.0), 15.0 / 16.0, 0.5 + side.getZOffset() * (7.0/16.0));
     }
 
@@ -419,7 +419,7 @@ public abstract class BasePhoneTileEntity extends TileEntity implements IImmersi
 
         inCallWith.clear();
 
-        world.setBlockState(pos, this.getBlockState().with(TelephoneBlock.HANDSET, true));
+        world.setBlockState(pos, this.getBlockState().with(TelephoneTier1Block.HANDSET, true));
         world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
     }
 

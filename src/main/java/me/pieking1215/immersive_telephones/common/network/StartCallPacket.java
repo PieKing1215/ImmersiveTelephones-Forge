@@ -1,6 +1,6 @@
 package me.pieking1215.immersive_telephones.common.network;
 
-import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTileEntity;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTier1TileEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
@@ -39,8 +39,8 @@ public class StartCallPacket {
                 //noinspection deprecation
                 if(player != null && player.world.isBlockLoaded(caller) && caller.distanceSq(player.getPosition()) < 16 * 16){
                     TileEntity tileEntity = player.world.getTileEntity(caller);
-                    if(tileEntity instanceof TelephoneTileEntity){
-                        TelephoneTileEntity te = (TelephoneTileEntity)tileEntity;
+                    if(tileEntity instanceof TelephoneTier1TileEntity){
+                        TelephoneTier1TileEntity te = (TelephoneTier1TileEntity)tileEntity;
 
                         te.findConnectedCallables().stream()
                                 .filter(t -> t.getID().equals(callee))

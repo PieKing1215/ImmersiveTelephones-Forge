@@ -8,7 +8,7 @@ import me.pieking1215.immersive_telephones.common.entity.HandsetEntity;
 import me.pieking1215.immersive_telephones.common.block.IAudioPlayerHandler;
 import me.pieking1215.immersive_telephones.mixin.client.MixinClientAccessor;
 import me.pieking1215.immersive_telephones.client.screen.TelephoneScreen;
-import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTileEntity;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTier1TileEntity;
 import me.pieking1215.immersive_telephones.client.voice.TelephoneAudioChannel;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,7 +19,7 @@ import net.minecraftforge.client.event.InputEvent;
 public class ClientProxy implements IProxy {
     @SuppressWarnings("unused")
     @Override
-    public void openPhoneScreen(TelephoneTileEntity te) {
+    public void openPhoneScreen(TelephoneTier1TileEntity te) {
         TelephoneScreen screen = new TelephoneScreen(te);
         Minecraft.getInstance().displayGuiScreen(screen);
     }

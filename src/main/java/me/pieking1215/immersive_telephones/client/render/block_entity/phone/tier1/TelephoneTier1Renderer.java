@@ -5,22 +5,22 @@ import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.pieking1215.immersive_telephones.client.render.block_entity.phone.HandsetPhoneRenderer;
 import me.pieking1215.immersive_telephones.client.render.block_entity.ICallableRenderer;
 import me.pieking1215.immersive_telephones.client.render.block_entity.GeoMultiTERenderer;
-import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTileEntity;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTier1TileEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 
-public class TelephoneRenderer extends GeoMultiTERenderer<TelephoneTileEntity> {
-    public TelephoneRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
-        super(rendererDispatcherIn, new TelephoneModel(),
+public class TelephoneTier1Renderer extends GeoMultiTERenderer<TelephoneTier1TileEntity> {
+    public TelephoneTier1Renderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+        super(rendererDispatcherIn, new TelephoneTier1Model(),
                 new ICallableRenderer<>(rendererDispatcherIn),
                 new HandsetPhoneRenderer<>(rendererDispatcherIn));
     }
 
-    TelephoneTileEntity nowTile = null;
+    TelephoneTier1TileEntity nowTile = null;
 
     @Override
-    public void render(TelephoneTileEntity tile, float partialTicks, MatrixStack stack, IRenderTypeBuffer bufferIn, int packedLightIn) {
+    public void render(TelephoneTier1TileEntity tile, float partialTicks, MatrixStack stack, IRenderTypeBuffer bufferIn, int packedLightIn) {
         stack.push();
         stack.translate(0, -0.01, 0);
         nowTile = tile;

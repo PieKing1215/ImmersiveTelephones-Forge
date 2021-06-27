@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICallable, IAudioReceiver, IAnimatable, IRecieveAnimationPacket {
+public class TelephoneTier1TileEntity extends HandsetPhoneTileEntity implements ICallable, IAudioReceiver, IAnimatable, IRecieveAnimationPacket {
     private final AnimationFactory manager = new AnimationFactory(this);
 
     private int color = 0xffffff;
@@ -57,8 +57,8 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
 
     protected final List<Pair<String, Pair<String, Boolean>>> recievedAnimations = new ArrayList<>();
 
-    public TelephoneTileEntity() {
-        super(TileEntityRegister.TELEPHONE.get());
+    public TelephoneTier1TileEntity() {
+        super(TileEntityRegister.TELEPHONE_T1.get());
         cordLength = 6;
     }
 
@@ -325,7 +325,7 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
 
         if(controller.getName().equals("ringer")) {
             event.getController().transitionLengthTicks = 0;
-            if(getBlockState().get(TelephoneBlock.HANDSET) && isRinging()){
+            if(getBlockState().get(TelephoneTier1Block.HANDSET) && isRinging()){
                 event.getController().setAnimation(new AnimationBuilder().addAnimation("animation.telephone_block.ringing", true));
                 return PlayState.CONTINUE;
             }
@@ -336,7 +336,7 @@ public class TelephoneTileEntity extends HandsetPhoneTileEntity implements ICall
         if(controller.getName().equals("handset")){
             event.getController().transitionLengthTicks = 0;
 
-            boolean nowHandset = getBlockState().get(TelephoneBlock.HANDSET);
+            boolean nowHandset = getBlockState().get(TelephoneTier1Block.HANDSET);
             if(!_prevHandsetState_set){
 
                 if(!nowHandset){

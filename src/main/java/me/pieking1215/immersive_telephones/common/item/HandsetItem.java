@@ -1,7 +1,7 @@
 package me.pieking1215.immersive_telephones.common.item;
 
 import com.google.common.base.Preconditions;
-import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTileEntity;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTier1TileEntity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -66,7 +66,7 @@ public class HandsetItem extends Item {
         return null;
     }
 
-    public static Optional<TelephoneTileEntity> findConnectedTE(ItemStack stack, World world){
+    public static Optional<TelephoneTier1TileEntity> findConnectedTE(ItemStack stack, World world){
         BlockPos telPos = HandsetItem.getConnectedPosition(stack);
 
         if(telPos == null) {
@@ -83,12 +83,12 @@ public class HandsetItem extends Item {
         }
 
         TileEntity te = world.getTileEntity(telPos);
-        if(!(te instanceof TelephoneTileEntity)){
+        if(!(te instanceof TelephoneTier1TileEntity)){
             // there is no telephone here
             return Optional.empty();
         }
 
-        return Optional.of((TelephoneTileEntity) te);
+        return Optional.of((TelephoneTier1TileEntity) te);
     }
 
     public static void setColor(ItemStack stack, int color){

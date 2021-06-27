@@ -1,11 +1,11 @@
 package me.pieking1215.immersive_telephones.common.events;
 
 import me.pieking1215.immersive_telephones.common.Config;
-import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneBlock;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTier1Block;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntity;
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
 import me.pieking1215.immersive_telephones.common.network.ImmersiveTelephonePacketHandler;
-import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTileEntity;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTier1TileEntity;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -32,7 +32,7 @@ public class EventHandler {
         ItemStack stack = ev.getItem().getItem();
         if(stack.getItem() instanceof HandsetItem){
 
-            Optional<TelephoneTileEntity> o_tel = HandsetItem.findConnectedTE(stack, ev.getItem().world);
+            Optional<TelephoneTier1TileEntity> o_tel = HandsetItem.findConnectedTE(stack, ev.getItem().world);
 
             if(o_tel.isPresent()){
                 o_tel.get().reconnectHandset((ServerPlayerEntity) ev.getPlayer());
@@ -63,7 +63,7 @@ public class EventHandler {
 
     @SubscribeEvent
     public void onRightClick(PlayerInteractEvent.RightClickBlock ev){
-        if(ev.getItemStack().getItem() instanceof HandsetItem && ev.getWorld().getBlockState(ev.getPos()).getBlock() instanceof TelephoneBlock){
+        if(ev.getItemStack().getItem() instanceof HandsetItem && ev.getWorld().getBlockState(ev.getPos()).getBlock() instanceof TelephoneTier1Block){
             ev.setUseBlock(Event.Result.ALLOW);
             ev.setUseItem(Event.Result.DENY);
         }

@@ -5,7 +5,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import me.pieking1215.immersive_telephones.common.Config;
 import me.pieking1215.immersive_telephones.common.block.phone.HandsetPhoneTileEntity;
-import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTileEntity;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTier1TileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.LightTexture;
@@ -260,10 +260,10 @@ public class HandsetPhoneRenderer<T extends HandsetPhoneTileEntity> extends Tile
         float g = 0.6F;
         float b = 0.55F;
 
-        if(te instanceof TelephoneTileEntity) {
-            float telR = (((TelephoneTileEntity)te).getColor() >> 16 & 255) / 255f;
-            float telG = (((TelephoneTileEntity)te).getColor() >> 8 & 255) / 255f;
-            float telB = (((TelephoneTileEntity)te).getColor() & 255) / 255f;
+        if(te instanceof TelephoneTier1TileEntity) {
+            float telR = (((TelephoneTier1TileEntity)te).getColor() >> 16 & 255) / 255f;
+            float telG = (((TelephoneTier1TileEntity)te).getColor() >> 8 & 255) / 255f;
+            float telB = (((TelephoneTier1TileEntity)te).getColor() & 255) / 255f;
 
             r = 0.8f * r + 0.2f * telR;
             g = 0.8f * g + 0.2f * telG;

@@ -1,10 +1,10 @@
 package me.pieking1215.immersive_telephones.client.events;
 
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
-import me.pieking1215.immersive_telephones.client.render.block_entity.phone.tier1.TelephoneRenderer;
+import me.pieking1215.immersive_telephones.client.render.block_entity.phone.tier1.TelephoneTier1Renderer;
 import me.pieking1215.immersive_telephones.client.render.block_entity.ICallableRenderer;
 import me.pieking1215.immersive_telephones.common.block.BlockRegister;
-import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneBlock;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTier1Block;
 import me.pieking1215.immersive_telephones.common.entity.EntityRegister;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntityRenderer;
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
@@ -33,12 +33,12 @@ public class ClientModEventSubscriber {
 //                        new ICallableTileEntityRenderer<>(d),
 //                        new HandsetPhoneTileEntityRenderer(d)));
 
-        ClientRegistry.bindTileEntityRenderer(TileEntityRegister.TELEPHONE.get(), TelephoneRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(TileEntityRegister.TELEPHONE_T1.get(), TelephoneTier1Renderer::new);
 
         ClientRegistry.bindTileEntityRenderer(TileEntityRegister.SPEAKER.get(),
                 ICallableRenderer::new);
 
-        RenderTypeLookup.setRenderLayer(BlockRegister.TELEPHONE_BLOCK.get(),
+        RenderTypeLookup.setRenderLayer(BlockRegister.TELEPHONE_T1.get(),
                 rt -> rt == RenderType.getSolid() || rt == RenderType.getCutout());
 
         RenderingRegistry.registerEntityRenderingHandler(EntityRegister.HANDSET.get(), (EntityRendererManager renderManagerIn) -> new HandsetEntityRenderer(renderManagerIn, Minecraft.getInstance().getItemRenderer()));
@@ -51,7 +51,7 @@ public class ClientModEventSubscriber {
 
     @SubscribeEvent
     public static void onRegisterBlockColors(ColorHandlerEvent.Block event){
-        event.getBlockColors().register(TelephoneBlock::getColor, BlockRegister.TELEPHONE_BLOCK.get());
+        event.getBlockColors().register(TelephoneTier1Block::getColor, BlockRegister.TELEPHONE_T1.get());
     }
 
 }

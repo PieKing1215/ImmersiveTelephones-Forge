@@ -4,7 +4,6 @@ import blusunrize.immersiveengineering.data.blockstates.ConnectorBlockBuilder;
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
 import me.pieking1215.immersive_telephones.common.block.BlockRegister;
 import me.pieking1215.immersive_telephones.common.block.peripheral.SpeakerBlock;
-import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneBlock;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.util.ResourceLocation;
@@ -23,20 +22,18 @@ public class ModBlockStateProvider extends BlockStateProvider {
 
     @Override
     protected void registerStatesAndModels() {
-        telephoneBlock();
+        telephoneTier1Block();
         switchboardT1Block();
         audioProviderRouterT1Block();
         audioReceiverRouterT1Block();
         speakerBlock();
     }
 
-    private void telephoneBlock(){
+    private void telephoneTier1Block(){
         ResourceLocation particle = modLoc("blocks/telephone");
-        VariantBlockStateBuilder builder = getVariantBuilder(BlockRegister.TELEPHONE_BLOCK.get());
+        VariantBlockStateBuilder builder = getVariantBuilder(BlockRegister.TELEPHONE_T1.get());
         ConnectorBlockBuilder.builder(this.models(), builder, (res, mod) -> res.texture("particle", particle))
-                .binaryModel(TelephoneBlock.HANDSET,
-                        models().getExistingFile(modLoc("block/telephone_base")),
-                        models().getExistingFile(modLoc("block/telephone_with_handset")))
+                .fixedModel(models().getExistingFile(modLoc("block/empty")))
                 .layers(RenderType.getCutout())
                 .autoRotationData()
                 .build();

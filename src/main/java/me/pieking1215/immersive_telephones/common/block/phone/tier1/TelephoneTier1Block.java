@@ -45,7 +45,7 @@ import java.util.stream.Stream;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-public class TelephoneBlock extends Block {
+public class TelephoneTier1Block extends Block {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty HANDSET = BooleanProperty.create("handset");
@@ -94,7 +94,7 @@ public class TelephoneBlock extends Block {
     // this data structure is backwards from what you might expect
     private static final List<Map<Direction, VoxelShape>> DIR_BUTTON_SHAPES = new ArrayList<>();
 
-    public TelephoneBlock(Properties properties) {
+    public TelephoneTier1Block(Properties properties) {
         super(properties);
         this.setDefaultState(this.getStateContainer().getBaseState()
                 .with(FACING, Direction.NORTH)
@@ -125,15 +125,15 @@ public class TelephoneBlock extends Block {
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new TelephoneTileEntity();
+        return new TelephoneTier1TileEntity();
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
         TileEntity tileEntity = worldIn.getTileEntity(pos);
-        if(tileEntity instanceof TelephoneTileEntity) {
-            TelephoneTileEntity tel = (TelephoneTileEntity) tileEntity;
+        if(tileEntity instanceof TelephoneTier1TileEntity) {
+            TelephoneTier1TileEntity tel = (TelephoneTier1TileEntity) tileEntity;
 
             ItemStack handStack = player.getHeldItem(handIn);
             if(handStack.getItem() instanceof DyeItem){
@@ -273,7 +273,7 @@ public class TelephoneBlock extends Block {
     public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
         if(!state.matchesBlock(newState.getBlock())){
             TileEntity tileEntity = worldIn.getTileEntity(pos);
-            if(tileEntity instanceof TelephoneTileEntity){
+            if(tileEntity instanceof TelephoneTier1TileEntity){
                 // on te broken
                 worldIn.updateBlock(pos, this);
             }
@@ -304,8 +304,8 @@ public class TelephoneBlock extends Block {
     public static int getColor(BlockState blockState, IBlockDisplayReader iBlockDisplayReader, BlockPos blockPos, int i) {
         if(i == 0){
             TileEntity tileEntity = iBlockDisplayReader.getTileEntity(blockPos);
-            if(tileEntity instanceof TelephoneTileEntity) {
-                TelephoneTileEntity tel = (TelephoneTileEntity) tileEntity;
+            if(tileEntity instanceof TelephoneTier1TileEntity) {
+                TelephoneTier1TileEntity tel = (TelephoneTier1TileEntity) tileEntity;
 
                 return tel.getColor();
             }

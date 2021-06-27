@@ -2,7 +2,7 @@ package me.pieking1215.immersive_telephones.common.block;
 
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
 import me.pieking1215.immersive_telephones.common.block.peripheral.SpeakerBlock;
-import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneBlock;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTier1Block;
 import me.pieking1215.immersive_telephones.common.block.router.AudioProviderRouterTier1Block;
 import me.pieking1215.immersive_telephones.common.block.router.AudioReceiverRouterTier1Block;
 import me.pieking1215.immersive_telephones.common.block.switchboard.tier1.SwitchboardTier1Block;
@@ -19,8 +19,8 @@ public class BlockRegister {
 
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, ImmersiveTelephone.MOD_ID);
 
-    public static final RegistryObject<TelephoneBlock> TELEPHONE_BLOCK = BLOCKS.register("telephone",
-            () -> new TelephoneBlock(AbstractBlock.Properties.create(Material.PISTON)
+    public static final RegistryObject<TelephoneTier1Block> TELEPHONE_T1 = BLOCKS.register("telephone_t1",
+            () -> new TelephoneTier1Block(AbstractBlock.Properties.create(Material.PISTON)
                     .hardnessAndResistance(1f, 30f)
                     .harvestTool(ToolType.PICKAXE)
                     .harvestLevel(-1)

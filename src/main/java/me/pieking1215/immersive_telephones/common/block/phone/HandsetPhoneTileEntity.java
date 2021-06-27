@@ -8,7 +8,7 @@ import de.maxhenkel.voicechat.voice.common.SoundPacket;
 import de.maxhenkel.voicechat.voice.server.Server;
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
 import me.pieking1215.immersive_telephones.common.Config;
-import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneBlock;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTier1Block;
 import me.pieking1215.immersive_telephones.common.block.ICallable;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntity;
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
@@ -65,7 +65,7 @@ public class HandsetPhoneTileEntity extends BasePhoneTileEntity {
             // server
             ServerWorld sw = (ServerWorld) this.world;
 
-            if(world.getGameTime() % 10 == 0 && !getBlockState().get(TelephoneBlock.HANDSET) && handsetEntity == null){
+            if(world.getGameTime() % 10 == 0 && !getBlockState().get(TelephoneTier1Block.HANDSET) && handsetEntity == null){
                 // the handset entity got lost
 
                 sw.getLoadedEntitiesWithinAABB(HandsetEntity.class, AxisAlignedBB.fromVector(Vector3d.copyCentered(getPos())).grow(20)).stream()
@@ -208,7 +208,7 @@ public class HandsetPhoneTileEntity extends BasePhoneTileEntity {
 
         world.playSound(null, getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 1.0f, 1.0f);
 
-        world.setBlockState(pos, this.getBlockState().with(TelephoneBlock.HANDSET, false));
+        world.setBlockState(pos, this.getBlockState().with(TelephoneTier1Block.HANDSET, false));
         world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
     }
 
@@ -217,7 +217,7 @@ public class HandsetPhoneTileEntity extends BasePhoneTileEntity {
 
         handsetEntity = player;
 
-        world.setBlockState(pos, this.getBlockState().with(TelephoneBlock.HANDSET, false));
+        world.setBlockState(pos, this.getBlockState().with(TelephoneTier1Block.HANDSET, false));
         world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
     }
 
@@ -226,7 +226,7 @@ public class HandsetPhoneTileEntity extends BasePhoneTileEntity {
 
         handsetEntity = entityItem;
 
-        world.setBlockState(pos, this.getBlockState().with(TelephoneBlock.HANDSET, false));
+        world.setBlockState(pos, this.getBlockState().with(TelephoneTier1Block.HANDSET, false));
         world.notifyBlockUpdate(pos, this.getBlockState(), this.getBlockState(), Constants.BlockFlags.BLOCK_UPDATE);
     }
 
@@ -371,7 +371,7 @@ public class HandsetPhoneTileEntity extends BasePhoneTileEntity {
 
     @SuppressWarnings("WeakerAccess")
     public Vector3d getCordConnectionPos() {
-        Direction side = getBlockState().get(TelephoneBlock.FACING);
+        Direction side = getBlockState().get(TelephoneTier1Block.FACING);
         return new Vector3d(0.5 + side.getXOffset() * (7.0/16.0), 2.5 / 16.0, 0.5 + side.getZOffset() * (7.0/16.0));
     }
 
