@@ -1,8 +1,8 @@
 package me.pieking1215.immersive_telephones.client.events;
 
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
-import me.pieking1215.immersive_telephones.client.render.block_entity.phone.tier1.GEO_TelephoneTileRenderer;
-import me.pieking1215.immersive_telephones.client.render.block_entity.ICallableTileEntityRenderer;
+import me.pieking1215.immersive_telephones.client.render.block_entity.phone.tier1.TelephoneRenderer;
+import me.pieking1215.immersive_telephones.client.render.block_entity.ICallableRenderer;
 import me.pieking1215.immersive_telephones.common.block.BlockRegister;
 import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneBlock;
 import me.pieking1215.immersive_telephones.common.entity.EntityRegister;
@@ -33,10 +33,10 @@ public class ClientModEventSubscriber {
 //                        new ICallableTileEntityRenderer<>(d),
 //                        new HandsetPhoneTileEntityRenderer(d)));
 
-        ClientRegistry.bindTileEntityRenderer(TileEntityRegister.TELEPHONE.get(), GEO_TelephoneTileRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(TileEntityRegister.TELEPHONE.get(), TelephoneRenderer::new);
 
         ClientRegistry.bindTileEntityRenderer(TileEntityRegister.SPEAKER.get(),
-                ICallableTileEntityRenderer::new);
+                ICallableRenderer::new);
 
         RenderTypeLookup.setRenderLayer(BlockRegister.TELEPHONE_BLOCK.get(),
                 rt -> rt == RenderType.getSolid() || rt == RenderType.getCutout());

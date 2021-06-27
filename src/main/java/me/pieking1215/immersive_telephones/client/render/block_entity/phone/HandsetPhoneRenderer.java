@@ -24,8 +24,8 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraft.util.math.vector.Vector4f;
 import net.minecraft.world.LightType;
 
-public class HandsetPhoneTileEntityRenderer<T extends HandsetPhoneTileEntity> extends TileEntityRenderer<T> {
-    public HandsetPhoneTileEntityRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+public class HandsetPhoneRenderer<T extends HandsetPhoneTileEntity> extends TileEntityRenderer<T> {
+    public HandsetPhoneRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
     }
 

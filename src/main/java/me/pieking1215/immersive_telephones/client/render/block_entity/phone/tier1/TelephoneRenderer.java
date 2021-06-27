@@ -2,19 +2,19 @@ package me.pieking1215.immersive_telephones.client.render.block_entity.phone.tie
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import me.pieking1215.immersive_telephones.client.render.block_entity.phone.HandsetPhoneTileEntityRenderer;
-import me.pieking1215.immersive_telephones.client.render.block_entity.ICallableTileEntityRenderer;
+import me.pieking1215.immersive_telephones.client.render.block_entity.phone.HandsetPhoneRenderer;
+import me.pieking1215.immersive_telephones.client.render.block_entity.ICallableRenderer;
 import me.pieking1215.immersive_telephones.client.render.block_entity.GeoMultiTERenderer;
 import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTileEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import software.bernie.geckolib3.geo.render.built.GeoBone;
 
-public class GEO_TelephoneTileRenderer extends GeoMultiTERenderer<TelephoneTileEntity> {
-    public GEO_TelephoneTileRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+public class TelephoneRenderer extends GeoMultiTERenderer<TelephoneTileEntity> {
+    public TelephoneRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn, new TelephoneModel(),
-                new ICallableTileEntityRenderer<>(rendererDispatcherIn),
-                new HandsetPhoneTileEntityRenderer<>(rendererDispatcherIn));
+                new ICallableRenderer<>(rendererDispatcherIn),
+                new HandsetPhoneRenderer<>(rendererDispatcherIn));
     }
 
     TelephoneTileEntity nowTile = null;

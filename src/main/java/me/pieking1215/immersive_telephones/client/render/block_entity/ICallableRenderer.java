@@ -13,8 +13,8 @@ import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 
-public class ICallableTileEntityRenderer<T extends TileEntity & ICallable> extends TileEntityRenderer<T> {
-    public ICallableTileEntityRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+public class ICallableRenderer<T extends TileEntity & ICallable> extends TileEntityRenderer<T> {
+    public ICallableRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
         super(rendererDispatcherIn);
     }
 
