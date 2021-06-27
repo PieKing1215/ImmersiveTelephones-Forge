@@ -1,4 +1,4 @@
-package me.pieking1215.immersive_telephones.common.tile_entity;
+package me.pieking1215.immersive_telephones.common.block.peripheral;
 
 import com.google.common.base.Preconditions;
 import de.maxhenkel.voicechat.Main;
@@ -7,7 +7,11 @@ import de.maxhenkel.voicechat.voice.common.NetworkMessage;
 import de.maxhenkel.voicechat.voice.common.SoundPacket;
 import de.maxhenkel.voicechat.voice.server.Server;
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
-import me.pieking1215.immersive_telephones.common.block.SpeakerBlock;
+import me.pieking1215.immersive_telephones.common.block.IAudioPlayerHandler;
+import me.pieking1215.immersive_telephones.common.block.IAudioProvider;
+import me.pieking1215.immersive_telephones.common.block.IAudioReceiver;
+import me.pieking1215.immersive_telephones.common.block.ICallable;
+import me.pieking1215.immersive_telephones.common.block.TileEntityRegister;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundNBT;

@@ -5,7 +5,7 @@ import de.maxhenkel.voicechat.Main;
 import de.maxhenkel.voicechat.voice.client.AudioChannel;
 import de.maxhenkel.voicechat.voice.client.Client;
 import de.maxhenkel.voicechat.voice.common.Utils;
-import me.pieking1215.immersive_telephones.common.tile_entity.IAudioPlayerHandler;
+import me.pieking1215.immersive_telephones.common.block.IAudioPlayerHandler;
 import me.pieking1215.immersive_telephones.mixin.client.MixinAudioChannelAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;

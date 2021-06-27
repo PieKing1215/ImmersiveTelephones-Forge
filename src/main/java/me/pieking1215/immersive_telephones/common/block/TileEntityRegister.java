@@ -1,8 +1,10 @@
-package me.pieking1215.immersive_telephones.common.tile_entity;
+package me.pieking1215.immersive_telephones.common.block;
 
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
 import me.pieking1215.immersive_telephones.common.block.BlockRegister;
-import me.pieking1215.immersive_telephones.common.tile_entity.switchboard.SwitchboardTier1TileEntity;
+import me.pieking1215.immersive_telephones.common.block.peripheral.SpeakerTileEntity;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTileEntity;
+import me.pieking1215.immersive_telephones.common.block.switchboard.tier1.SwitchboardTier1TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;

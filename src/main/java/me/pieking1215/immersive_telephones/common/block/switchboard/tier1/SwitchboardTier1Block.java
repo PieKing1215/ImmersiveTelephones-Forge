@@ -1,6 +1,6 @@
-package me.pieking1215.immersive_telephones.common.block.switchboard;
+package me.pieking1215.immersive_telephones.common.block.switchboard.tier1;
 
-import me.pieking1215.immersive_telephones.common.tile_entity.switchboard.SwitchboardTier1TileEntity;
+import me.pieking1215.immersive_telephones.common.block.switchboard.BaseSwitchboardBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

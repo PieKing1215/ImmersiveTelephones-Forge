@@ -1,4 +1,4 @@
-package me.pieking1215.immersive_telephones.client.geo;
+package me.pieking1215.immersive_telephones.client.render.block_entity;
 
 public interface IBakedConnectionModelForceDisplay {
 

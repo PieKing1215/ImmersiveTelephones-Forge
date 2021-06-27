@@ -1,10 +1,11 @@
-package me.pieking1215.immersive_telephones.common.tile_entity.switchboard;
+package me.pieking1215.immersive_telephones.common.block.switchboard.tier1;
 
 import blusunrize.immersiveengineering.common.blocks.metal.EnergyConnectorTileEntity;
-import me.pieking1215.immersive_telephones.common.tile_entity.IAudioProvider;
-import me.pieking1215.immersive_telephones.common.tile_entity.IAudioReceiver;
-import me.pieking1215.immersive_telephones.common.tile_entity.ICallable;
-import me.pieking1215.immersive_telephones.common.tile_entity.TileEntityRegister;
+import me.pieking1215.immersive_telephones.common.block.IAudioProvider;
+import me.pieking1215.immersive_telephones.common.block.IAudioReceiver;
+import me.pieking1215.immersive_telephones.common.block.ICallable;
+import me.pieking1215.immersive_telephones.common.block.TileEntityRegister;
+import me.pieking1215.immersive_telephones.common.block.switchboard.BaseSwitchboardTileEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Util;

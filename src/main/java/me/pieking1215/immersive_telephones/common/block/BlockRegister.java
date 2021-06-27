@@ -1,9 +1,11 @@
 package me.pieking1215.immersive_telephones.common.block;
 
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
+import me.pieking1215.immersive_telephones.common.block.peripheral.SpeakerBlock;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneBlock;
 import me.pieking1215.immersive_telephones.common.block.router.AudioProviderRouterTier1Block;
 import me.pieking1215.immersive_telephones.common.block.router.AudioReceiverRouterTier1Block;
-import me.pieking1215.immersive_telephones.common.block.switchboard.SwitchboardTier1Block;
+import me.pieking1215.immersive_telephones.common.block.switchboard.tier1.SwitchboardTier1Block;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;

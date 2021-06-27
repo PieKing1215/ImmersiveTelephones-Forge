@@ -3,7 +3,7 @@ package me.pieking1215.immersive_telephones.common.util;
 import blusunrize.immersiveengineering.api.wires.GlobalWireNetwork;
 import blusunrize.immersiveengineering.api.wires.LocalWireNetwork;
 import blusunrize.immersiveengineering.common.blocks.metal.EnergyConnectorTileEntity;
-import me.pieking1215.immersive_telephones.common.tile_entity.switchboard.BaseSwitchboardTileEntity;
+import me.pieking1215.immersive_telephones.common.block.switchboard.BaseSwitchboardTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;

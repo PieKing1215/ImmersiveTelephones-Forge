@@ -1,4 +1,4 @@
-package me.pieking1215.immersive_telephones.common.tile_entity;
+package me.pieking1215.immersive_telephones.common.block;
 
 import de.maxhenkel.voicechat.voice.common.MicPacket;
 import net.minecraft.util.math.vector.Vector3d;

@@ -1,15 +1,15 @@
 package me.pieking1215.immersive_telephones.client.events;
 
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
-import me.pieking1215.immersive_telephones.client.geo.GEO_TelephoneTileRenderer;
-import me.pieking1215.immersive_telephones.client.tile_entity.ICallableTileEntityRenderer;
+import me.pieking1215.immersive_telephones.client.render.block_entity.phone.tier1.GEO_TelephoneTileRenderer;
+import me.pieking1215.immersive_telephones.client.render.block_entity.ICallableTileEntityRenderer;
 import me.pieking1215.immersive_telephones.common.block.BlockRegister;
-import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneBlock;
 import me.pieking1215.immersive_telephones.common.entity.EntityRegister;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntityRenderer;
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
 import me.pieking1215.immersive_telephones.common.item.ItemRegister;
-import me.pieking1215.immersive_telephones.common.tile_entity.TileEntityRegister;
+import me.pieking1215.immersive_telephones.common.block.TileEntityRegister;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;

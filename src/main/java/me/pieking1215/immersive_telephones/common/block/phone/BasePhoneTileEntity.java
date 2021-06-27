@@ -1,4 +1,4 @@
-package me.pieking1215.immersive_telephones.common.tile_entity;
+package me.pieking1215.immersive_telephones.common.block.phone;
 
 import blusunrize.immersiveengineering.api.IEProperties;
 import blusunrize.immersiveengineering.api.TargetingInfo;
@@ -13,7 +13,11 @@ import blusunrize.immersiveengineering.api.wires.LocalWireNetwork;
 import blusunrize.immersiveengineering.api.wires.WireType;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneBlock;
+import me.pieking1215.immersive_telephones.common.block.IAudioPlayerHandler;
+import me.pieking1215.immersive_telephones.common.block.IAudioProvider;
+import me.pieking1215.immersive_telephones.common.block.IAudioReceiver;
+import me.pieking1215.immersive_telephones.common.block.ICallable;
 import me.pieking1215.immersive_telephones.common.util.Utils;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

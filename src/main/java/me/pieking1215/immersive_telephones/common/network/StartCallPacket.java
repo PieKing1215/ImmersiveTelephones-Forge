@@ -1,6 +1,6 @@
 package me.pieking1215.immersive_telephones.common.network;
 
-import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTileEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;

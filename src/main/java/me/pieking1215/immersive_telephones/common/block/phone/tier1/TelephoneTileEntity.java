@@ -1,9 +1,12 @@
-package me.pieking1215.immersive_telephones.common.tile_entity;
+package me.pieking1215.immersive_telephones.common.block.phone.tier1;
 
 import com.google.common.base.Preconditions;
 import com.mojang.datafixers.util.Pair;
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
-import me.pieking1215.immersive_telephones.common.block.TelephoneBlock;
+import me.pieking1215.immersive_telephones.common.block.phone.HandsetPhoneTileEntity;
+import me.pieking1215.immersive_telephones.common.block.IAudioReceiver;
+import me.pieking1215.immersive_telephones.common.block.ICallable;
+import me.pieking1215.immersive_telephones.common.block.TileEntityRegister;
 import me.pieking1215.immersive_telephones.common.entity.HandsetEntity;
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
 import me.pieking1215.immersive_telephones.common.item.ItemRegister;

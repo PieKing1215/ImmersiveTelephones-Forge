@@ -1,4 +1,4 @@
-package me.pieking1215.immersive_telephones.common.tile_entity;
+package me.pieking1215.immersive_telephones.common.block;
 
 import java.util.Optional;
 

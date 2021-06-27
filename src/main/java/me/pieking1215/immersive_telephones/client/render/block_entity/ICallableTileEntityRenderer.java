@@ -1,7 +1,7 @@
-package me.pieking1215.immersive_telephones.client.tile_entity;
+package me.pieking1215.immersive_telephones.client.render.block_entity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import me.pieking1215.immersive_telephones.common.tile_entity.ICallable;
+import me.pieking1215.immersive_telephones.common.block.ICallable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRenderer;

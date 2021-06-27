@@ -1,10 +1,11 @@
-package me.pieking1215.immersive_telephones.client.geo;
+package me.pieking1215.immersive_telephones.client.render.block_entity.phone.tier1;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
-import me.pieking1215.immersive_telephones.client.tile_entity.HandsetPhoneTileEntityRenderer;
-import me.pieking1215.immersive_telephones.client.tile_entity.ICallableTileEntityRenderer;
-import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
+import me.pieking1215.immersive_telephones.client.render.block_entity.phone.HandsetPhoneTileEntityRenderer;
+import me.pieking1215.immersive_telephones.client.render.block_entity.ICallableTileEntityRenderer;
+import me.pieking1215.immersive_telephones.client.render.block_entity.GeoMultiTERenderer;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTileEntity;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import software.bernie.geckolib3.geo.render.built.GeoBone;

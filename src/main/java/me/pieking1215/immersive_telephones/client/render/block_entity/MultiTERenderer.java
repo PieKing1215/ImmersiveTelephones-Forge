@@ -1,4 +1,4 @@
-package me.pieking1215.immersive_telephones.client.tile_entity;
+package me.pieking1215.immersive_telephones.client.render.block_entity;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.renderer.IRenderTypeBuffer;

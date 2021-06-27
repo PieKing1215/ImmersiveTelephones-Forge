@@ -1,6 +1,5 @@
 package me.pieking1215.immersive_telephones.common.block.switchboard;
 
-import me.pieking1215.immersive_telephones.common.tile_entity.switchboard.BaseSwitchboardTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.properties.BlockStateProperties;

@@ -1,4 +1,4 @@
-package me.pieking1215.immersive_telephones.common.tile_entity.switchboard;
+package me.pieking1215.immersive_telephones.common.block.switchboard;
 
 import blusunrize.immersiveengineering.api.wires.ConnectionPoint;
 import blusunrize.immersiveengineering.api.wires.GlobalWireNetwork;
@@ -6,9 +6,8 @@ import blusunrize.immersiveengineering.api.wires.LocalWireNetwork;
 import blusunrize.immersiveengineering.common.blocks.metal.EnergyConnectorTileEntity;
 import com.google.common.base.Preconditions;
 import me.pieking1215.immersive_telephones.common.block.router.ICapacityHandler;
-import me.pieking1215.immersive_telephones.common.block.switchboard.BaseSwitchboardBlock;
-import me.pieking1215.immersive_telephones.common.tile_entity.ICallable;
-import me.pieking1215.immersive_telephones.common.tile_entity.IHasID;
+import me.pieking1215.immersive_telephones.common.block.ICallable;
+import me.pieking1215.immersive_telephones.common.block.IHasID;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;

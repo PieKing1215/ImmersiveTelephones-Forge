@@ -1,7 +1,7 @@
 package me.pieking1215.immersive_telephones.common.item;
 
 import com.google.common.base.Preconditions;
-import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
+import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTileEntity;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

@@ -10,7 +10,7 @@ import me.pieking1215.immersive_telephones.common.network.ImmersiveTelephonePack
 import me.pieking1215.immersive_telephones.client.ClientProxy;
 import me.pieking1215.immersive_telephones.common.IProxy;
 import me.pieking1215.immersive_telephones.common.ServerProxy;
-import me.pieking1215.immersive_telephones.common.tile_entity.TileEntityRegister;
+import me.pieking1215.immersive_telephones.common.block.TileEntityRegister;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;

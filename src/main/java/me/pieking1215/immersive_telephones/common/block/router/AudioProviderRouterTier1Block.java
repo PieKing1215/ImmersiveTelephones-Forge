@@ -1,6 +1,6 @@
 package me.pieking1215.immersive_telephones.common.block.router;
 
-import me.pieking1215.immersive_telephones.common.tile_entity.IAudioProvider;
+import me.pieking1215.immersive_telephones.common.block.IAudioProvider;
 import net.minecraft.block.Block;
 
 public class AudioProviderRouterTier1Block extends Block implements ICapacityHandler {

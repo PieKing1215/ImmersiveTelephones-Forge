@@ -1,6 +1,6 @@
-package me.pieking1215.immersive_telephones.common.block;
+package me.pieking1215.immersive_telephones.common.block.peripheral;
 
-import me.pieking1215.immersive_telephones.common.tile_entity.SpeakerTileEntity;
+import me.pieking1215.immersive_telephones.common.block.peripheral.SpeakerTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;

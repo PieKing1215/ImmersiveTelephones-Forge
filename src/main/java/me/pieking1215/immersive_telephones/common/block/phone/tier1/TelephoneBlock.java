@@ -1,8 +1,7 @@
-package me.pieking1215.immersive_telephones.common.block;
+package me.pieking1215.immersive_telephones.common.block.phone.tier1;
 
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
 import me.pieking1215.immersive_telephones.common.item.HandsetItem;
-import me.pieking1215.immersive_telephones.common.tile_entity.TelephoneTileEntity;
 import me.pieking1215.immersive_telephones.common.util.Utils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -95,7 +94,7 @@ public class TelephoneBlock extends Block {
     // this data structure is backwards from what you might expect
     private static final List<Map<Direction, VoxelShape>> DIR_BUTTON_SHAPES = new ArrayList<>();
 
-    TelephoneBlock(Properties properties) {
+    public TelephoneBlock(Properties properties) {
         super(properties);
         this.setDefaultState(this.getStateContainer().getBaseState()
                 .with(FACING, Direction.NORTH)
