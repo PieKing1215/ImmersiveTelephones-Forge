@@ -10,6 +10,14 @@
   "config.immersive_telephones.handsetPose": "Handset Pose",
   "tooltip.config.immersive_telephones.handsetPose": "When holding a handset, players hold it to their head",
 
-  "block.immersive_telephones.telephone_t1": "Telephone",
+  "config.immersive_telephones.maxHandsetDistance": "Max Handset Distance",
+  "tooltip.config.immersive_telephones.maxHandsetDistance": "Maximum distance players can bring the handset\nbefore it is yanked out of their hand",
+
+  "block.immersive_telephones.telephone_t1": "Telephone T1",
+  "block.immersive_telephones.switchboard_t1": "Switchboard T1",
+  "block.immersive_telephones.audio_provider_router_t1": "Audio Provider Router T1",
+  "block.immersive_telephones.audio_receiver_router_t1": "Audio Receiver Router T1",
+  "block.immersive_telephones.speaker": "Speaker",
+
   "item.immersive_telephones.handset": "Handset"
 }
