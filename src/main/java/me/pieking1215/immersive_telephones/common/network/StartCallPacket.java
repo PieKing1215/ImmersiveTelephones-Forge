@@ -43,9 +43,9 @@ public class StartCallPacket {
                         TelephoneTier1TileEntity te = (TelephoneTier1TileEntity)tileEntity;
 
                         te.findConnectedCallables().stream()
-                                .filter(t -> t.getID().equals(callee))
+                                .filter(t -> t.matches(callee))
                                 .findFirst().ifPresent(
-                                        other -> other.onDialed(te));
+                                        other -> other.onDialed(te, callee));
                     }
                 }
             }

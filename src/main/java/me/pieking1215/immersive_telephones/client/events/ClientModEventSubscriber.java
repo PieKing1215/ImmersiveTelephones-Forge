@@ -38,6 +38,9 @@ public class ClientModEventSubscriber {
         ClientRegistry.bindTileEntityRenderer(TileEntityRegister.SPEAKER.get(),
                 ICallableRenderer::new);
 
+        ClientRegistry.bindTileEntityRenderer(TileEntityRegister.NETWORK_INTERFACE_DEVICE.get(),
+                ICallableRenderer::new);
+
         RenderTypeLookup.setRenderLayer(BlockRegister.TELEPHONE_T1.get(),
                 rt -> rt == RenderType.getSolid() || rt == RenderType.getCutout());
 

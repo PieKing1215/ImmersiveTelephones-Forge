@@ -53,7 +53,7 @@ public class ProbeConnectionCommand {
             BlockPos pos = BlockPosArgument.getBlockPos(source, "position");
             TileEntity te = source.getSource().getWorld().getTileEntity(pos);
             if(te != null){
-                Collection<BaseSwitchboardTileEntity> sbs = Utils.findSwitchboards(te).collect(Collectors.toList());
+                Collection<BaseSwitchboardTileEntity> sbs = Utils.findSwitchboards(te.getWorld(), te.getPos()).collect(Collectors.toList());
                 source.getSource().sendFeedback(new StringTextComponent("There are " + sbs.size() + " switchboards:"), true);
                 sbs.forEach(sb -> 
                         source.getSource().sendFeedback(new StringTextComponent(sb.getPos() + " " + sb.getCapacityForType(ICallable.class) + " " + sb.getCapacityForType(IAudioProvider.class) + " " + sb.getCapacityForType(IAudioReceiver.class)), true));

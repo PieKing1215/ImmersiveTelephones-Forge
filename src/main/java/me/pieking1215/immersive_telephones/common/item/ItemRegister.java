@@ -29,6 +29,9 @@ public class ItemRegister {
     public static final RegistryObject<BlockItem> SPEAKER = ITEMS.register("speaker",
             () -> new BlockItem(BlockRegister.SPEAKER.get(), new Item.Properties().group(ItemGroup.REDSTONE)));
 
+    public static final RegistryObject<BlockItem> NETWORK_INTERFACE_DEVICE = ITEMS.register("network_interface_device_t1",
+            () -> new BlockItem(BlockRegister.NETWORK_INTERFACE_DEVICE.get(), new Item.Properties().group(ItemGroup.REDSTONE)));
+
     public static final RegistryObject<Item> TELEPHONE_HANDSET = ITEMS.register("handset",
             () -> new HandsetItem(new Item.Properties()
                     .group(ItemGroup.REDSTONE)

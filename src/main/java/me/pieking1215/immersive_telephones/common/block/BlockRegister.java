@@ -1,6 +1,7 @@
 package me.pieking1215.immersive_telephones.common.block;
 
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
+import me.pieking1215.immersive_telephones.common.block.nid.NetworkInterfaceDeviceBlock;
 import me.pieking1215.immersive_telephones.common.block.peripheral.SpeakerBlock;
 import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTier1Block;
 import me.pieking1215.immersive_telephones.common.block.router.AudioProviderRouterTier1Block;
@@ -49,6 +50,13 @@ public class BlockRegister {
 
     public static final RegistryObject<SpeakerBlock> SPEAKER = BLOCKS.register("speaker",
             () -> new SpeakerBlock(AbstractBlock.Properties.create(Material.PISTON)
+                    .hardnessAndResistance(1f, 30f)
+                    .harvestTool(ToolType.PICKAXE)
+                    .harvestLevel(-1)
+                    .sound(SoundType.METAL)));
+
+    public static final RegistryObject<NetworkInterfaceDeviceBlock> NETWORK_INTERFACE_DEVICE = BLOCKS.register("network_interface_device_t1",
+            () -> new NetworkInterfaceDeviceBlock(AbstractBlock.Properties.create(Material.PISTON)
                     .hardnessAndResistance(1f, 30f)
                     .harvestTool(ToolType.PICKAXE)
                     .harvestLevel(-1)

@@ -197,6 +197,7 @@ public class TelephoneTier1TileEntity extends HandsetPhoneTileEntity implements 
                 break;
             case 9:
                 // *
+                keypadInput += "+";
                 animationToPlay = "animation.telephone_block.button.star";
                 break;
             case 11:

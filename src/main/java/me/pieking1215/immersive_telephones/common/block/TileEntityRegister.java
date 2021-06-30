@@ -1,6 +1,7 @@
 package me.pieking1215.immersive_telephones.common.block;
 
 import me.pieking1215.immersive_telephones.ImmersiveTelephone;
+import me.pieking1215.immersive_telephones.common.block.nid.NetworkInterfaceDeviceTileEntity;
 import me.pieking1215.immersive_telephones.common.block.peripheral.SpeakerTileEntity;
 import me.pieking1215.immersive_telephones.common.block.phone.tier1.TelephoneTier1TileEntity;
 import me.pieking1215.immersive_telephones.common.block.switchboard.tier1.SwitchboardTier1TileEntity;
@@ -24,4 +25,8 @@ public class TileEntityRegister {
     @SuppressWarnings("ConstantConditions")
     public static final RegistryObject<TileEntityType<SpeakerTileEntity>> SPEAKER = TILE_ENTITIES.register("speaker",
             () -> TileEntityType.Builder.create(SpeakerTileEntity::new, BlockRegister.SPEAKER.get()).build(null));
+
+    @SuppressWarnings("ConstantConditions")
+    public static final RegistryObject<TileEntityType<NetworkInterfaceDeviceTileEntity>> NETWORK_INTERFACE_DEVICE = TILE_ENTITIES.register("network_interface_device_t1",
+            () -> TileEntityType.Builder.create(NetworkInterfaceDeviceTileEntity::new, BlockRegister.NETWORK_INTERFACE_DEVICE.get()).build(null));
 }

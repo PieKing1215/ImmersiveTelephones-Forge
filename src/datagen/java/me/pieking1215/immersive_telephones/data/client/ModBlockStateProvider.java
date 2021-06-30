@@ -27,6 +27,7 @@ public class ModBlockStateProvider extends BlockStateProvider {
         audioProviderRouterT1Block();
         audioReceiverRouterT1Block();
         speakerBlock();
+        networkInterfaceT1Block();
     }
 
     private void telephoneTier1Block(){
@@ -45,6 +46,16 @@ public class ModBlockStateProvider extends BlockStateProvider {
         VariantBlockStateBuilder builder = getVariantBuilder(BlockRegister.SWITCHBOARD_T1.get());
         ConnectorBlockBuilder.builder(this.models(), builder, (res, mod) -> res.texture("particle", particle))
                 .fixedModel(models().getExistingFile(modLoc("block/switchboard_t1")))
+                .layers(RenderType.getSolid())
+                .autoRotationData()
+                .build();
+    }
+
+    private void networkInterfaceT1Block(){
+        ResourceLocation particle = modLoc("blocks/network_interface_device_t1");
+        VariantBlockStateBuilder builder = getVariantBuilder(BlockRegister.NETWORK_INTERFACE_DEVICE.get());
+        ConnectorBlockBuilder.builder(this.models(), builder, (res, mod) -> res.texture("particle", particle))
+                .fixedModel(models().getExistingFile(modLoc("block/network_interface_device_t1")))
                 .layers(RenderType.getSolid())
                 .autoRotationData()
                 .build();

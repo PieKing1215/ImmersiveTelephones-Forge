@@ -8,7 +8,7 @@ public interface ICallable extends IHasID {
      * Run when another device dials this one
      * @param dialedBy The device that is calling this instance
      */
-    void onDialed(ICallable dialedBy);
+    void onDialed(ICallable dialedBy, String query);
 
     /**
      * May be run by another device to check that this one is still calling it

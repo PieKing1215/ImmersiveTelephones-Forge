@@ -102,7 +102,7 @@ public class SpeakerTileEntity extends TileEntity implements ICallable, IAudioRe
     //endregion
 
     @Override
-    public void onDialed(ICallable dialedBy) {
+    public void onDialed(ICallable dialedBy, String query) {
         Preconditions.checkNotNull(world);
 
         dialedBy.onAnsweredCall(this);

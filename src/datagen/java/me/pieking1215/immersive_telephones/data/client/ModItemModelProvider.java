@@ -17,5 +17,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         withExistingParent("audio_provider_router_t1", modLoc("block/audio_provider_router_t1"));
         withExistingParent("audio_receiver_router_t1", modLoc("block/audio_receiver_router_t1"));
         withExistingParent("speaker", modLoc("block/speaker_off"));
+        withExistingParent("network_interface_device_t1", modLoc("block/network_interface_device_t1"));
     }
 }

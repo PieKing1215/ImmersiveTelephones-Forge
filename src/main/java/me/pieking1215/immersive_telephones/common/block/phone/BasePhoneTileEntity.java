@@ -280,7 +280,7 @@ public abstract class BasePhoneTileEntity extends TileEntity implements IImmersi
     }
 
     @Override
-    public void onDialed(ICallable dialedBy) {
+    public void onDialed(ICallable dialedBy, String query) {
         Preconditions.checkNotNull(world);
 
         if(!world.isRemote){
@@ -385,9 +385,9 @@ public abstract class BasePhoneTileEntity extends TileEntity implements IImmersi
     }
 
     public void dial(String id){
-        Utils.findSwitchboards(this).map(sb -> sb.findCallable(id))
+        Utils.findSwitchboards(world, getPos()).map(sb -> sb.findCallable(id))
                 .filter(Optional::isPresent).map(Optional::get)
-                .findFirst().ifPresent(other -> other.onDialed(this));
+                .findFirst().ifPresent(other -> other.onDialed(this, id));
     }
 
     @SuppressWarnings("WeakerAccess")

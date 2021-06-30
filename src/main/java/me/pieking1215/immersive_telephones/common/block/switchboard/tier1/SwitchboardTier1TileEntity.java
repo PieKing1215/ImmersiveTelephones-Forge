@@ -6,6 +6,7 @@ import me.pieking1215.immersive_telephones.common.block.IAudioReceiver;
 import me.pieking1215.immersive_telephones.common.block.ICallable;
 import me.pieking1215.immersive_telephones.common.block.TileEntityRegister;
 import me.pieking1215.immersive_telephones.common.block.switchboard.BaseSwitchboardTileEntity;
+import me.pieking1215.immersive_telephones.common.util.Utils;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Util;
@@ -27,7 +28,7 @@ public class SwitchboardTier1TileEntity extends BaseSwitchboardTileEntity {
             return;
         }
 
-        scanConnectedNetworks().forEach(c -> {
+        Utils.scanConnectedNetworks(world, getPos()).forEach(c -> {
             TileEntity te = world.getTileEntity(c.getPosition());
             if(te instanceof EnergyConnectorTileEntity){
                 BlockPos p2 = c.getPosition().offset(((EnergyConnectorTileEntity) te).getFacing());
@@ -40,7 +41,7 @@ public class SwitchboardTier1TileEntity extends BaseSwitchboardTileEntity {
 
         player.sendMessage(new StringTextComponent("======="), Util.DUMMY_UUID);
 
-        scanConnectedNetworks().forEach(cnp -> {
+        Utils.scanConnectedNetworks(world, getPos()).forEach(cnp -> {
             TileEntity te = world.getTileEntity(cnp.getPosition());
             if(te instanceof ICallable) {
                 player.sendMessage(new StringTextComponent(((ICallable)te).getID()), Util.DUMMY_UUID);

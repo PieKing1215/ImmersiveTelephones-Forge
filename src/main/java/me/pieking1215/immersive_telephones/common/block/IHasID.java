@@ -4,4 +4,8 @@ public interface IHasID {
 
     String getID();
 
+    default boolean matches(String query){
+        return query.equals(getID());
+    }
+
 }
